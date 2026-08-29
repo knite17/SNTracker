@@ -5078,12 +5078,61 @@ db.auth.onAuthStateChange(
     (event, session) => {
 
         /*
-           Do not reload the database here.
-
-           initializeApp() handles the initial session.
-           This listener only reacts to later
-           sign-in/sign-out changes.
+           Supabase fires SIGNED_IN after a successful login.
+           Previously this listener only handled SIGNED_OUT,
+           so the login succeeded but the UI stayed on the
+           sign-in screen until the page was refreshed.
         */
+
+        if (event === "SIGNED_IN" && session?.user) {
+
+            // Let Supabase finish its auth callback before doing
+            // database work. This avoids auth callback deadlocks.
+            setTimeout(async () => {
+
+                try {
+
+                    currentUser = session.user;
+
+                    document.getElementById(
+                        "authScreen"
+                    ).style.display = "none";
+
+                    document.getElementById(
+                        "app"
+                    ).style.display = "flex";
+
+                    document.getElementById(
+                        "userEmail"
+                    ).textContent = currentUser.email || "";
+
+                    await loadData();
+
+                } catch (error) {
+
+                    console.error(
+                        "Focus sign-in load error:",
+                        error
+                    );
+
+                    document.getElementById(
+                        "authScreen"
+                    ).style.display = "flex";
+
+                    document.getElementById(
+                        "app"
+                    ).style.display = "none";
+
+                    showAuthMessage(
+                        "Signed in, but Focus could not load your data: " +
+                        error.message
+                    );
+
+                }
+
+            }, 0);
+
+        }
 
         if (event === "SIGNED_OUT") {
 
