@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -10,18 +11,28 @@
 
 <style>
 
+/* =========================================================
+   BASE / DEFAULT THEME
+========================================================= */
+
 :root {
     --bg:#f5f5f3;
     --card:#fff;
     --text:#20211f;
     --muted:#777873;
     --line:#e6e6e1;
+
     --accent:#5d6b52;
     --accent-light:#dfe6d8;
-    --danger:#a94a45;
 
-    --sidebar:#d463a3;
+    --sidebar:#5d6b52;
     --sidebar-hover:#343831;
+
+    --theme-soft:#f0f3ed;
+    --theme-medium:#dfe6d8;
+    --theme-text:#394333;
+
+    --danger:#a94a45;
 
     --sidebar-width:245px;
     --sidebar-collapsed:72px;
@@ -29,17 +40,62 @@
     --shadow:0 8px 30px rgba(30,30,20,.06);
 }
 
+
+/* =========================================================
+   USER THEMES
+========================================================= */
+
+/* Sam — green */
+
+body.theme-green {
+    --accent:#49c70f;
+    --accent-light:#e2f5d9;
+
+    --sidebar:#49c70f;
+    --sidebar-hover:#32940b;
+
+    --theme-soft:#f0faeb;
+    --theme-medium:#d9f1cd;
+    --theme-text:#347d17;
+}
+
+
+/* Anna — pink */
+
+body.theme-pink {
+    --accent:#d96b9d;
+    --accent-light:#f6dfeb;
+
+    --sidebar:#d96b9d;
+    --sidebar-hover:#b95080;
+
+    --theme-soft:#fcf1f6;
+    --theme-medium:#f5d9e7;
+    --theme-text:#9d426b;
+}
+
+
 * {
     box-sizing:border-box;
 }
 
+
 body {
     margin:0;
-    font-family:Inter,ui-sans-serif,system-ui,-apple-system,
-    BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
     background:var(--bg);
     color:var(--text);
 }
+
 
 button,
 input,
@@ -47,6 +103,7 @@ textarea,
 select {
     font:inherit;
 }
+
 
 button {
     cursor:pointer;
@@ -69,8 +126,10 @@ button {
 
 .sidebar {
     width:var(--sidebar-width);
+
     background:var(--sidebar);
     color:white;
+
     padding:28px 18px;
 
     position:fixed;
@@ -78,11 +137,13 @@ button {
 
     transition:
         width .25s ease,
-        padding .25s ease;
+        padding .25s ease,
+        background .25s ease;
 
     overflow:hidden;
     z-index:20;
 }
+
 
 .sidebar.collapsed {
     width:var(--sidebar-collapsed);
@@ -95,12 +156,15 @@ button {
 .logo {
     font-weight:800;
     font-size:22px;
+
     padding:0 12px 28px;
+
     white-space:nowrap;
 }
 
-.logo span {
-    color:#b9c8aa;
+
+.logo-dot {
+    color:var(--accent-light);
 }
 
 
@@ -108,6 +172,7 @@ button {
 
 .sidebar-toggle {
     position:absolute;
+
     top:20px;
     right:14px;
 
@@ -126,8 +191,11 @@ button {
     align-items:center;
     justify-content:center;
 
-    transition:background .2s ease;
+    transition:
+        background .2s ease,
+        color .2s ease;
 }
+
 
 .sidebar-toggle:hover {
     background:#ffffff20;
@@ -139,14 +207,20 @@ button {
 
 .user-box {
     padding:12px;
+
     margin-bottom:15px;
+
     border-bottom:1px solid #ffffff14;
+
     white-space:nowrap;
 }
 
+
 .user-email {
-    color:#c7c8c4;
+    color:#ffffffb8;
+
     font-size:11px;
+
     overflow:hidden;
     text-overflow:ellipsis;
 }
@@ -165,7 +239,7 @@ button {
     border:0;
     background:transparent;
 
-    color:#c7c8c4;
+    color:#ffffffb8;
 
     padding:12px 14px;
 
@@ -179,11 +253,13 @@ button {
         color .2s ease;
 }
 
+
 .nav button:hover,
 .nav button.active {
     background:var(--sidebar-hover);
     color:white;
 }
+
 
 .nav-icon {
     width:22px;
@@ -197,19 +273,23 @@ button {
     font-size:15px;
 }
 
+
 .nav-label {
     transition:opacity .15s ease;
 }
 
+
 .nav small {
     display:block;
 
-    color:#888d84;
+    color:#ffffff80;
 
     padding:22px 14px 8px;
 
     text-transform:uppercase;
+
     letter-spacing:1.2px;
+
     font-size:10px;
 
     white-space:nowrap;
@@ -220,31 +300,38 @@ button {
 
 .sidebar.collapsed .logo {
     font-size:0;
+
     padding-left:12px;
     padding-right:12px;
 }
 
+
 .sidebar.collapsed .logo span {
     display:none;
 }
+
 
 .sidebar.collapsed .user-box,
 .sidebar.collapsed .nav small {
     display:none;
 }
 
+
 .sidebar.collapsed .nav button {
     justify-content:center;
     padding:12px 0;
 }
 
+
 .sidebar.collapsed .nav-icon {
     margin-right:0;
 }
 
+
 .sidebar.collapsed .nav-label {
     display:none;
 }
+
 
 .sidebar.collapsed .sidebar-toggle {
     right:21px;
@@ -269,8 +356,10 @@ button {
         width .25s ease;
 }
 
+
 body.sidebar-collapsed .main {
     margin-left:var(--sidebar-collapsed);
+
     width:calc(100% - var(--sidebar-collapsed));
 }
 
@@ -281,6 +370,7 @@ body.sidebar-collapsed .main {
 
 header {
     display:flex;
+
     justify-content:space-between;
     align-items:flex-start;
 
@@ -289,18 +379,23 @@ header {
     gap:20px;
 }
 
+
 .eyebrow {
     font-size:12px;
 
     text-transform:uppercase;
+
     letter-spacing:1.6px;
 
     color:var(--muted);
+
     font-weight:700;
 }
 
+
 .title {
     font-size:38px;
+
     line-height:1.05;
 
     letter-spacing:-1.5px;
@@ -308,17 +403,22 @@ header {
     margin:7px 0;
 }
 
+
 .sub {
     color:var(--muted);
     margin:0;
 }
 
+
 .today {
     font-size:13px;
+
     color:var(--muted);
+
     padding-top:8px;
 
     text-align:right;
+
     white-space:nowrap;
 }
 
@@ -336,6 +436,7 @@ header {
     gap:18px;
 }
 
+
 .card {
     background:var(--card);
 
@@ -350,17 +451,21 @@ header {
     min-width:0;
 }
 
+
 .span12 {
     grid-column:span 12;
 }
+
 
 .span8 {
     grid-column:span 8;
 }
 
+
 .span6 {
     grid-column:span 6;
 }
+
 
 .span4 {
     grid-column:span 4;
@@ -373,16 +478,21 @@ header {
 
 .card h2 {
     font-size:17px;
+
     margin:0 0 5px;
 }
 
+
 .card p {
     color:var(--muted);
+
     font-size:13px;
 }
 
+
 .section-head {
     display:flex;
+
     justify-content:space-between;
     align-items:center;
 
@@ -410,16 +520,29 @@ header {
     font-size:13px;
 
     white-space:nowrap;
+
+    transition:
+        background .2s ease,
+        opacity .2s ease,
+        transform .1s ease;
 }
+
 
 .btn:hover {
     opacity:.88;
 }
 
+
+.btn:active {
+    transform:translateY(1px);
+}
+
+
 .btn.secondary {
     background:var(--accent-light);
-    color:#394333;
+    color:var(--theme-text);
 }
+
 
 .btn.danger {
     background:#f4dfdd;
@@ -437,19 +560,23 @@ header {
     border-top:1px solid var(--line);
 }
 
+
 .goal:first-child {
     border-top:0;
     padding-top:0;
 }
 
+
 .goal-row {
     display:flex;
+
     align-items:center;
 
     gap:12px;
 
     min-width:0;
 }
+
 
 .check {
     width:21px;
@@ -464,12 +591,19 @@ header {
     flex:none;
 
     position:relative;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease;
 }
+
 
 .check.done {
     background:var(--accent);
+
     border-color:var(--accent);
 }
+
 
 .check.done:after {
     content:"✓";
@@ -484,25 +618,31 @@ header {
     top:0;
 }
 
+
 .goal-name {
     flex:1;
 
     min-width:0;
 
     font-weight:650;
+
     font-size:14px;
 
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
+
 .goal.done .goal-name {
     text-decoration:line-through;
+
     color:#999;
 }
 
+
 .icon {
     border:0;
+
     background:transparent;
 
     color:#999;
@@ -511,6 +651,7 @@ header {
 
     flex:none;
 }
+
 
 .icon:hover {
     color:var(--danger);
@@ -524,8 +665,9 @@ header {
 .badge {
     font-size:11px;
 
-    background:#f0f1ed;
-    color:#66705e;
+    background:var(--theme-soft);
+
+    color:var(--theme-text);
 
     border-radius:99px;
 
@@ -549,27 +691,31 @@ header {
     min-width:0;
 }
 
+
 .cover {
     width:48px;
     height:66px;
 
     border-radius:5px;
 
-    background:#dedfd9;
+    background:var(--theme-medium);
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 
-    color:#777;
+    color:var(--theme-text);
 
     font-size:10px;
+
     text-align:center;
 
     padding:4px;
 
     flex-shrink:0;
 }
+
 
 .book h3 {
     font-size:15px;
@@ -580,6 +726,7 @@ header {
     text-overflow:ellipsis;
 }
 
+
 .author {
     font-size:12px;
 
@@ -589,15 +736,19 @@ header {
     text-overflow:ellipsis;
 }
 
+
 .list {
     display:grid;
+
     gap:10px;
 }
+
 
 .list-item {
     display:flex;
 
     align-items:center;
+
     justify-content:space-between;
 
     gap:12px;
@@ -613,16 +764,20 @@ header {
     min-width:0;
 }
 
+
 .list-item > div:first-child {
     min-width:0;
 }
+
 
 .list-item strong {
     font-size:13px;
 }
 
+
 .list-item span {
     font-size:11px;
+
     color:var(--muted);
 }
 
@@ -645,6 +800,7 @@ header {
     max-width:100%;
 }
 
+
 .tabs button {
     border:0;
 
@@ -661,10 +817,11 @@ header {
     white-space:nowrap;
 }
 
+
 .tabs button.active {
     background:white;
 
-    color:#222;
+    color:var(--theme-text);
 
     box-shadow:0 1px 5px #00000010;
 }
@@ -677,6 +834,7 @@ header {
 .page {
     display:none;
 }
+
 
 .page.active {
     display:block;
@@ -695,9 +853,11 @@ header {
     gap:12px;
 }
 
+
 .form .full {
     grid-column:1/-1;
 }
+
 
 label {
     font-size:11px;
@@ -710,6 +870,7 @@ label {
 
     margin-bottom:5px;
 }
+
 
 input,
 textarea,
@@ -725,12 +886,20 @@ select {
     background:white;
 
     outline:none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
 }
+
 
 input:focus,
 textarea:focus,
 select:focus {
-    border-color:#a8b49e;
+    border-color:var(--accent);
+
+    box-shadow:
+        0 0 0 3px var(--accent-light);
 }
 
 
@@ -755,9 +924,11 @@ select:focus {
     z-index:100;
 }
 
+
 .modal.show {
     display:flex;
 }
+
 
 .modal-box {
     background:white;
@@ -771,6 +942,7 @@ select:focus {
     box-shadow:0 20px 70px #0003;
 }
 
+
 .modal-head {
     display:flex;
 
@@ -780,11 +952,13 @@ select:focus {
     margin-bottom:18px;
 }
 
+
 .modal-head h2 {
     margin:0;
 
     font-size:20px;
 }
+
 
 .close {
     border:0;
@@ -799,13 +973,15 @@ select:focus {
 
 
 /* =========================================================
-   IMPROVED PROGRESS
+   PROGRESS
 ========================================================= */
 
 .progress-card {
     display:flex;
+
     flex-direction:column;
 }
+
 
 .progress-stats {
     display:grid;
@@ -818,8 +994,9 @@ select:focus {
     width:100%;
 }
 
+
 .progress-stat {
-    background:#f7f7f4;
+    background:var(--theme-soft);
 
     border-radius:12px;
 
@@ -828,7 +1005,10 @@ select:focus {
     min-width:0;
 
     text-align:center;
+
+    transition:background .2s ease;
 }
+
 
 .progress-stat b {
     display:block;
@@ -840,8 +1020,10 @@ select:focus {
     margin-bottom:5px;
 
     overflow:hidden;
+
     text-overflow:ellipsis;
 }
+
 
 .progress-stat span {
     display:block;
@@ -853,6 +1035,7 @@ select:focus {
     white-space:nowrap;
 
     overflow:hidden;
+
     text-overflow:ellipsis;
 }
 
@@ -873,6 +1056,7 @@ select:focus {
     margin-top:16px;
 }
 
+
 .progress-fill {
     height:100%;
 
@@ -882,9 +1066,10 @@ select:focus {
 
     width:0%;
 
-    transition:width .3s ease;
+    transition:
+        width .3s ease,
+        background .2s ease;
 }
-
 
 
 /* =========================================================
@@ -893,159 +1078,246 @@ select:focus {
 
 .tracking-summary {
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
+
+    grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
     gap:12px;
+
     margin-bottom:18px;
 }
+
 
 .tracking-summary .progress-stat {
     text-align:left;
 }
 
+
 .tracking-goal {
     padding:16px 0;
+
     border-top:1px solid var(--line);
 }
 
+
 .tracking-goal:first-child {
     border-top:0;
+
     padding-top:0;
 }
 
+
 .tracking-head {
     display:flex;
+
     justify-content:space-between;
     align-items:center;
+
     gap:14px;
+
     margin-bottom:10px;
 }
 
+
 .tracking-name {
     font-weight:700;
+
     font-size:14px;
+
     line-height:1.35;
 }
 
+
 .tracking-percent {
     display:inline-flex;
+
     align-items:center;
     justify-content:center;
+
     min-width:52px;
     height:30px;
+
     padding:0 9px;
+
     border-radius:10px;
-    background:var(--ink);
+
+    background:var(--accent);
+
     color:white;
+
     font-size:12px;
+
     font-weight:800;
+
     letter-spacing:.2px;
+
     white-space:nowrap;
+
     flex:none;
 }
 
+
 .tracking-meta {
     display:flex;
+
     justify-content:space-between;
+
     gap:10px;
+
     color:var(--muted);
+
     font-size:11px;
+
     margin-top:7px;
 }
 
+
 .tracking-bar {
     width:100%;
+
     height:9px;
+
     background:#ecece7;
+
     border-radius:99px;
+
     overflow:hidden;
 }
 
+
 .tracking-fill {
     height:100%;
+
     width:0;
+
     background:var(--accent);
+
     border-radius:99px;
-    transition:width .3s ease;
+
+    transition:
+        width .3s ease,
+        background .2s ease;
 }
+
 
 .day-dots {
     display:grid;
-    grid-template-columns:repeat(7,1fr);
+
+    grid-template-columns:
+        repeat(7,1fr);
+
     gap:5px;
+
     margin-top:11px;
 }
 
+
 .day-cell {
     display:flex;
+
     flex-direction:column;
+
     align-items:center;
+
     gap:5px;
 }
 
+
 .day-label {
     font-size:9px;
+
     line-height:1;
+
     color:var(--muted);
+
     font-weight:700;
 }
 
+
 .day-dot {
     width:100%;
+
     height:6px;
+
     border-radius:99px;
+
     background:#e5e5df;
 }
+
 
 .day-dot.done {
     background:var(--accent);
 }
 
+
 .weekly-progress {
     display:flex;
+
     align-items:center;
+
     gap:10px;
+
     margin-top:10px;
 }
+
 
 .weekly-progress .tracking-bar {
     flex:1;
 }
 
+
 .weekly-count {
     font-size:11px;
+
     color:var(--muted);
+
     white-space:nowrap;
 }
+
 
 .goal-repeat-control {
     display:none;
 }
 
+
 .goal-repeat-control.show {
     display:block;
 }
 
+
 .goal-helper {
     color:var(--muted);
+
     font-size:11px;
+
     margin-top:5px;
+
     line-height:1.4;
 }
 
+
 .goal-action-count {
     display:inline-flex;
+
     align-items:center;
+
     gap:7px;
+
     margin-left:auto;
+
     flex:none;
 }
 
+
 .goal-action-count .btn {
     padding:6px 9px;
+
     font-size:11px;
 }
 
+
 @media(max-width:500px) {
+
     .tracking-summary {
         grid-template-columns:1fr;
     }
@@ -1053,7 +1325,9 @@ select:focus {
     .tracking-head {
         align-items:flex-start;
     }
+
 }
+
 
 /* =========================================================
    PAST WEEKS
@@ -1063,147 +1337,214 @@ select:focus {
     margin-bottom:18px;
 }
 
+
 .history-week:last-child {
     margin-bottom:0;
 }
 
+
 .history-week-header {
     display:flex;
+
     justify-content:space-between;
     align-items:center;
+
     gap:16px;
+
     margin-bottom:16px;
 }
 
+
 .history-week-title {
     font-size:18px;
+
     font-weight:800;
+
     letter-spacing:-.3px;
 }
 
+
 .history-week-sub {
     color:var(--muted);
+
     font-size:11px;
+
     margin-top:4px;
 }
 
+
 .history-week-metrics {
     display:flex;
+
     align-items:center;
+
     gap:10px;
+
     flex:none;
 }
+
 
 .history-metric {
     text-align:right;
 }
 
+
 .history-metric b {
     display:block;
+
     font-size:18px;
 }
 
+
 .history-metric span {
     display:block;
+
     color:var(--muted);
+
     font-size:10px;
 }
+
 
 .history-grid {
     display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
     gap:18px;
 }
 
+
 .history-section {
     border-top:1px solid var(--line);
+
     padding-top:15px;
 }
 
+
 .history-section h3 {
     margin:0 0 3px;
+
     font-size:13px;
 }
+
 
 .history-section p {
     margin:0 0 12px;
+
     color:var(--muted);
+
     font-size:11px;
 }
+
 
 .history-empty {
     padding:20px;
-    background:#fafaf7;
+
+    background:var(--theme-soft);
+
     border:1px dashed var(--line);
+
     border-radius:12px;
+
     color:var(--muted);
+
     text-align:center;
+
     font-size:12px;
 }
 
+
 .history-goal {
     padding:12px 0;
+
     border-top:1px solid var(--line);
 }
 
+
 .history-goal:first-child {
     border-top:0;
+
     padding-top:0;
 }
 
+
 .history-goal-head {
     display:flex;
+
     justify-content:space-between;
     align-items:center;
+
     gap:12px;
+
     margin-bottom:8px;
 }
 
+
 .history-goal-name {
     font-size:13px;
+
     font-weight:700;
 }
+
 
 .history-goal-percent {
     color:var(--muted);
+
     font-size:11px;
+
     font-weight:700;
+
     white-space:nowrap;
 }
 
+
 .history-goal-meta {
     display:flex;
+
     justify-content:space-between;
+
     gap:10px;
+
     margin-top:6px;
+
     color:var(--muted);
+
     font-size:10px;
 }
+
 
 .history-week .tracking-bar {
     height:8px;
 }
 
+
 @media(max-width:700px) {
+
     .history-grid {
         grid-template-columns:1fr;
     }
 
     .history-week-header {
         align-items:flex-start;
+
         flex-direction:column;
     }
 
     .history-week-metrics {
         width:100%;
+
         justify-content:flex-start;
+
         text-align:left;
     }
 
     .history-metric {
         text-align:left;
     }
+
 }
+
 
 /* =========================================================
    EMPTY
@@ -1237,6 +1578,7 @@ select:focus {
     padding:20px;
 }
 
+
 .auth-card {
     width:min(430px,100%);
 
@@ -1251,6 +1593,7 @@ select:focus {
     box-shadow:var(--shadow);
 }
 
+
 .auth-logo {
     font-size:28px;
 
@@ -1259,15 +1602,23 @@ select:focus {
     margin-bottom:8px;
 }
 
+
+.auth-logo .logo-dot {
+    color:var(--accent);
+}
+
+
 .auth-card p {
     color:var(--muted);
 
     font-size:13px;
 }
 
+
 .auth-card .field {
     margin:15px 0;
 }
+
 
 .auth-message {
     margin-top:15px;
@@ -1287,7 +1638,7 @@ select:focus {
 
     inset:0;
 
-    background:#f5f5f3;
+    background:var(--bg);
 
     display:flex;
 
@@ -1297,6 +1648,8 @@ select:focus {
     z-index:1000;
 
     font-weight:700;
+
+    color:var(--theme-text);
 }
 
 
@@ -1393,6 +1746,7 @@ select:focus {
 
     .today {
         text-align:left;
+
         padding-top:0;
     }
 
@@ -1408,6 +1762,7 @@ select:focus {
 
     .card {
         padding:16px;
+
         border-radius:14px;
     }
 
@@ -1428,6 +1783,7 @@ select:focus {
 
     .progress-stat b {
         margin:0;
+
         font-size:22px;
     }
 
@@ -1446,11 +1802,10 @@ select:focus {
 }
 
 </style>
+
 </head>
 
-
 <body>
-
 
 <!-- =========================================================
      LOADING
@@ -1460,72 +1815,72 @@ select:focus {
     Loading Focus...
 </div>
 
-
 <!-- =========================================================
      LOGIN
 ========================================================= -->
 
 <section id="authScreen" class="auth-screen">
 
-    <div class="auth-card">
+```
+<div class="auth-card">
 
-        <div class="auth-logo">
-            Focus<span style="color:#b9c8aa">.</span>
-        </div>
+    <div class="auth-logo">
+        Focus<span class="logo-dot">.</span>
+    </div>
 
-        <p>
-            Your personal goals, books and learning system.
-        </p>
+    <p>
+        Your personal goals, books and learning system.
+    </p>
 
-        <div class="field">
+    <div class="field">
 
-            <label>EMAIL</label>
+        <label>EMAIL</label>
 
-            <input
-                id="authEmail"
-                type="email"
-                placeholder="you@example.com">
-
-        </div>
-
-        <div class="field">
-
-            <label>PASSWORD</label>
-
-            <input
-                id="authPassword"
-                type="password"
-                placeholder="At least 6 characters">
-
-        </div>
-
-        <button
-            class="btn"
-            style="width:100%"
-            onclick="signIn()">
-
-            Sign in
-
-        </button>
-
-        <button
-            class="btn secondary"
-            style="width:100%;margin-top:8px"
-            onclick="signUp()">
-
-            Create account
-
-        </button>
-
-        <div
-            id="authMessage"
-            class="auth-message">
-        </div>
+        <input
+            id="authEmail"
+            type="email"
+            placeholder="you@example.com">
 
     </div>
 
-</section>
+    <div class="field">
 
+        <label>PASSWORD</label>
+
+        <input
+            id="authPassword"
+            type="password"
+            placeholder="At least 6 characters">
+
+    </div>
+
+    <button
+        class="btn"
+        style="width:100%"
+        onclick="signIn()">
+
+        Sign in
+
+    </button>
+
+    <button
+        class="btn secondary"
+        style="width:100%;margin-top:8px"
+        onclick="signUp()">
+
+        Create account
+
+    </button>
+
+    <div
+        id="authMessage"
+        class="auth-message">
+    </div>
+
+</div>
+```
+
+</section>
 
 <!-- =========================================================
      APP
@@ -1536,7 +1891,6 @@ select:focus {
     class="app"
     style="display:none">
 
-
 <!-- =========================================================
      SIDEBAR
 ========================================================= -->
@@ -1545,141 +1899,141 @@ select:focus {
     class="sidebar"
     id="sidebar">
 
-    <div class="logo">
-        Focus<span>.</span>
+```
+<div class="logo">
+    Focus<span class="logo-dot">.</span>
+</div>
+
+
+<button
+    class="sidebar-toggle"
+    id="sidebarToggle"
+    onclick="toggleSidebar()"
+    aria-label="Collapse sidebar">
+
+    ‹
+
+</button>
+
+
+<div class="user-box">
+
+    <div
+        class="user-email"
+        id="userEmail">
     </div>
+
+</div>
+
+
+<nav class="nav">
 
 
     <button
-        class="sidebar-toggle"
-        id="sidebarToggle"
-        onclick="toggleSidebar()"
-        aria-label="Collapse sidebar">
+        class="active"
+        data-page="dashboard">
 
-        ‹
+        <span class="nav-icon">⌂</span>
+
+        <span class="nav-label">
+            Dashboard
+        </span>
 
     </button>
 
 
-    <div class="user-box">
+    <button data-page="goals">
 
-        <div
-            class="user-email"
-            id="userEmail">
-        </div>
+        <span class="nav-icon">✓</span>
 
-    </div>
+        <span class="nav-label">
+            Goals
+        </span>
 
-
-    <nav class="nav">
+    </button>
 
 
-        <button
-            class="active"
-            data-page="dashboard">
+    <button data-page="tracking">
 
-            <span class="nav-icon">⌂</span>
+        <span class="nav-icon">◔</span>
 
-            <span class="nav-label">
-                Dashboard
-            </span>
+        <span class="nav-label">
+            Tracking
+        </span>
 
-        </button>
+    </button>
 
 
-        <button data-page="goals">
+    <button data-page="history">
 
-            <span class="nav-icon">✓</span>
+        <span class="nav-icon">↺</span>
 
-            <span class="nav-label">
-                Goals
-            </span>
+        <span class="nav-label">
+            Past weeks
+        </span>
 
-        </button>
-
-
-        <button data-page="tracking">
-
-            <span class="nav-icon">◔</span>
-
-            <span class="nav-label">
-                Tracking
-            </span>
-
-        </button>
+    </button>
 
 
-        <button data-page="history">
+    <button data-page="books">
 
-            <span class="nav-icon">↺</span>
+        <span class="nav-icon">▣</span>
 
-            <span class="nav-label">
-                Past weeks
-            </span>
+        <span class="nav-label">
+            Books
+        </span>
 
-        </button>
-
-
-        <button data-page="books">
-
-            <span class="nav-icon">▣</span>
-
-            <span class="nav-label">
-                Books
-            </span>
-
-        </button>
+    </button>
 
 
-        <button data-page="learning">
+    <button data-page="learning">
 
-            <span class="nav-icon">◇</span>
+        <span class="nav-icon">◇</span>
 
-            <span class="nav-label">
-                Learning
-            </span>
+        <span class="nav-label">
+            Learning
+        </span>
 
-        </button>
-
-
-        <small>
-            Account
-        </small>
+    </button>
 
 
-        <button onclick="exportBackup()">
-
-            <span class="nav-icon">↓</span>
-
-            <span class="nav-label">
-                Export backup
-            </span>
-
-        </button>
+    <small>
+        Account
+    </small>
 
 
-        <button onclick="signOut()">
+    <button onclick="exportBackup()">
 
-            <span class="nav-icon">↪</span>
+        <span class="nav-icon">↓</span>
 
-            <span class="nav-label">
-                Sign out
-            </span>
+        <span class="nav-label">
+            Export backup
+        </span>
 
-        </button>
+    </button>
 
 
-    </nav>
+    <button onclick="signOut()">
+
+        <span class="nav-icon">↪</span>
+
+        <span class="nav-label">
+            Sign out
+        </span>
+
+    </button>
+
+
+</nav>
+```
 
 </aside>
-
 
 <!-- =========================================================
      MAIN
 ========================================================= -->
 
 <main class="main">
-
 
 <!-- =========================================================
      DASHBOARD
@@ -1689,277 +2043,282 @@ select:focus {
     id="dashboard"
     class="page active">
 
-
 <header>
 
-    <div>
+```
+<div>
 
-        <div class="eyebrow">
-            Your personal system
-        </div>
-
-        <div class="title">
-            Good to see you.
-        </div>
-
-        <p class="sub">
-            Keep the important things moving, one day at a time.
-        </p>
-
+    <div class="eyebrow">
+        Your personal system
     </div>
 
-    <div
-        class="today"
-        id="date">
+    <div class="title">
+        Good to see you.
     </div>
+
+    <p class="sub">
+        Keep the important things moving, one day at a time.
+    </p>
+
+</div>
+
+<div
+    class="today"
+    id="date">
+</div>
+```
 
 </header>
 
-
 <div class="grid">
-
 
 <!-- TODAY -->
 
 <div class="card span8">
 
-    <div class="section-head">
+```
+<div class="section-head">
 
-        <div>
+    <div>
 
-            <h2>
-                Today
-            </h2>
+        <h2>
+            Today
+        </h2>
 
-            <p>
-                Daily goals
-            </p>
-
-        </div>
-
-        <button
-            class="btn"
-            onclick="openGoal()">
-
-            + Goal
-
-        </button>
+        <p>
+            Daily goals
+        </p>
 
     </div>
 
-    <div id="dashDaily"></div>
+    <button
+        class="btn"
+        onclick="openGoal()">
+
+        + Goal
+
+    </button>
 
 </div>
 
+<div id="dashDaily"></div>
+```
+
+</div>
 
 <!-- PROGRESS -->
 
 <div class="card span4 progress-card">
 
-    <div class="section-head">
+```
+<div class="section-head">
 
-        <div>
+    <div>
 
-            <h2>
-                Progress
-            </h2>
+        <h2>
+            Progress
+        </h2>
 
-            <p>
-                Current goals
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div
-        class="progress-stats"
-        id="stats">
-    </div>
-
-
-    <div class="progress-bar">
-
-        <div
-            class="progress-fill"
-            id="progressFill">
-        </div>
+        <p>
+            Current goals
+        </p>
 
     </div>
 
 </div>
 
+
+<div
+    class="progress-stats"
+    id="stats">
+</div>
+
+
+<div class="progress-bar">
+
+    <div
+        class="progress-fill"
+        id="progressFill">
+    </div>
+
+</div>
+```
+
+</div>
 
 <!-- WEEK -->
 
 <div class="card span6">
 
-    <div class="section-head">
+```
+<div class="section-head">
 
-        <div>
+    <div>
 
-            <h2>
-                This week
-            </h2>
+        <h2>
+            This week
+        </h2>
 
-            <p>
-                Weekly goals
-            </p>
-
-        </div>
-
-        <button
-            class="btn secondary"
-            onclick="showPage('goals')">
-
-            View all
-
-        </button>
+        <p>
+            Weekly goals
+        </p>
 
     </div>
 
-    <div id="dashWeekly"></div>
+    <button
+        class="btn secondary"
+        onclick="showPage('goals')">
+
+        View all
+
+    </button>
 
 </div>
 
+<div id="dashWeekly"></div>
+```
+
+</div>
 
 <!-- MONTH -->
 
 <div class="card span6">
 
-    <div class="section-head">
+```
+<div class="section-head">
 
-        <div>
+    <div>
 
-            <h2>
-                This month
-            </h2>
+        <h2>
+            This month
+        </h2>
 
-            <p>
-                Monthly goals
-            </p>
-
-        </div>
-
-        <button
-            class="btn secondary"
-            onclick="showPage('goals')">
-
-            View all
-
-        </button>
+        <p>
+            Monthly goals
+        </p>
 
     </div>
 
-    <div id="dashMonthly"></div>
+    <button
+        class="btn secondary"
+        onclick="showPage('goals')">
+
+        View all
+
+    </button>
 
 </div>
 
+<div id="dashMonthly"></div>
+```
+
+</div>
 
 <!-- FICTION -->
 
 <div class="card span6">
 
-    <div class="section-head">
+```
+<div class="section-head">
 
-        <div>
+    <div>
 
-            <h2>
-                Next fiction
-            </h2>
+        <h2>
+            Next fiction
+        </h2>
 
-            <p>
-                From your reading queue
-            </p>
-
-        </div>
-
-        <button
-            class="btn secondary"
-            onclick="showPage('books')">
-
-            Books
-
-        </button>
+        <p>
+            From your reading queue
+        </p>
 
     </div>
 
-    <div id="nextFiction"></div>
+    <button
+        class="btn secondary"
+        onclick="showPage('books')">
+
+        Books
+
+    </button>
 
 </div>
 
+<div id="nextFiction"></div>
+```
+
+</div>
 
 <!-- NONFICTION -->
 
 <div class="card span6">
 
-    <div class="section-head">
+```
+<div class="section-head">
 
-        <div>
+    <div>
 
-            <h2>
-                Next non-fiction
-            </h2>
+        <h2>
+            Next non-fiction
+        </h2>
 
-            <p>
-                From your reading queue
-            </p>
-
-        </div>
-
-        <button
-            class="btn secondary"
-            onclick="showPage('books')">
-
-            Books
-
-        </button>
+        <p>
+            From your reading queue
+        </p>
 
     </div>
 
-    <div id="nextNonfiction"></div>
+    <button
+        class="btn secondary"
+        onclick="showPage('books')">
+
+        Books
+
+    </button>
 
 </div>
 
+<div id="nextNonfiction"></div>
+```
+
+</div>
 
 <!-- LEARNING -->
 
 <div class="card span12">
 
-    <div class="section-head">
+```
+<div class="section-head">
 
-        <div>
+    <div>
 
-            <h2>
-                Next learning focus
-            </h2>
+        <h2>
+            Next learning focus
+        </h2>
 
-            <p>
-                Your active learning queue
-            </p>
-
-        </div>
-
-        <button
-            class="btn secondary"
-            onclick="showPage('learning')">
-
-            Learning
-
-        </button>
+        <p>
+            Your active learning queue
+        </p>
 
     </div>
 
-    <div id="nextLearning"></div>
+    <button
+        class="btn secondary"
+        onclick="showPage('learning')">
+
+        Learning
+
+    </button>
 
 </div>
 
+<div id="nextLearning"></div>
+```
+
+</div>
 
 </div>
 
 </section>
-
 
 <!-- =========================================================
      GOALS
@@ -1969,76 +2328,77 @@ select:focus {
     id="goals"
     class="page">
 
-
 <header>
 
-    <div>
+```
+<div>
 
-        <div class="eyebrow">
-            Goals
-        </div>
-
-        <div class="title">
-            Your goals.
-        </div>
-
-        <p class="sub">
-            Daily, weekly and monthly.
-        </p>
-
+    <div class="eyebrow">
+        Goals
     </div>
 
-    <button
-        class="btn"
-        onclick="openGoal()">
+    <div class="title">
+        Your goals.
+    </div>
 
-        + Add goal
+    <p class="sub">
+        Daily, weekly and monthly.
+    </p>
 
-    </button>
+</div>
+
+<button
+    class="btn"
+    onclick="openGoal()">
+
+    + Add goal
+
+</button>
+```
 
 </header>
 
-
 <div class="card">
 
-    <div class="section-head">
+```
+<div class="section-head">
 
-        <div
-            class="tabs"
-            id="goalTabs">
+    <div
+        class="tabs"
+        id="goalTabs">
 
-            <button
-                class="active"
-                data-horizon="daily">
+        <button
+            class="active"
+            data-horizon="daily">
 
-                Daily
+            Daily
 
-            </button>
+        </button>
 
-            <button
-                data-horizon="weekly">
+        <button
+            data-horizon="weekly">
 
-                Weekly
+            Weekly
 
-            </button>
+        </button>
 
-            <button
-                data-horizon="monthly">
+        <button
+            data-horizon="monthly">
 
-                Monthly
+            Monthly
 
-            </button>
-
-        </div>
+        </button>
 
     </div>
 
-    <div id="goalList"></div>
+</div>
+
+<div id="goalList"></div>
+```
 
 </div>
 
 </section>
-
 
 <!-- =========================================================
      TRACKING
@@ -2049,48 +2409,111 @@ select:focus {
     class="page">
 
 <header>
-    <div>
-        <div class="eyebrow">Tracking</div>
-        <div class="title">Your week.</div>
-        <p class="sub">See how consistently you are completing your daily and weekly goals.</p>
+
+```
+<div>
+
+    <div class="eyebrow">
+        Tracking
     </div>
-    <div class="today" id="trackingWeekLabel"></div>
+
+    <div class="title">
+        Your week.
+    </div>
+
+    <p class="sub">
+        See how consistently you are completing your daily and weekly goals.
+    </p>
+
+</div>
+
+<div
+    class="today"
+    id="trackingWeekLabel">
+</div>
+```
+
 </header>
 
 <div class="card span12">
-    <div class="section-head">
-        <div>
-            <h2>Weekly overview</h2>
-            <p>Daily goals are measured across the current week. Weekly goals fill up as you complete their targets.</p>
-        </div>
+
+```
+<div class="section-head">
+
+    <div>
+
+        <h2>
+            Weekly overview
+        </h2>
+
+        <p>
+            Daily goals are measured across the current week. Weekly goals fill up as you complete their targets.
+        </p>
+
     </div>
-    <div id="trackingSummary" class="tracking-summary"></div>
+
+</div>
+
+<div
+    id="trackingSummary"
+    class="tracking-summary">
+</div>
+```
+
 </div>
 
 <div class="grid">
-    <div class="card span6">
-        <div class="section-head">
-            <div>
-                <h2>Daily goals</h2>
-                <p>Completion this week</p>
-            </div>
+
+```
+<div class="card span6">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                Daily goals
+            </h2>
+
+            <p>
+                Completion this week
+            </p>
+
         </div>
-        <div id="trackingDaily"></div>
+
     </div>
 
-    <div class="card span6">
-        <div class="section-head">
-            <div>
-                <h2>Weekly goals</h2>
-                <p>Progress toward each weekly target</p>
-            </div>
+    <div id="trackingDaily"></div>
+
+</div>
+
+
+<div class="card span6">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                Weekly goals
+            </h2>
+
+            <p>
+                Progress toward each weekly target
+            </p>
+
         </div>
-        <div id="trackingWeekly"></div>
+
     </div>
+
+    <div id="trackingWeekly"></div>
+
+</div>
+```
+
 </div>
 
 </section>
-
 
 <!-- =========================================================
      PAST WEEKS
@@ -2101,18 +2524,34 @@ select:focus {
     class="page">
 
 <header>
-    <div>
-        <div class="eyebrow">History</div>
-        <div class="title">Past weeks.</div>
-        <p class="sub">Review your daily consistency and weekly targets from previous weeks.</p>
+
+```
+<div>
+
+    <div class="eyebrow">
+        History
     </div>
-    <div class="today">From today backwards</div>
+
+    <div class="title">
+        Past weeks.
+    </div>
+
+    <p class="sub">
+        Review your daily consistency and weekly targets from previous weeks.
+    </p>
+
+</div>
+
+<div class="today">
+    From today backwards
+</div>
+```
+
 </header>
 
 <div id="historyWeeks"></div>
 
 </section>
-
 
 <!-- =========================================================
      BOOKS
@@ -2122,95 +2561,95 @@ select:focus {
     id="books"
     class="page">
 
-
 <header>
+
+```
+<div>
+
+    <div class="eyebrow">
+        Reading
+    </div>
+
+    <div class="title">
+        Books.
+    </div>
+
+    <p class="sub">
+        Build your reading queue.
+    </p>
+
+</div>
+
+<button
+    class="btn"
+    onclick="openBook()">
+
+    + Add book
+
+</button>
+```
+
+</header>
+
+<div class="grid">
+
+<div class="card span6">
+
+```
+<div class="section-head">
 
     <div>
 
-        <div class="eyebrow">
-            Reading
-        </div>
+        <h2>
+            Fiction
+        </h2>
 
-        <div class="title">
-            Books.
-        </div>
-
-        <p class="sub">
-            Build your reading queue.
+        <p>
+            Reading queue
         </p>
 
     </div>
 
-    <button
-        class="btn"
-        onclick="openBook()">
+</div>
 
-        + Add book
+<div
+    id="fictionList"
+    class="list">
+</div>
+```
 
-    </button>
-
-</header>
-
-
-<div class="grid">
-
+</div>
 
 <div class="card span6">
 
-    <div class="section-head">
+```
+<div class="section-head">
 
-        <div>
+    <div>
 
-            <h2>
-                Fiction
-            </h2>
+        <h2>
+            Non-fiction
+        </h2>
 
-            <p>
-                Reading queue
-            </p>
+        <p>
+            Reading queue
+        </p>
 
-        </div>
-
-    </div>
-
-    <div
-        id="fictionList"
-        class="list">
     </div>
 
 </div>
 
-
-<div class="card span6">
-
-    <div class="section-head">
-
-        <div>
-
-            <h2>
-                Non-fiction
-            </h2>
-
-            <p>
-                Reading queue
-            </p>
-
-        </div>
-
-    </div>
-
-    <div
-        id="nonfictionList"
-        class="list">
-    </div>
+<div
+    id="nonfictionList"
+    class="list">
+</div>
+```
 
 </div>
-
 
 </div>
 
 </section>
-
 
 <!-- =========================================================
      LEARNING
@@ -2220,52 +2659,52 @@ select:focus {
     id="learning"
     class="page">
 
-
 <header>
 
-    <div>
+```
+<div>
 
-        <div class="eyebrow">
-            Learning
-        </div>
-
-        <div class="title">
-            Learning.
-        </div>
-
-        <p class="sub">
-            Your learning queue.
-        </p>
-
+    <div class="eyebrow">
+        Learning
     </div>
 
-    <button
-        class="btn"
-        onclick="openLearning()">
+    <div class="title">
+        Learning.
+    </div>
 
-        + Add learning goal
+    <p class="sub">
+        Your learning queue.
+    </p>
 
-    </button>
+</div>
+
+<button
+    class="btn"
+    onclick="openLearning()">
+
+    + Add learning goal
+
+</button>
+```
 
 </header>
 
-
 <div class="card">
 
-    <div
-        id="learningList"
-        class="list">
-    </div>
+```
+<div
+    id="learningList"
+    class="list">
+</div>
+```
 
 </div>
 
 </section>
 
-
 </main>
 
 </div>
-
 
 <!-- =========================================================
      MODAL
@@ -2275,13 +2714,14 @@ select:focus {
     class="modal"
     id="modal">
 
-    <div
-        class="modal-box"
-        id="modalContent">
-    </div>
+```
+<div
+    class="modal-box"
+    id="modalContent">
+</div>
+```
 
 </div>
-
 
 <script>
 
@@ -2292,6 +2732,7 @@ select:focus {
 
 const SUPABASE_URL =
     "https://eolmzfbnvelnozynpmez.supabase.co";
+
 
 const SUPABASE_KEY =
     "sb_publishable_wHBm6EI9kFXgOhPwEI7VoQ_AaKWIQRh";
@@ -2327,16 +2768,67 @@ let data = {
 
 
 /* =========================================================
+   USER THEME
+========================================================= */
+
+function applyUserTheme(user) {
+
+    document.body.classList.remove(
+        "theme-green",
+        "theme-pink"
+    );
+
+
+    if (!user || !user.email)
+        return;
+
+
+    const email =
+        user.email.trim().toLowerCase();
+
+
+    if (
+        email ===
+        "thesambutdifferent@gmail.com"
+    ) {
+
+        document.body.classList.add(
+            "theme-green"
+        );
+
+    }
+
+    else if (
+        email ===
+        "annahbisley8@gmail.com"
+    ) {
+
+        document.body.classList.add(
+            "theme-pink"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
    SIDEBAR
 ========================================================= */
 
 function toggleSidebar() {
 
     const sidebar =
-        document.getElementById("sidebar");
+        document.getElementById(
+            "sidebar"
+        );
+
 
     const collapsed =
-        sidebar.classList.toggle("collapsed");
+        sidebar.classList.toggle(
+            "collapsed"
+        );
+
 
     document.body.classList.toggle(
         "sidebar-collapsed",
@@ -2345,7 +2837,9 @@ function toggleSidebar() {
 
 
     const toggle =
-        document.getElementById("sidebarToggle");
+        document.getElementById(
+            "sidebarToggle"
+        );
 
 
     toggle.textContent =
@@ -2385,15 +2879,23 @@ function toggleSidebar() {
     if (collapsed) {
 
         document
-            .getElementById("sidebar")
-            .classList.add("collapsed");
+            .getElementById(
+                "sidebar"
+            )
+            .classList.add(
+                "collapsed"
+            );
+
 
         document.body.classList.add(
             "sidebar-collapsed"
         );
 
+
         document
-            .getElementById("sidebarToggle")
+            .getElementById(
+                "sidebarToggle"
+            )
             .textContent = "›";
 
     }
@@ -2407,7 +2909,9 @@ function toggleSidebar() {
 
 function esc(value) {
 
-    return String(value ?? "").replace(
+    return String(
+        value ?? ""
+    ).replace(
         /[&<>"']/g,
         function(match) {
 
@@ -2430,23 +2934,26 @@ function getDateKey(
 ) {
 
     /*
-       Uses local NZ time rather than UTC.
-       This prevents the daily reset from
-       happening at the wrong time.
+       Uses local browser time rather than UTC.
+       This keeps daily resets aligned with the user's
+       local date.
     */
 
     const year =
         date.getFullYear();
+
 
     const month =
         String(
             date.getMonth()+1
         ).padStart(2,"0");
 
+
     const day =
         String(
             date.getDate()
         ).padStart(2,"0");
+
 
     return `${year}-${month}-${day}`;
 
@@ -2460,21 +2967,26 @@ function getWeekKey(
     const d =
         new Date(date);
 
+
     d.setHours(
         0,0,0,0
     );
 
+
     const day =
         d.getDay();
+
 
     const diff =
         day === 0
             ? -6
             : 1 - day;
 
+
     d.setDate(
         d.getDate() + diff
     );
+
 
     return getDateKey(d);
 
@@ -2500,14 +3012,18 @@ async function signUp() {
 
     const email =
         document
-            .getElementById("authEmail")
+            .getElementById(
+                "authEmail"
+            )
             .value
             .trim();
 
 
     const password =
         document
-            .getElementById("authPassword")
+            .getElementById(
+                "authPassword"
+            )
             .value;
 
 
@@ -2554,15 +3070,30 @@ async function signIn() {
 
     const email =
         document
-            .getElementById("authEmail")
+            .getElementById(
+                "authEmail"
+            )
             .value
             .trim();
 
 
     const password =
         document
-            .getElementById("authPassword")
+            .getElementById(
+                "authPassword"
+            )
             .value;
+
+
+    if (!email || !password) {
+
+        showAuthMessage(
+            "Enter your email and password."
+        );
+
+        return;
+
+    }
 
 
     const { error } =
@@ -2595,7 +3126,9 @@ async function signOut() {
 function showAuthMessage(message) {
 
     document
-        .getElementById("authMessage")
+        .getElementById(
+            "authMessage"
+        )
         .textContent = message;
 
 }
@@ -2640,11 +3173,14 @@ async function loadData() {
     if (goalsResult.error)
         throw goalsResult.error;
 
+
     if (completionsResult.error)
         throw completionsResult.error;
 
+
     if (booksResult.error)
         throw booksResult.error;
+
 
     if (learningResult.error)
         throw learningResult.error;
@@ -2653,19 +3189,24 @@ async function loadData() {
     data.goals =
         goalsResult.data || [];
 
+
     data.completions =
         completionsResult.data || [];
 
+
     await seedLegacyCompletions();
+
 
     data.books =
         booksResult.data || [];
+
 
     data.learning =
         learningResult.data || [];
 
 
     await resetRecurringGoals();
+
 
     render();
 
@@ -2677,340 +3218,725 @@ async function loadData() {
 ========================================================= */
 
 async function seedLegacyCompletions() {
-    /*
-       Existing versions of Focus stored only the current "done" state.
-       If a legacy goal is currently done and has no completion event,
-       create one so the new tracking page does not lose that completion.
-    */
-    for (const goal of data.goals) {
-        const alreadySeeded = data.completions.some(c => c.goal_id === goal.id);
 
-        if (!goal.done || alreadySeeded)
+    /*
+       Existing versions of Focus stored only the current
+       "done" state.
+
+       If a legacy goal is currently done and has no
+       completion event, create one so tracking does not
+       lose that completion.
+    */
+
+    for (const goal of data.goals) {
+
+        const alreadySeeded =
+            data.completions.some(
+                c =>
+                    c.goal_id === goal.id
+            );
+
+
+        if (
+            !goal.done ||
+            alreadySeeded
+        )
             continue;
+
 
         let completedDate = null;
 
-        if (goal.horizon === "daily")
-            completedDate = goal.completed_date || getDateKey();
 
-        if (goal.horizon === "weekly")
-            completedDate = getDateKey();
+        if (
+            goal.horizon ===
+            "daily"
+        )
+            completedDate =
+                goal.completed_date ||
+                getDateKey();
+
+
+        if (
+            goal.horizon ===
+            "weekly"
+        )
+            completedDate =
+                getDateKey();
+
 
         if (!completedDate)
             continue;
 
-        const { data: created, error } = await db
-            .from("goal_completions")
-            .insert({
-                user_id:currentUser.id,
-                goal_id:goal.id,
-                completed_at:new Date(
-                    completedDate + "T12:00:00"
-                ).toISOString()
-            })
-            .select()
-            .single();
 
-        if (!error && created)
-            data.completions.push(created);
+        const {
+            data:created,
+            error
+        } =
+            await db
+                .from(
+                    "goal_completions"
+                )
+                .insert({
+                    user_id:
+                        currentUser.id,
+
+                    goal_id:
+                        goal.id,
+
+                    completed_at:
+                        new Date(
+                            completedDate +
+                            "T12:00:00"
+                        ).toISOString()
+                })
+                .select()
+                .single();
+
+
+        if (
+            !error &&
+            created
+        )
+            data.completions.push(
+                created
+            );
+
     }
+
 }
 
 
-function completionDateKey(completion) {
-    if (!completion || !completion.completed_at)
+function completionDateKey(
+    completion
+) {
+
+    if (
+        !completion ||
+        !completion.completed_at
+    )
         return "";
 
-    return getDateKey(new Date(completion.completed_at));
+
+    return getDateKey(
+        new Date(
+            completion.completed_at
+        )
+    );
+
 }
 
 
-function weekCompletions(goalId) {
-    const week = getWeekKey();
+function weekCompletions(
+    goalId
+) {
+
+    const week =
+        getWeekKey();
+
+
     return data.completions.filter(
         c =>
             c.goal_id === goalId &&
-            getWeekKey(new Date(c.completed_at)) === week
+            getWeekKey(
+                new Date(
+                    c.completed_at
+                )
+            ) === week
     );
+
 }
 
 
-function todayCompletions(goalId) {
-    const today = getDateKey();
+function todayCompletions(
+    goalId
+) {
+
+    const today =
+        getDateKey();
+
+
     return data.completions.filter(
         c =>
             c.goal_id === goalId &&
             completionDateKey(c) === today
     );
+
 }
 
 
 function weeklyTarget(goal) {
+
     return Math.max(
         1,
-        Number(goal.target_count || 1)
+        Number(
+            goal.target_count || 1
+        )
     );
+
 }
 
 
 function isGoalDoneNow(goal) {
-    if (goal.horizon === "daily")
-        return todayCompletions(goal.id).length > 0;
 
-    if (goal.horizon === "weekly")
-        return weekCompletions(goal.id).length >= weeklyTarget(goal);
+    if (
+        goal.horizon ===
+        "daily"
+    )
+        return todayCompletions(
+            goal.id
+        ).length > 0;
+
+
+    if (
+        goal.horizon ===
+        "weekly"
+    )
+        return weekCompletions(
+            goal.id
+        ).length >=
+        weeklyTarget(goal);
+
 
     return !!goal.done;
+
 }
 
 
-async function syncGoalDone(goal) {
-    const doneNow = isGoalDoneNow(goal);
+async function syncGoalDone(
+    goal
+) {
 
-    if (goal.horizon === "daily") {
-        const date = doneNow ? getDateKey() : null;
+    const doneNow =
+        isGoalDoneNow(goal);
+
+
+    if (
+        goal.horizon ===
+        "daily"
+    ) {
+
+        const date =
+            doneNow
+                ? getDateKey()
+                : null;
+
 
         if (
             goal.done !== doneNow ||
             goal.completed_date !== date
         ) {
+
             await db
                 .from("goals")
                 .update({
                     done:doneNow,
                     completed_date:date
                 })
-                .eq("id",goal.id)
-                .eq("user_id",currentUser.id);
+                .eq(
+                    "id",
+                    goal.id
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
 
-            goal.done = doneNow;
-            goal.completed_date = date;
+
+            goal.done =
+                doneNow;
+
+
+            goal.completed_date =
+                date;
+
         }
 
+
         return;
+
     }
 
-    if (goal.horizon === "weekly") {
-        const week = doneNow ? getWeekKey() : null;
+
+    if (
+        goal.horizon ===
+        "weekly"
+    ) {
+
+        const week =
+            doneNow
+                ? getWeekKey()
+                : null;
+
 
         if (
             goal.done !== doneNow ||
             goal.completed_week !== week
         ) {
+
             await db
                 .from("goals")
                 .update({
                     done:doneNow,
                     completed_week:week
                 })
-                .eq("id",goal.id)
-                .eq("user_id",currentUser.id);
+                .eq(
+                    "id",
+                    goal.id
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
 
-            goal.done = doneNow;
-            goal.completed_week = week;
+
+            goal.done =
+                doneNow;
+
+
+            goal.completed_week =
+                week;
+
         }
+
     }
+
 }
 
 
 async function resetRecurringGoals() {
+
     /*
-       Completion history is never erased at the start of a new day/week.
-       Only the legacy display flags are refreshed from the completion log.
+       Completion history is never erased at the start
+       of a new day/week.
+
+       Only the legacy display flags are refreshed
+       from the completion log.
     */
-    for (const goal of data.goals)
-        await syncGoalDone(goal);
+
+    for (
+        const goal of data.goals
+    )
+        await syncGoalDone(
+            goal
+        );
+
 }
+
 
 /* =========================================================
    GOALS
 ========================================================= */
 
 async function toggleGoal(id) {
+
     const goal =
-        data.goals.find(g => g.id === id);
+        data.goals.find(
+            g => g.id === id
+        );
+
 
     if (!goal)
         return;
 
+
     /*
        Daily goals can be completed once per day.
-       Weekly repeat goals add/remove one completion event at a time.
-       Monthly goals keep the original one-checkbox behaviour.
+       Weekly repeat goals add/remove one completion
+       event at a time.
+       Monthly goals keep the original checkbox behaviour.
     */
-    if (goal.horizon === "monthly") {
-        const now = new Date();
-        const newDone = !goal.done;
+
+    if (
+        goal.horizon ===
+        "monthly"
+    ) {
+
+        const now =
+            new Date();
+
+
+        const newDone =
+            !goal.done;
+
 
         const update = {
+
             done:newDone,
+
             completed_date:null,
+
             completed_week:null,
-            completed_month:newDone
-                ? getMonthKey(now)
-                : null
+
+            completed_month:
+                newDone
+                    ? getMonthKey(now)
+                    : null
+
         };
 
-        const { error } = await db
-            .from("goals")
-            .update(update)
-            .eq("id",id)
-            .eq("user_id",currentUser.id);
+
+        const { error } =
+            await db
+                .from("goals")
+                .update(update)
+                .eq(
+                    "id",
+                    id
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
+
 
         if (error) {
-            alert(error.message);
+
+            alert(
+                error.message
+            );
+
             return;
+
         }
 
-        Object.assign(goal, update);
+
+        Object.assign(
+            goal,
+            update
+        );
+
+
         render();
+
         return;
+
     }
 
-    if (goal.horizon === "daily") {
-        const existing = todayCompletions(id)[0];
+
+    if (
+        goal.horizon ===
+        "daily"
+    ) {
+
+        const existing =
+            todayCompletions(
+                id
+            )[0];
+
 
         if (existing) {
-            const { error } = await db
-                .from("goal_completions")
-                .delete()
-                .eq("id",existing.id)
-                .eq("user_id",currentUser.id);
+
+            const { error } =
+                await db
+                    .from(
+                        "goal_completions"
+                    )
+                    .delete()
+                    .eq(
+                        "id",
+                        existing.id
+                    )
+                    .eq(
+                        "user_id",
+                        currentUser.id
+                    );
+
 
             if (error) {
-                alert(error.message);
+
+                alert(
+                    error.message
+                );
+
                 return;
+
             }
+
 
             data.completions =
                 data.completions.filter(
-                    c => c.id !== existing.id
+                    c =>
+                        c.id !==
+                        existing.id
                 );
-        } else {
-            const { data:created, error } = await db
-                .from("goal_completions")
-                .insert({
-                    user_id:currentUser.id,
-                    goal_id:id,
-                    completed_at:new Date().toISOString()
-                })
-                .select()
-                .single();
 
-            if (error) {
-                alert(error.message);
-                return;
-            }
-
-            data.completions.push(created);
         }
 
-        await syncGoalDone(goal);
+        else {
+
+            const {
+                data:created,
+                error
+            } =
+                await db
+                    .from(
+                        "goal_completions"
+                    )
+                    .insert({
+                        user_id:
+                            currentUser.id,
+
+                        goal_id:
+                            id,
+
+                        completed_at:
+                            new Date()
+                                .toISOString()
+                    })
+                    .select()
+                    .single();
+
+
+            if (error) {
+
+                alert(
+                    error.message
+                );
+
+                return;
+
+            }
+
+
+            data.completions.push(
+                created
+            );
+
+        }
+
+
+        await syncGoalDone(
+            goal
+        );
+
+
         render();
+
         return;
+
     }
 
-    if (goal.horizon === "weekly") {
-        const completions = weekCompletions(id);
-        const target = weeklyTarget(goal);
+
+    if (
+        goal.horizon ===
+        "weekly"
+    ) {
+
+        const completions =
+            weekCompletions(
+                id
+            );
+
+
+        const target =
+            weeklyTarget(
+                goal
+            );
+
 
         /*
-           Once the target is reached, the main checkbox removes the
-           latest completion so the goal can be corrected.
+           Once the target is reached,
+           the main checkbox removes the
+           latest completion so the goal
+           can be corrected.
         */
-        if (completions.length >= target) {
+
+        if (
+            completions.length >=
+            target
+        ) {
+
             const latest =
                 completions
                     .slice()
                     .sort(
                         (a,b) =>
-                            new Date(b.completed_at) -
-                            new Date(a.completed_at)
+                            new Date(
+                                b.completed_at
+                            ) -
+                            new Date(
+                                a.completed_at
+                            )
                     )[0];
 
-            const { error } = await db
-                .from("goal_completions")
-                .delete()
-                .eq("id",latest.id)
-                .eq("user_id",currentUser.id);
+
+            const { error } =
+                await db
+                    .from(
+                        "goal_completions"
+                    )
+                    .delete()
+                    .eq(
+                        "id",
+                        latest.id
+                    )
+                    .eq(
+                        "user_id",
+                        currentUser.id
+                    );
+
 
             if (error) {
-                alert(error.message);
+
+                alert(
+                    error.message
+                );
+
                 return;
+
             }
+
 
             data.completions =
                 data.completions.filter(
-                    c => c.id !== latest.id
+                    c =>
+                        c.id !==
+                        latest.id
                 );
-        } else {
-            const { data:created, error } = await db
-                .from("goal_completions")
-                .insert({
-                    user_id:currentUser.id,
-                    goal_id:id,
-                    completed_at:new Date().toISOString()
-                })
-                .select()
-                .single();
 
-            if (error) {
-                alert(error.message);
-                return;
-            }
-
-            data.completions.push(created);
         }
 
-        await syncGoalDone(goal);
+        else {
+
+            const {
+                data:created,
+                error
+            } =
+                await db
+                    .from(
+                        "goal_completions"
+                    )
+                    .insert({
+                        user_id:
+                            currentUser.id,
+
+                        goal_id:
+                            id,
+
+                        completed_at:
+                            new Date()
+                                .toISOString()
+                    })
+                    .select()
+                    .single();
+
+
+            if (error) {
+
+                alert(
+                    error.message
+                );
+
+                return;
+
+            }
+
+
+            data.completions.push(
+                created
+            );
+
+        }
+
+
+        await syncGoalDone(
+            goal
+        );
+
+
         render();
+
     }
+
 }
 
+
 async function addGoal() {
+
     const name =
-        document.getElementById("gName").value.trim();
+        document
+            .getElementById(
+                "gName"
+            )
+            .value
+            .trim();
+
 
     const horizon =
-        document.getElementById("gH").value;
+        document
+            .getElementById(
+                "gH"
+            )
+            .value;
+
 
     const targetInput =
-        document.getElementById("gTarget");
+        document.getElementById(
+            "gTarget"
+        );
+
 
     const targetCount =
         horizon === "weekly"
             ? Math.max(
                 1,
-                Number(targetInput?.value || 1)
+                Number(
+                    targetInput?.value ||
+                    1
+                )
             )
             : 1;
+
 
     if (!name)
         return;
 
-    const { data:created, error } =
+
+    const {
+        data:created,
+        error
+    } =
         await db
             .from("goals")
             .insert({
-                user_id:currentUser.id,
+                user_id:
+                    currentUser.id,
+
                 name,
+
                 horizon,
-                target_count:targetCount,
+
+                target_count:
+                    targetCount,
+
                 done:false
             })
             .select()
             .single();
 
+
     if (error) {
-        alert(error.message);
+
+        alert(
+            error.message
+        );
+
         return;
+
     }
 
-    data.goals.push(created);
+
+    data.goals.push(
+        created
+    );
+
 
     closeModal();
+
     render();
+
 }
+
 
 async function deleteGoal(id) {
 
@@ -3026,7 +3952,10 @@ async function deleteGoal(id) {
         await db
             .from("goals")
             .delete()
-            .eq("id",id)
+            .eq(
+                "id",
+                id
+            )
             .eq(
                 "user_id",
                 currentUser.id
@@ -3035,7 +3964,9 @@ async function deleteGoal(id) {
 
     if (error) {
 
-        alert(error.message);
+        alert(
+            error.message
+        );
 
         return;
 
@@ -3044,7 +3975,8 @@ async function deleteGoal(id) {
 
     data.goals =
         data.goals.filter(
-            g => g.id !== id
+            g =>
+                g.id !== id
         );
 
 
@@ -3054,22 +3986,44 @@ async function deleteGoal(id) {
 
 
 function goalHTML(goal) {
-    const done = isGoalDoneNow(goal);
+
+    const done =
+        isGoalDoneNow(
+            goal
+        );
+
 
     let suffix = "";
 
-    if (goal.horizon === "weekly") {
-        const count = weekCompletions(goal.id).length;
-        const target = weeklyTarget(goal);
+
+    if (
+        goal.horizon ===
+        "weekly"
+    ) {
+
+        const count =
+            weekCompletions(
+                goal.id
+            ).length;
+
+
+        const target =
+            weeklyTarget(
+                goal
+            );
+
 
         suffix = `
             <span class="badge">
                 ${count}/${target} this week
             </span>`;
+
     }
+
 
     return `
     <div class="goal ${done ? "done":""}">
+
         <div class="goal-row">
 
             <button
@@ -3090,15 +4044,22 @@ function goalHTML(goal) {
             </button>
 
         </div>
+
     </div>
     `;
+
 }
 
-function renderGoals(horizon) {
+
+function renderGoals(
+    horizon
+) {
 
     const goals =
         data.goals.filter(
-            g => g.horizon === horizon
+            g =>
+                g.horizon ===
+                horizon
         );
 
 
@@ -3131,27 +4092,35 @@ async function addBook() {
 
     const title =
         document
-            .getElementById("bTitle")
+            .getElementById(
+                "bTitle"
+            )
             .value
             .trim();
 
 
     const author =
         document
-            .getElementById("bAuthor")
+            .getElementById(
+                "bAuthor"
+            )
             .value
             .trim();
 
 
     const type =
         document
-            .getElementById("bType")
+            .getElementById(
+                "bType"
+            )
             .value;
 
 
     const status =
         document
-            .getElementById("bStatus")
+            .getElementById(
+                "bStatus"
+            )
             .value;
 
 
@@ -3159,7 +4128,9 @@ async function addBook() {
         return;
 
 
-    if (status === "next") {
+    if (
+        status === "next"
+    ) {
 
         await db
             .from("books")
@@ -3170,8 +4141,14 @@ async function addBook() {
                 "user_id",
                 currentUser.id
             )
-            .eq("type",type)
-            .eq("status","next");
+            .eq(
+                "type",
+                type
+            )
+            .eq(
+                "status",
+                "next"
+            );
 
 
         data.books
@@ -3181,7 +4158,9 @@ async function addBook() {
                     b.status === "next"
             )
             .forEach(
-                b => b.status = "queued"
+                b =>
+                    b.status =
+                        "queued"
             );
 
     }
@@ -3194,10 +4173,15 @@ async function addBook() {
         await db
             .from("books")
             .insert({
-                user_id:currentUser.id,
+                user_id:
+                    currentUser.id,
+
                 title,
+
                 author,
+
                 type,
+
                 status
             })
             .select()
@@ -3206,14 +4190,19 @@ async function addBook() {
 
     if (error) {
 
-        alert(error.message);
+        alert(
+            error.message
+        );
 
         return;
 
     }
 
 
-    data.books.push(created);
+    data.books.push(
+        created
+    );
+
 
     closeModal();
 
@@ -3222,7 +4211,9 @@ async function addBook() {
 }
 
 
-async function deleteBook(id) {
+async function deleteBook(
+    id
+) {
 
     if (
         !confirm(
@@ -3236,7 +4227,10 @@ async function deleteBook(id) {
         await db
             .from("books")
             .delete()
-            .eq("id",id)
+            .eq(
+                "id",
+                id
+            )
             .eq(
                 "user_id",
                 currentUser.id
@@ -3245,7 +4239,9 @@ async function deleteBook(id) {
 
     if (error) {
 
-        alert(error.message);
+        alert(
+            error.message
+        );
 
         return;
 
@@ -3254,7 +4250,8 @@ async function deleteBook(id) {
 
     data.books =
         data.books.filter(
-            b => b.id !== id
+            b =>
+                b.id !== id
         );
 
 
@@ -3269,76 +4266,80 @@ function renderBooks() {
         "fiction",
         "nonfiction"
     ]
-    .forEach(type => {
+    .forEach(
+        type => {
 
-        const element =
-            document.getElementById(
-                type === "fiction"
-                    ? "fictionList"
-                    : "nonfictionList"
-            );
-
-
-        const books =
-            data.books.filter(
-                b => b.type === type
-            );
+            const element =
+                document.getElementById(
+                    type === "fiction"
+                        ? "fictionList"
+                        : "nonfictionList"
+                );
 
 
-        element.innerHTML =
+            const books =
+                data.books.filter(
+                    b =>
+                        b.type ===
+                        type
+                );
 
-            books.length
 
-            ?
+            element.innerHTML =
 
-            books.map(
-                (book,index) => `
+                books.length
 
-                <div class="list-item">
+                ?
 
-                    <div>
+                books.map(
+                    (book,index) => `
 
-                        <strong>
-                            ${index+1}.
-                            ${esc(book.title)}
-                        </strong>
+                    <div class="list-item">
 
-                        <br>
+                        <div>
 
-                        <span>
-                            ${esc(book.author)}
-                        </span>
+                            <strong>
+                                ${index+1}.
+                                ${esc(book.title)}
+                            </strong>
+
+                            <br>
+
+                            <span>
+                                ${esc(book.author)}
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <span class="badge">
+                                ${esc(book.status)}
+                            </span>
+
+                            <button
+                                class="icon"
+                                onclick="deleteBook(${book.id})">
+
+                                ×
+
+                            </button>
+
+                        </div>
 
                     </div>
 
-                    <div>
+                    `
+                ).join("")
 
-                        <span class="badge">
-                            ${esc(book.status)}
-                        </span>
+                :
 
-                        <button
-                            class="icon"
-                            onclick="deleteBook(${book.id})">
+                `<div class="empty">
+                    No books yet.
+                </div>`;
 
-                            ×
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-                `
-            ).join("")
-
-            :
-
-            `<div class="empty">
-                No books yet.
-            </div>`;
-
-    });
+        }
+    );
 
 }
 
@@ -3351,14 +4352,18 @@ async function addLearning() {
 
     const title =
         document
-            .getElementById("lTitle")
+            .getElementById(
+                "lTitle"
+            )
             .value
             .trim();
 
 
     const detail =
         document
-            .getElementById("lDetail")
+            .getElementById(
+                "lDetail"
+            )
             .value
             .trim();
 
@@ -3374,9 +4379,13 @@ async function addLearning() {
         await db
             .from("learning")
             .insert({
-                user_id:currentUser.id,
+                user_id:
+                    currentUser.id,
+
                 title,
+
                 detail,
+
                 status:"queued"
             })
             .select()
@@ -3385,14 +4394,19 @@ async function addLearning() {
 
     if (error) {
 
-        alert(error.message);
+        alert(
+            error.message
+        );
 
         return;
 
     }
 
 
-    data.learning.push(created);
+    data.learning.push(
+        created
+    );
+
 
     closeModal();
 
@@ -3401,11 +4415,14 @@ async function addLearning() {
 }
 
 
-async function cycleLearning(id) {
+async function cycleLearning(
+    id
+) {
 
     const learning =
         data.learning.find(
-            l => l.id === id
+            l =>
+                l.id === id
         );
 
 
@@ -3429,7 +4446,8 @@ async function cycleLearning(id) {
 
     const newStatus =
         states[
-            (index+1) % states.length
+            (index+1) %
+            states.length
         ];
 
 
@@ -3439,7 +4457,10 @@ async function cycleLearning(id) {
             .update({
                 status:newStatus
             })
-            .eq("id",id)
+            .eq(
+                "id",
+                id
+            )
             .eq(
                 "user_id",
                 currentUser.id
@@ -3448,7 +4469,9 @@ async function cycleLearning(id) {
 
     if (error) {
 
-        alert(error.message);
+        alert(
+            error.message
+        );
 
         return;
 
@@ -3464,7 +4487,9 @@ async function cycleLearning(id) {
 }
 
 
-async function deleteLearning(id) {
+async function deleteLearning(
+    id
+) {
 
     if (
         !confirm(
@@ -3478,7 +4503,10 @@ async function deleteLearning(id) {
         await db
             .from("learning")
             .delete()
-            .eq("id",id)
+            .eq(
+                "id",
+                id
+            )
             .eq(
                 "user_id",
                 currentUser.id
@@ -3487,7 +4515,9 @@ async function deleteLearning(id) {
 
     if (error) {
 
-        alert(error.message);
+        alert(
+            error.message
+        );
 
         return;
 
@@ -3496,7 +4526,8 @@ async function deleteLearning(id) {
 
     data.learning =
         data.learning.filter(
-            l => l.id !== id
+            l =>
+                l.id !== id
         );
 
 
@@ -3577,16 +4608,21 @@ function renderLearning() {
    MODALS
 ========================================================= */
 
-function openModal(content) {
+function openModal(
+    content
+) {
 
     document.getElementById(
         "modalContent"
-    ).innerHTML = content;
+    ).innerHTML =
+        content;
 
 
     document.getElementById(
         "modal"
-    ).classList.add("show");
+    ).classList.add(
+        "show"
+    );
 
 }
 
@@ -3595,7 +4631,9 @@ function closeModal() {
 
     document.getElementById(
         "modal"
-    ).classList.remove("show");
+    ).classList.remove(
+        "show"
+    );
 
 }
 
@@ -3605,7 +4643,8 @@ document.getElementById(
 ).onclick = e => {
 
     if (
-        e.target.id === "modal"
+        e.target.id ===
+        "modal"
     )
         closeModal();
 
@@ -3617,6 +4656,7 @@ document.getElementById(
 ========================================================= */
 
 function openGoal() {
+
     openModal(`
 
     <div class="modal-head">
@@ -3628,10 +4668,13 @@ function openGoal() {
         <button
             class="close"
             onclick="closeModal()">
+
             ×
+
         </button>
 
     </div>
+
 
     <div class="form">
 
@@ -3647,13 +4690,16 @@ function openGoal() {
 
         </div>
 
+
         <div>
 
             <label>
                 TIMEFRAME
             </label>
 
-            <select id="gH" onchange="toggleGoalRepeatField()">
+            <select
+                id="gH"
+                onchange="toggleGoalRepeatField()">
 
                 <option value="daily">
                     Daily
@@ -3670,6 +4716,7 @@ function openGoal() {
             </select>
 
         </div>
+
 
         <div
             id="goalRepeatField"
@@ -3692,6 +4739,7 @@ function openGoal() {
 
         </div>
 
+
         <div style="display:flex;align-items:end">
 
             <button
@@ -3709,25 +4757,39 @@ function openGoal() {
 
     `);
 
+
     toggleGoalRepeatField();
+
 }
 
 
 function toggleGoalRepeatField() {
+
     const horizon =
-        document.getElementById("gH")?.value;
+        document
+            .getElementById(
+                "gH"
+            )
+            ?.value;
+
 
     const field =
-        document.getElementById("goalRepeatField");
+        document.getElementById(
+            "goalRepeatField"
+        );
+
 
     if (!field)
         return;
+
 
     field.classList.toggle(
         "show",
         horizon === "weekly"
     );
+
 }
+
 
 /* =========================================================
    BOOK MODAL
@@ -3895,102 +4957,815 @@ function openLearning() {
                 rows="3"
                 placeholder="How will you work on it?"></textarea>
 
-        </div>
+```
+    </div>
 
 
-        <div class="full">
+    <div class="full">
 
-            <button
-                class="btn"
-                style="width:100%"
-                onclick="addLearning()">
+        <button
+            class="btn"
+            style="width:100%"
+            onclick="addLearning()">
 
-                Save learning goal
+            Save learning goal
 
-            </button>
-
-        </div>
+        </button>
 
     </div>
 
-    `);
+</div>
+
+`);
+```
 
 }
 
-
 /* =========================================================
-   DASHBOARD
+DASHBOARD
 ========================================================= */
 
 function bookHero(book) {
 
-    if (!book)
-
-        return `
-        <div class="empty">
-            No books in this queue.
-        </div>`;
-
+```
+if (!book)
 
     return `
+    <div class="empty">
+        No books in this queue.
+    </div>`;
+
+
+return `
+
+<div class="book">
+
+    <div class="cover">
+
+        ${esc(
+            book.title.slice(
+                0,
+                18
+            )
+        )}
+
+    </div>
+
+    <div>
+
+        <h3>
+            ${esc(book.title)}
+        </h3>
+
+        <div class="author">
+            ${esc(book.author)}
+        </div>
+
+    </div>
+
+</div>
+
+`;
+```
+
+}
+
+function renderDashboard() {
+
+```
+const daily =
+    data.goals.filter(
+        g =>
+            g.horizon ===
+            "daily"
+    );
+
+
+const weekly =
+    data.goals.filter(
+        g =>
+            g.horizon ===
+            "weekly"
+    );
+
+
+const monthly =
+    data.goals.filter(
+        g =>
+            g.horizon ===
+            "monthly"
+    );
+
+
+document.getElementById(
+    "dashDaily"
+).innerHTML =
+    daily.length
+
+    ?
+
+    daily
+        .slice(0,5)
+        .map(goalHTML)
+        .join("")
+
+    :
+
+    `<div class="empty">
+        No daily goals yet.
+    </div>`;
+
+
+document.getElementById(
+    "dashWeekly"
+).innerHTML =
+    weekly.length
+
+    ?
+
+    weekly
+        .slice(0,5)
+        .map(goalHTML)
+        .join("")
+
+    :
+
+    `<div class="empty">
+        No weekly goals yet.
+    </div>`;
+
+
+document.getElementById(
+    "dashMonthly"
+).innerHTML =
+    monthly.length
+
+    ?
+
+    monthly
+        .slice(0,5)
+        .map(goalHTML)
+        .join("")
+
+    :
+
+    `<div class="empty">
+        No monthly goals yet.
+    </div>`;
+
+
+/* Progress */
+
+const total =
+    data.goals.length;
+
+
+const completed =
+    data.goals.filter(
+        g =>
+            g.done
+    ).length;
+
+
+const percentage =
+    total
+        ? Math.round(
+            completed /
+            total *
+            100
+        )
+        : 0;
+
+
+document.getElementById(
+    "stats"
+).innerHTML = `
+
+<div class="progress-stat">
+
+    <b>
+        ${completed}
+    </b>
+
+    <span>
+        completed
+    </span>
+
+</div>
+
+
+<div class="progress-stat">
+
+    <b>
+        ${total}
+    </b>
+
+    <span>
+        total goals
+    </span>
+
+</div>
+
+
+<div class="progress-stat">
+
+    <b>
+        ${percentage}%
+    </b>
+
+    <span>
+        completion
+    </span>
+
+</div>
+
+`;
+
+
+const progressFill =
+    document.getElementById(
+        "progressFill"
+    );
+
+
+if (progressFill) {
+
+    progressFill.style.width =
+        percentage + "%";
+
+}
+
+
+/* Books */
+
+function nextBook(
+    type
+) {
+
+    return (
+
+        data.books.find(
+            b =>
+                b.type === type &&
+                b.status === "next"
+        )
+
+        ||
+
+        data.books.find(
+            b =>
+                b.type === type &&
+                b.status === "queued"
+        )
+
+    );
+
+}
+
+
+document.getElementById(
+    "nextFiction"
+).innerHTML =
+    bookHero(
+        nextBook(
+            "fiction"
+        )
+    );
+
+
+document.getElementById(
+    "nextNonfiction"
+).innerHTML =
+    bookHero(
+        nextBook(
+            "nonfiction"
+        )
+    );
+
+
+/* Learning */
+
+const nextLearning =
+    data.learning.find(
+        l =>
+            l.status ===
+            "active"
+    )
+
+    ||
+
+    data.learning.find(
+        l =>
+            l.status ===
+            "queued"
+    );
+
+
+document.getElementById(
+    "nextLearning"
+).innerHTML =
+    nextLearning
+
+    ?
+
+    `
 
     <div class="book">
 
         <div class="cover">
-            ${esc(
-                book.title.slice(0,18)
-            )}
+            LEARN
         </div>
 
         <div>
 
             <h3>
-                ${esc(book.title)}
+                ${esc(
+                    nextLearning.title
+                )}
             </h3>
 
             <div class="author">
-                ${esc(book.author)}
+                ${esc(
+                    nextLearning.detail
+                )}
             </div>
 
         </div>
 
+        <span class="badge">
+            ${esc(
+                nextLearning.status
+            )}
+        </span>
+
     </div>
 
-    `;
+    `
+
+    :
+
+    `<div class="empty">
+        No learning goals yet.
+    </div>`;
+```
+
+}
+
+/* =========================================================
+TRACKING
+========================================================= */
+
+function getWeekDates() {
+
+```
+const start =
+    new Date(
+        getWeekKey() +
+        "T00:00:00"
+    );
+
+
+const dates = [];
+
+
+for (
+    let i = 0;
+    i < 7;
+    i++
+) {
+
+    const d =
+        new Date(start);
+
+
+    d.setDate(
+        start.getDate() + i
+    );
+
+
+    dates.push(
+        getDateKey(d)
+    );
 
 }
 
 
-function renderDashboard() {
+return dates;
+```
 
-    const daily =
-        data.goals.filter(
-            g => g.horizon === "daily"
-        );
+}
 
+function daysElapsedThisWeek() {
 
-    const weekly =
-        data.goals.filter(
-            g => g.horizon === "weekly"
-        );
+```
+const today =
+    getDateKey();
 
 
-    const monthly =
-        data.goals.filter(
-            g => g.horizon === "monthly"
-        );
+const dates =
+    getWeekDates();
 
 
-    document.getElementById(
-        "dashDaily"
-    ).innerHTML = daily.length
+const index =
+    dates.indexOf(
+        today
+    );
+
+
+return index >= 0
+    ? index + 1
+    : 7;
+```
+
+}
+
+function dailyGoalStats(
+goal
+) {
+
+```
+const dates =
+    getWeekDates();
+
+
+const completedDates =
+    new Set(
+        data.completions
+            .filter(
+                c =>
+                    c.goal_id ===
+                    goal.id &&
+                    dates.includes(
+                        completionDateKey(c)
+                    )
+            )
+            .map(
+                completionDateKey
+            )
+    );
+
+
+const elapsed =
+    daysElapsedThisWeek();
+
+
+const completedElapsed =
+    dates
+        .slice(
+            0,
+            elapsed
+        )
+        .filter(
+            d =>
+                completedDates.has(d)
+        )
+        .length;
+
+
+const percentage =
+    elapsed
+        ? Math.round(
+            completedElapsed /
+            elapsed *
+            100
+        )
+        : 0;
+
+
+return {
+
+    dates,
+
+    completedDates,
+
+    completedElapsed,
+
+    elapsed,
+
+    percentage
+
+};
+```
+
+}
+
+function trackingDailyHTML(
+goal
+) {
+
+```
+const stats =
+    dailyGoalStats(
+        goal
+    );
+
+
+const dayLabels =
+    [
+        "M",
+        "T",
+        "W",
+        "T",
+        "F",
+        "S",
+        "S"
+    ];
+
+
+return `
+<div class="tracking-goal">
+
+    <div class="tracking-head">
+
+        <div class="tracking-name">
+            ${esc(goal.name)}
+        </div>
+
+        <div class="tracking-percent">
+            ${stats.percentage}%
+        </div>
+
+    </div>
+
+
+    <div class="tracking-bar">
+
+        <div
+            class="tracking-fill"
+            style="width:${stats.percentage}%">
+        </div>
+
+    </div>
+
+
+    <div class="day-dots">
+
+        ${stats.dates.map(
+            (date,index) => `
+
+                <div class="day-cell">
+
+                    <div class="day-label">
+                        ${dayLabels[index]}
+                    </div>
+
+                    <div
+                        class="day-dot ${
+                            stats.completedDates.has(date)
+                                ? "done"
+                                : ""
+                        }"
+                        title="${date}">
+                    </div>
+
+                </div>
+
+            `
+        ).join("")}
+
+    </div>
+
+
+    <div class="tracking-meta">
+
+        <span>
+            ${stats.completedElapsed}/${stats.elapsed}
+            days completed
+        </span>
+
+        <span>
+            ${dayLabels.join(" · ")}
+        </span>
+
+    </div>
+
+</div>
+`;
+```
+
+}
+
+function trackingWeeklyHTML(
+goal
+) {
+
+```
+const count =
+    weekCompletions(
+        goal.id
+    ).length;
+
+
+const target =
+    weeklyTarget(
+        goal
+    );
+
+
+const percentage =
+    Math.min(
+        100,
+        Math.round(
+            count /
+            target *
+            100
+        )
+    );
+
+
+return `
+<div class="tracking-goal">
+
+    <div class="tracking-head">
+
+        <div class="tracking-name">
+            ${esc(goal.name)}
+        </div>
+
+        <div class="tracking-percent">
+            ${count}/${target}
+        </div>
+
+    </div>
+
+
+    <div class="weekly-progress">
+
+        <div class="tracking-bar">
+
+            <div
+                class="tracking-fill"
+                style="width:${percentage}%">
+            </div>
+
+        </div>
+
+        <div class="weekly-count">
+            ${percentage}%
+        </div>
+
+    </div>
+
+
+    <div class="tracking-meta">
+
+        <span>
+            ${
+                count >= target
+                    ? "Target complete"
+                    : `${target-count} more to go`
+            }
+        </span>
+
+        <span>
+            Weekly target
+        </span>
+
+    </div>
+
+</div>
+`;
+```
+
+}
+
+function renderTracking() {
+
+```
+const daily =
+    data.goals.filter(
+        g =>
+            g.horizon ===
+            "daily"
+    );
+
+
+const weekly =
+    data.goals.filter(
+        g =>
+            g.horizon ===
+            "weekly"
+    );
+
+
+const dailyPercentages =
+    daily.map(
+        dailyGoalStats
+    );
+
+
+const overallDaily =
+    daily.length
+        ? Math.round(
+            dailyPercentages.reduce(
+                (sum,item) =>
+                    sum +
+                    item.percentage,
+                0
+            ) /
+            daily.length
+        )
+        : 0;
+
+
+const weeklyTargetTotal =
+    weekly.reduce(
+        (sum,g) =>
+            sum +
+            weeklyTarget(g),
+        0
+    );
+
+
+const weeklyDoneTotal =
+    weekly.reduce(
+        (sum,g) =>
+            sum +
+            Math.min(
+                weekCompletions(
+                    g.id
+                ).length,
+                weeklyTarget(g)
+            ),
+        0
+    );
+
+
+const weeklyPercent =
+    weeklyTargetTotal
+        ? Math.round(
+            weeklyDoneTotal /
+            weeklyTargetTotal *
+            100
+        )
+        : 0;
+
+
+const fullyCompleteWeekly =
+    weekly.filter(
+        g =>
+            weekCompletions(
+                g.id
+            ).length >=
+            weeklyTarget(g)
+    ).length;
+
+
+document.getElementById(
+    "trackingSummary"
+).innerHTML = `
+
+    <div class="progress-stat">
+
+        <b>
+            ${overallDaily}%
+        </b>
+
+        <span>
+            average daily completion
+        </span>
+
+    </div>
+
+
+    <div class="progress-stat">
+
+        <b>
+            ${weeklyPercent}%
+        </b>
+
+        <span>
+            weekly target progress
+        </span>
+
+    </div>
+
+
+    <div class="progress-stat">
+
+        <b>
+            ${fullyCompleteWeekly}/${weekly.length}
+        </b>
+
+        <span>
+            weekly goals complete
+        </span>
+
+    </div>
+
+`;
+
+
+document.getElementById(
+    "trackingDaily"
+).innerHTML =
+    daily.length
 
         ?
 
-        daily
-            .slice(0,5)
-            .map(goalHTML)
-            .join("")
+        daily.map(
+            trackingDailyHTML
+        ).join("")
 
         :
 
@@ -3999,16 +5774,16 @@ function renderDashboard() {
         </div>`;
 
 
-    document.getElementById(
-        "dashWeekly"
-    ).innerHTML = weekly.length
+document.getElementById(
+    "trackingWeekly"
+).innerHTML =
+    weekly.length
 
         ?
 
-        weekly
-            .slice(0,5)
-            .map(goalHTML)
-            .join("")
+        weekly.map(
+            trackingWeeklyHTML
+        ).join("")
 
         :
 
@@ -4017,498 +5792,26 @@ function renderDashboard() {
         </div>`;
 
 
-    document.getElementById(
-        "dashMonthly"
-    ).innerHTML = monthly.length
-
-        ?
-
-        monthly
-            .slice(0,5)
-            .map(goalHTML)
-            .join("")
-
-        :
-
-        `<div class="empty">
-            No monthly goals yet.
-        </div>`;
-
-
-    /* Progress */
-
-    const total =
-        data.goals.length;
-
-
-    const completed =
-        data.goals.filter(
-            g => g.done
-        ).length;
-
-
-    const percentage =
-        total
-            ? Math.round(
-                completed / total * 100
-            )
-            : 0;
-
-
-    document.getElementById(
-        "stats"
-    ).innerHTML = `
-
-    <div class="progress-stat">
-
-        <b>
-            ${completed}
-        </b>
-
-        <span>
-            completed
-        </span>
-
-    </div>
-
-
-    <div class="progress-stat">
-
-        <b>
-            ${total}
-        </b>
-
-        <span>
-            total goals
-        </span>
-
-    </div>
-
-
-    <div class="progress-stat">
-
-        <b>
-            ${percentage}%
-        </b>
-
-        <span>
-            completion
-        </span>
-
-    </div>
-
-    `;
-
-
-    const progressFill =
-        document.getElementById(
-            "progressFill"
-        );
-
-
-    if (progressFill) {
-
-        progressFill.style.width =
-            percentage + "%";
-
-    }
-
-
-    /* Books */
-
-    function nextBook(type) {
-
-        return (
-
-            data.books.find(
-                b =>
-                    b.type === type &&
-                    b.status === "next"
-            )
-
-            ||
-
-            data.books.find(
-                b =>
-                    b.type === type &&
-                    b.status === "queued"
-            )
-
-        );
-
-    }
-
-
-    document.getElementById(
-        "nextFiction"
-    ).innerHTML =
-        bookHero(
-            nextBook("fiction")
-        );
-
-
-    document.getElementById(
-        "nextNonfiction"
-    ).innerHTML =
-        bookHero(
-            nextBook("nonfiction")
-        );
-
-
-    /* Learning */
-
-    const nextLearning =
-        data.learning.find(
-            l =>
-                l.status === "active"
-        )
-
-        ||
-
-        data.learning.find(
-            l =>
-                l.status === "queued"
-        );
-
-
-    document.getElementById(
-        "nextLearning"
-    ).innerHTML = nextLearning
-
-        ?
-
-        `
-
-        <div class="book">
-
-            <div class="cover">
-                LEARN
-            </div>
-
-            <div>
-
-                <h3>
-                    ${esc(
-                        nextLearning.title
-                    )}
-                </h3>
-
-                <div class="author">
-                    ${esc(
-                        nextLearning.detail
-                    )}
-                </div>
-
-            </div>
-
-            <span class="badge">
-                ${esc(
-                    nextLearning.status
-                )}
-            </span>
-
-        </div>
-
-        `
-
-        :
-
-        `<div class="empty">
-            No learning goals yet.
-        </div>`;
-
-}
-
-
-/* =========================================================
-   TRACKING
-========================================================= */
-
-function getWeekDates() {
-    const start = new Date(getWeekKey() + "T00:00:00");
-    const dates = [];
-
-    for (let i = 0; i < 7; i++) {
-        const d = new Date(start);
-        d.setDate(start.getDate() + i);
-        dates.push(getDateKey(d));
-    }
-
-    return dates;
-}
-
-
-function daysElapsedThisWeek() {
-    const today = getDateKey();
-    const dates = getWeekDates();
-    const index = dates.indexOf(today);
-
-    return index >= 0 ? index + 1 : 7;
-}
-
-
-function dailyGoalStats(goal) {
-    const dates = getWeekDates();
-    const completedDates = new Set(
-        data.completions
-            .filter(
-                c =>
-                    c.goal_id === goal.id &&
-                    dates.includes(completionDateKey(c))
-            )
-            .map(completionDateKey)
+const weekStart =
+    new Date(
+        getWeekKey() +
+        "T00:00:00"
     );
 
-    const elapsed = daysElapsedThisWeek();
-    const completedElapsed =
-        dates
-            .slice(0,elapsed)
-            .filter(d => completedDates.has(d))
-            .length;
 
-    const percentage =
-        elapsed
-            ? Math.round(
-                completedElapsed / elapsed * 100
-            )
-            : 0;
-
-    return {
-        dates,
-        completedDates,
-        completedElapsed,
-        elapsed,
-        percentage
-    };
-}
-
-
-function trackingDailyHTML(goal) {
-    const stats = dailyGoalStats(goal);
-
-    const dayLabels = ["M","T","W","T","F","S","S"];
-
-    return `
-    <div class="tracking-goal">
-
-        <div class="tracking-head">
-            <div class="tracking-name">
-                ${esc(goal.name)}
-            </div>
-
-            <div class="tracking-percent">
-                ${stats.percentage}%
-            </div>
-        </div>
-
-        <div class="tracking-bar">
-            <div
-                class="tracking-fill"
-                style="width:${stats.percentage}%">
-            </div>
-        </div>
-
-        <div class="day-dots">
-            ${stats.dates.map(
-                (date,index) => `
-                    <div class="day-cell">
-                        <div class="day-label">${dayLabels[index]}</div>
-                        <div
-                            class="day-dot ${
-                                stats.completedDates.has(date)
-                                    ? "done"
-                                    : ""
-                            }"
-                            title="${dayLabels[index]}">
-                        </div>
-                    </div>
-                `
-            ).join("")}
-        </div>
-
-        <div class="tracking-meta">
-            <span>
-                ${stats.completedElapsed}/${stats.elapsed} days completed
-            </span>
-            <span>
-                ${dayLabels.join(" · ")}
-            </span>
-        </div>
-
-    </div>
-    `;
-}
-
-
-function trackingWeeklyHTML(goal) {
-    const count =
-        weekCompletions(goal.id).length;
-
-    const target =
-        weeklyTarget(goal);
-
-    const percentage =
-        Math.min(
-            100,
-            Math.round(
-                count / target * 100
-            )
-        );
-
-    return `
-    <div class="tracking-goal">
-
-        <div class="tracking-head">
-            <div class="tracking-name">
-                ${esc(goal.name)}
-            </div>
-
-            <div class="tracking-percent">
-                ${count}/${target}
-            </div>
-        </div>
-
-        <div class="weekly-progress">
-
-            <div class="tracking-bar">
-                <div
-                    class="tracking-fill"
-                    style="width:${percentage}%">
-                </div>
-            </div>
-
-            <div class="weekly-count">
-                ${percentage}%
-            </div>
-
-        </div>
-
-        <div class="tracking-meta">
-            <span>
-                ${count >= target ? "Target complete" : `${target-count} more to go`}
-            </span>
-            <span>
-                Weekly target
-            </span>
-        </div>
-
-    </div>
-    `;
-}
-
-
-function renderTracking() {
-    const daily =
-        data.goals.filter(
-            g => g.horizon === "daily"
-        );
-
-    const weekly =
-        data.goals.filter(
-            g => g.horizon === "weekly"
-        );
-
-    const dailyPercentages =
-        daily.map(
-            dailyGoalStats
-        );
-
-    const overallDaily =
-        daily.length
-            ? Math.round(
-                dailyPercentages.reduce(
-                    (sum,item) =>
-                        sum + item.percentage,
-                    0
-                ) / daily.length
-            )
-            : 0;
-
-    const weeklyTargetTotal =
-        weekly.reduce(
-            (sum,g) =>
-                sum + weeklyTarget(g),
-            0
-        );
-
-    const weeklyDoneTotal =
-        weekly.reduce(
-            (sum,g) =>
-                sum + Math.min(
-                    weekCompletions(g.id).length,
-                    weeklyTarget(g)
-                ),
-            0
-        );
-
-    const weeklyPercent =
-        weeklyTargetTotal
-            ? Math.round(
-                weeklyDoneTotal /
-                weeklyTargetTotal * 100
-            )
-            : 0;
-
-    const fullyCompleteWeekly =
-        weekly.filter(
-            g =>
-                weekCompletions(g.id).length >=
-                weeklyTarget(g)
-        ).length;
-
-    document.getElementById(
-        "trackingSummary"
-    ).innerHTML = `
-
-        <div class="progress-stat">
-            <b>${overallDaily}%</b>
-            <span>average daily completion</span>
-        </div>
-
-        <div class="progress-stat">
-            <b>${weeklyPercent}%</b>
-            <span>weekly target progress</span>
-        </div>
-
-        <div class="progress-stat">
-            <b>${fullyCompleteWeekly}/${weekly.length}</b>
-            <span>weekly goals complete</span>
-        </div>
-
-    `;
-
-    document.getElementById(
-        "trackingDaily"
-    ).innerHTML =
-        daily.length
-            ? daily.map(
-                trackingDailyHTML
-            ).join("")
-            : `<div class="empty">
-                No daily goals yet.
-               </div>`;
-
-    document.getElementById(
-        "trackingWeekly"
-    ).innerHTML =
-        weekly.length
-            ? weekly.map(
-                trackingWeeklyHTML
-            ).join("")
-            : `<div class="empty">
-                No weekly goals yet.
-               </div>`;
-
-    const weekStart = new Date(
-        getWeekKey() + "T00:00:00"
+const weekEnd =
+    new Date(
+        weekStart
     );
 
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(
-        weekEnd.getDate() + 6
-    );
 
-    const format = d =>
+weekEnd.setDate(
+    weekEnd.getDate() + 6
+);
+
+
+const format =
+    d =>
         d.toLocaleDateString(
             undefined,
             {
@@ -4517,75 +5820,88 @@ function renderTracking() {
             }
         );
 
-    const label =
-        `${format(weekStart)} – ${format(weekEnd)}`;
 
-    const weekLabel =
-        document.getElementById(
-            "trackingWeekLabel"
-        );
+const label =
+    `${format(weekStart)} – ${format(weekEnd)}`;
 
-    if (weekLabel)
-        weekLabel.textContent = label;
+
+const weekLabel =
+    document.getElementById(
+        "trackingWeekLabel"
+    );
+
+
+if (weekLabel)
+    weekLabel.textContent =
+        label;
+```
+
 }
 
-
 /* =========================================================
-   NAVIGATION
+NAVIGATION
 ========================================================= */
 
 function showPage(id) {
 
-    document
-        .querySelectorAll(".page")
-        .forEach(
-            page =>
-                page.classList.toggle(
-                    "active",
-                    page.id === id
-                )
-        );
-
-
-    document
-        .querySelectorAll(
-            ".nav button[data-page]"
-        )
-        .forEach(
-            button =>
-                button.classList.toggle(
-                    "active",
-                    button.dataset.page === id
-                )
-        );
-
-
-    render();
-
-}
+```
+document
+    .querySelectorAll(
+        ".page"
+    )
+    .forEach(
+        page =>
+            page.classList.toggle(
+                "active",
+                page.id === id
+            )
+    );
 
 
 document
     .querySelectorAll(
         ".nav button[data-page]"
     )
-    .forEach(button => {
+    .forEach(
+        button =>
+            button.classList.toggle(
+                "active",
+                button.dataset.page === id
+            )
+    );
 
+
+render();
+```
+
+}
+
+document
+.querySelectorAll(
+".nav button[data-page]"
+)
+.forEach(
+button => {
+
+```
         button.onclick =
             () =>
                 showPage(
                     button.dataset.page
                 );
 
-    });
-
+    }
+);
+```
 
 document
-    .querySelectorAll(
-        "#goalTabs button"
-    )
-    .forEach(button => {
+.querySelectorAll(
+"#goalTabs button"
+)
+.forEach(
+button => {
 
+```
         button.onclick = () => {
 
             document
@@ -4611,517 +5927,1105 @@ document
 
         };
 
-    });
-
+    }
+);
+```
 
 /* =========================================================
-   EXPORT
+EXPORT
 ========================================================= */
 
 function exportBackup() {
 
-    const backup = {
+```
+const backup = {
 
-        exported_at:
-            new Date().toISOString(),
+    exported_at:
+        new Date().toISOString(),
 
-        goals:data.goals,
+    goals:
+        data.goals,
 
-        books:data.books,
+    books:
+        data.books,
 
-        learning:data.learning
+    learning:
+        data.learning
 
-    };
+};
 
 
-    const blob =
-        new Blob(
-            [
-                JSON.stringify(
-                    backup,
-                    null,
-                    2
+const blob =
+    new Blob(
+        [
+            JSON.stringify(
+                backup,
+                null,
+                2
+            )
+        ],
+        {
+            type:
+                "application/json"
+        }
+    );
+
+
+const url =
+    URL.createObjectURL(
+        blob
+    );
+
+
+const a =
+    document.createElement(
+        "a"
+    );
+
+
+a.href =
+    url;
+
+
+a.download =
+    `focus-backup-${getDateKey()}.json`;
+
+
+a.click();
+
+
+URL.revokeObjectURL(
+    url
+);
+```
+
+}
+
+/* =========================================================
+HISTORY
+========================================================= */
+
+function historyWeekDates(
+weekKey
+) {
+
+```
+const start =
+    new Date(
+        weekKey +
+        "T00:00:00"
+    );
+
+
+return Array.from(
+    {
+        length:7
+    },
+    (_,i) => {
+
+        const d =
+            new Date(
+                start
+            );
+
+
+        d.setDate(
+            d.getDate() + i
+        );
+
+
+        return getDateKey(d);
+
+    }
+);
+```
+
+}
+
+function historyWeeksAvailable() {
+
+```
+const keys = [];
+
+
+for (
+    const completion
+    of data.completions
+) {
+
+    if (
+        !completion.completed_at
+    )
+        continue;
+
+
+    keys.push(
+        getWeekKey(
+            new Date(
+                completion.completed_at
+            )
+        )
+    );
+
+}
+
+
+for (
+    const goal
+    of data.goals
+) {
+
+    if (
+        goal.created_at
+    )
+        keys.push(
+            getWeekKey(
+                new Date(
+                    goal.created_at
                 )
-            ],
+            )
+        );
+
+}
+
+
+if (!keys.length)
+    return [];
+
+
+const currentWeek =
+    getWeekKey();
+
+
+const earliest =
+    keys.sort()[0];
+
+
+const weeks = [];
+
+
+let cursor =
+    new Date(
+        earliest +
+        "T00:00:00"
+    );
+
+
+const current =
+    new Date(
+        currentWeek +
+        "T00:00:00"
+    );
+
+
+while (
+    cursor < current
+) {
+
+    weeks.push(
+        getDateKey(
+            cursor
+        )
+    );
+
+
+    cursor.setDate(
+        cursor.getDate() + 7
+    );
+
+}
+
+
+return weeks.reverse();
+```
+
+}
+
+function goalWasActiveInWeek(
+goal,
+weekDates
+) {
+
+```
+if (!goal.created_at)
+    return true;
+
+
+const created =
+    new Date(
+        goal.created_at
+    );
+
+
+const createdKey =
+    getDateKey(
+        created
+    );
+
+
+return weekDates.some(
+    date =>
+        date >= createdKey
+);
+```
+
+}
+
+function historicalDailyStats(
+goal,
+weekDates
+) {
+
+```
+const activeDates =
+    weekDates.filter(
+        date =>
+            goalWasActiveOnDate(
+                goal,
+                date
+            )
+    );
+
+
+const completedDates =
+    new Set(
+        data.completions
+            .filter(
+                c =>
+                    c.goal_id ===
+                    goal.id &&
+                    weekDates.includes(
+                        completionDateKey(c)
+                    )
+            )
+            .map(
+                completionDateKey
+            )
+    );
+
+
+const completed =
+    activeDates.filter(
+        date =>
+            completedDates.has(
+                date
+            )
+    ).length;
+
+
+const percentage =
+    activeDates.length
+        ? Math.round(
+            completed /
+            activeDates.length *
+            100
+        )
+        : 0;
+
+
+return {
+
+    activeDates,
+
+    completedDates,
+
+    completed,
+
+    percentage
+
+};
+```
+
+}
+
+function goalWasActiveOnDate(
+goal,
+date
+) {
+
+```
+if (!goal.created_at)
+    return true;
+
+
+return (
+    date >=
+    getDateKey(
+        new Date(
+            goal.created_at
+        )
+    )
+);
+```
+
+}
+
+function historicalWeekCompletions(
+goalId,
+weekKey
+) {
+
+```
+return data.completions.filter(
+    c =>
+        c.goal_id === goalId &&
+        getWeekKey(
+            new Date(
+                c.completed_at
+            )
+        ) === weekKey
+);
+```
+
+}
+
+function historyDailyHTML(
+goal,
+weekDates
+) {
+
+```
+const stats =
+    historicalDailyStats(
+        goal,
+        weekDates
+    );
+
+
+const labels =
+    [
+        "M",
+        "T",
+        "W",
+        "T",
+        "F",
+        "S",
+        "S"
+    ];
+
+
+return `
+<div class="history-goal">
+
+    <div class="history-goal-head">
+
+        <div class="history-goal-name">
+            ${esc(goal.name)}
+        </div>
+
+        <div class="history-goal-percent">
+            ${stats.percentage}%
+        </div>
+
+    </div>
+
+
+    <div class="tracking-bar">
+
+        <div
+            class="tracking-fill"
+            style="width:${stats.percentage}%">
+        </div>
+
+    </div>
+
+
+    <div class="day-dots">
+
+        ${weekDates.map(
+            (date,index) => `
+
+            <div class="day-cell">
+
+                <div class="day-label">
+                    ${labels[index]}
+                </div>
+
+                <div
+                    class="day-dot ${
+                        stats.completedDates.has(date)
+                            ? "done"
+                            : ""
+                    }"
+                    title="${date}">
+                </div>
+
+            </div>
+
+            `
+        ).join("")}
+
+    </div>
+
+
+    <div class="history-goal-meta">
+
+        <span>
+            ${stats.completed}/${stats.activeDates.length}
+            days completed
+        </span>
+
+        <span>
+            ${
+                stats.activeDates.length < 7
+                    ? "Goal started during this week"
+                    : "7 days"
+            }
+        </span>
+
+    </div>
+
+</div>
+`;
+```
+
+}
+
+function historyWeeklyHTML(
+goal,
+weekKey
+) {
+
+```
+const count =
+    historicalWeekCompletions(
+        goal.id,
+        weekKey
+    ).length;
+
+
+const target =
+    weeklyTarget(
+        goal
+    );
+
+
+const percentage =
+    Math.min(
+        100,
+        Math.round(
+            count /
+            target *
+            100
+        )
+    );
+
+
+return `
+<div class="history-goal">
+
+    <div class="history-goal-head">
+
+        <div class="history-goal-name">
+            ${esc(goal.name)}
+        </div>
+
+        <div class="history-goal-percent">
+            ${count}/${target}
+        </div>
+
+    </div>
+
+
+    <div class="tracking-bar">
+
+        <div
+            class="tracking-fill"
+            style="width:${percentage}%">
+        </div>
+
+    </div>
+
+
+    <div class="history-goal-meta">
+
+        <span>
+            ${percentage}%
+        </span>
+
+        <span>
+            ${
+                count >= target
+                    ? "Target complete"
+                    : `${target-count} more to go`
+            }
+        </span>
+
+    </div>
+
+</div>
+`;
+```
+
+}
+
+function historyWeekHTML(
+weekKey
+) {
+
+```
+const weekDates =
+    historyWeekDates(
+        weekKey
+    );
+
+
+const daily =
+    data.goals.filter(
+        g =>
+            g.horizon ===
+            "daily" &&
+            goalWasActiveInWeek(
+                g,
+                weekDates
+            )
+    );
+
+
+const weekly =
+    data.goals.filter(
+        g =>
+            g.horizon ===
+            "weekly" &&
+            goalWasActiveInWeek(
+                g,
+                weekDates
+            )
+    );
+
+
+const dailyStats =
+    daily.map(
+        g =>
+            historicalDailyStats(
+                g,
+                weekDates
+            )
+    );
+
+
+const dailyPercent =
+    daily.length
+        ? Math.round(
+            dailyStats.reduce(
+                (sum,s) =>
+                    sum +
+                    s.percentage,
+                0
+            ) /
+            daily.length
+        )
+        : 0;
+
+
+const targetTotal =
+    weekly.reduce(
+        (sum,g) =>
+            sum +
+            weeklyTarget(g),
+        0
+    );
+
+
+const doneTotal =
+    weekly.reduce(
+        (sum,g) =>
+            sum +
+            Math.min(
+                historicalWeekCompletions(
+                    g.id,
+                    weekKey
+                ).length,
+                weeklyTarget(g)
+            ),
+        0
+    );
+
+
+const weeklyPercent =
+    targetTotal
+        ? Math.round(
+            doneTotal /
+            targetTotal *
+            100
+        )
+        : 0;
+
+
+const fullyComplete =
+    weekly.filter(
+        g =>
+            historicalWeekCompletions(
+                g.id,
+                weekKey
+            ).length >=
+            weeklyTarget(g)
+    ).length;
+
+
+const start =
+    new Date(
+        weekKey +
+        "T00:00:00"
+    );
+
+
+const end =
+    new Date(
+        start
+    );
+
+
+end.setDate(
+    end.getDate() + 6
+);
+
+
+const format =
+    d =>
+        d.toLocaleDateString(
+            undefined,
             {
-                type:"application/json"
+                month:"short",
+                day:"numeric",
+                year:"numeric"
             }
         );
 
 
-    const url =
-        URL.createObjectURL(
-            blob
-        );
+return `
+<div class="card history-week">
 
+    <div class="history-week-header">
 
-    const a =
-        document.createElement(
-            "a"
-        );
+        <div>
 
+            <div class="history-week-title">
+                ${format(start)} – ${format(end)}
+            </div>
 
-    a.href = url;
+            <div class="history-week-sub">
+                Week of ${format(start)}
+            </div>
 
-
-    a.download =
-        `focus-backup-${getDateKey()}.json`;
-
-
-    a.click();
-
-
-    URL.revokeObjectURL(
-        url
-    );
-
-}
-
-
-/* =========================================================
-   RENDER
-========================================================= */
-
-function historyWeekDates(weekKey) {
-    const start = new Date(weekKey + "T00:00:00");
-    return Array.from({length:7}, (_,i) => {
-        const d = new Date(start);
-        d.setDate(d.getDate() + i);
-        return getDateKey(d);
-    });
-}
-
-
-function historyWeeksAvailable() {
-    const keys = [];
-
-    for (const completion of data.completions) {
-        if (!completion.completed_at)
-            continue;
-        keys.push(getWeekKey(new Date(completion.completed_at)));
-    }
-
-    for (const goal of data.goals) {
-        if (goal.created_at)
-            keys.push(getWeekKey(new Date(goal.created_at)));
-    }
-
-    if (!keys.length)
-        return [];
-
-    const currentWeek = getWeekKey();
-    const earliest = keys.sort()[0];
-    const weeks = [];
-    let cursor = new Date(earliest + "T00:00:00");
-    const current = new Date(currentWeek + "T00:00:00");
-
-    while (cursor < current) {
-        weeks.push(getDateKey(cursor));
-        cursor.setDate(cursor.getDate() + 7);
-    }
-
-    return weeks.reverse();
-}
-
-
-function goalWasActiveInWeek(goal, weekDates) {
-    if (!goal.created_at)
-        return true;
-
-    const created = new Date(goal.created_at);
-    const createdKey = getDateKey(created);
-
-    return weekDates.some(date => date >= createdKey);
-}
-
-
-function historicalDailyStats(goal, weekDates) {
-    const activeDates = weekDates.filter(
-        date => goalWasActiveOnDate(goal, date)
-    );
-
-    const completedDates = new Set(
-        data.completions
-            .filter(c =>
-                c.goal_id === goal.id &&
-                weekDates.includes(completionDateKey(c))
-            )
-            .map(completionDateKey)
-    );
-
-    const completed = activeDates.filter(
-        date => completedDates.has(date)
-    ).length;
-
-    const percentage = activeDates.length
-        ? Math.round(completed / activeDates.length * 100)
-        : 0;
-
-    return {
-        activeDates,
-        completedDates,
-        completed,
-        percentage
-    };
-}
-
-
-function goalWasActiveOnDate(goal, date) {
-    if (!goal.created_at)
-        return true;
-
-    return date >= getDateKey(new Date(goal.created_at));
-}
-
-
-function historicalWeekCompletions(goalId, weekKey) {
-    return data.completions.filter(c =>
-        c.goal_id === goalId &&
-        getWeekKey(new Date(c.completed_at)) === weekKey
-    );
-}
-
-
-function historyDailyHTML(goal, weekDates) {
-    const stats = historicalDailyStats(goal, weekDates);
-    const labels = ["M","T","W","T","F","S","S"];
-
-    return `
-    <div class="history-goal">
-        <div class="history-goal-head">
-            <div class="history-goal-name">${esc(goal.name)}</div>
-            <div class="history-goal-percent">${stats.percentage}%</div>
         </div>
 
-        <div class="tracking-bar">
-            <div class="tracking-fill" style="width:${stats.percentage}%"></div>
+
+        <div class="history-week-metrics">
+
+            <div class="history-metric">
+
+                <b>
+                    ${dailyPercent}%
+                </b>
+
+                <span>
+                    daily
+                </span>
+
+            </div>
+
+
+            <div class="history-metric">
+
+                <b>
+                    ${weeklyPercent}%
+                </b>
+
+                <span>
+                    weekly
+                </span>
+
+            </div>
+
+
+            <div class="history-metric">
+
+                <b>
+                    ${fullyComplete}/${weekly.length}
+                </b>
+
+                <span>
+                    weekly goals
+                </span>
+
+            </div>
+
         </div>
 
-        <div class="day-dots">
-            ${weekDates.map((date,index) => `
-                <div class="day-cell">
-                    <div class="day-label">${labels[index]}</div>
-                    <div class="day-dot ${stats.completedDates.has(date) ? "done" : ""}"
-                         title="${date}"></div>
-                </div>
-            `).join("")}
-        </div>
-
-        <div class="history-goal-meta">
-            <span>${stats.completed}/${stats.activeDates.length} days completed</span>
-            <span>${stats.activeDates.length < 7 ? "Goal started during this week" : "7 days"}</span>
-        </div>
     </div>
-    `;
-}
 
 
-function historyWeeklyHTML(goal, weekKey) {
-    const count = historicalWeekCompletions(goal.id, weekKey).length;
-    const target = weeklyTarget(goal);
-    const percentage = Math.min(100, Math.round(count / target * 100));
+    <div class="history-grid">
 
-    return `
-    <div class="history-goal">
-        <div class="history-goal-head">
-            <div class="history-goal-name">${esc(goal.name)}</div>
-            <div class="history-goal-percent">${count}/${target}</div>
+        <div class="history-section">
+
+            <h3>
+                Daily goals
+            </h3>
+
+            <p>
+                Completion across the full week
+            </p>
+
+            ${
+                daily.length
+
+                ?
+
+                daily
+                    .map(
+                        g =>
+                            historyDailyHTML(
+                                g,
+                                weekDates
+                            )
+                    )
+                    .join("")
+
+                :
+
+                `<div class="history-empty">
+                    No daily goals recorded for this week.
+                </div>`
+            }
+
         </div>
 
-        <div class="tracking-bar">
-            <div class="tracking-fill" style="width:${percentage}%"></div>
+
+        <div class="history-section">
+
+            <h3>
+                Weekly goals
+            </h3>
+
+            <p>
+                Progress toward each weekly target
+            </p>
+
+            ${
+                weekly.length
+
+                ?
+
+                weekly
+                    .map(
+                        g =>
+                            historyWeeklyHTML(
+                                g,
+                                weekKey
+                            )
+                    )
+                    .join("")
+
+                :
+
+                `<div class="history-empty">
+                    No weekly goals recorded for this week.
+                </div>`
+            }
+
         </div>
 
-        <div class="history-goal-meta">
-            <span>${percentage}%</span>
-            <span>${count >= target ? "Target complete" : `${target-count} more to go`}</span>
-        </div>
     </div>
-    `;
+
+</div>
+`;
+```
+
 }
-
-
-function historyWeekHTML(weekKey) {
-    const weekDates = historyWeekDates(weekKey);
-
-    const daily = data.goals.filter(g =>
-        g.horizon === "daily" &&
-        goalWasActiveInWeek(g, weekDates)
-    );
-
-    const weekly = data.goals.filter(g =>
-        g.horizon === "weekly" &&
-        goalWasActiveInWeek(g, weekDates)
-    );
-
-    const dailyStats = daily.map(g => historicalDailyStats(g, weekDates));
-    const dailyPercent = daily.length
-        ? Math.round(dailyStats.reduce((sum,s) => sum + s.percentage, 0) / daily.length)
-        : 0;
-
-    const targetTotal = weekly.reduce((sum,g) => sum + weeklyTarget(g), 0);
-    const doneTotal = weekly.reduce((sum,g) =>
-        sum + Math.min(historicalWeekCompletions(g.id, weekKey).length, weeklyTarget(g)), 0);
-    const weeklyPercent = targetTotal
-        ? Math.round(doneTotal / targetTotal * 100)
-        : 0;
-
-    const fullyComplete = weekly.filter(g =>
-        historicalWeekCompletions(g.id, weekKey).length >= weeklyTarget(g)
-    ).length;
-
-    const start = new Date(weekKey + "T00:00:00");
-    const end = new Date(start);
-    end.setDate(end.getDate() + 6);
-
-    const format = d => d.toLocaleDateString(undefined, {
-        month:"short",
-        day:"numeric",
-        year:"numeric"
-    });
-
-    return `
-    <div class="card history-week">
-        <div class="history-week-header">
-            <div>
-                <div class="history-week-title">${format(start)} – ${format(end)}</div>
-                <div class="history-week-sub">Week of ${format(start)}</div>
-            </div>
-
-            <div class="history-week-metrics">
-                <div class="history-metric">
-                    <b>${dailyPercent}%</b>
-                    <span>daily</span>
-                </div>
-                <div class="history-metric">
-                    <b>${weeklyPercent}%</b>
-                    <span>weekly</span>
-                </div>
-                <div class="history-metric">
-                    <b>${fullyComplete}/${weekly.length}</b>
-                    <span>weekly goals</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="history-grid">
-            <div class="history-section">
-                <h3>Daily goals</h3>
-                <p>Completion across the full week</p>
-                ${daily.length
-                    ? daily.map(g => historyDailyHTML(g, weekDates)).join("")
-                    : `<div class="history-empty">No daily goals recorded for this week.</div>`}
-            </div>
-
-            <div class="history-section">
-                <h3>Weekly goals</h3>
-                <p>Progress toward each weekly target</p>
-                ${weekly.length
-                    ? weekly.map(g => historyWeeklyHTML(g, weekKey)).join("")
-                    : `<div class="history-empty">No weekly goals recorded for this week.</div>`}
-            </div>
-        </div>
-    </div>
-    `;
-}
-
 
 function renderHistory() {
-    const element = document.getElementById("historyWeeks");
-    if (!element)
-        return;
 
-    const weeks = historyWeeksAvailable();
+```
+const element =
+    document.getElementById(
+        "historyWeeks"
+    );
 
-    element.innerHTML = weeks.length
-        ? weeks.map(historyWeekHTML).join("")
-        : `<div class="card"><div class="history-empty">No past weeks to show yet. Complete some goals and your history will appear here next week.</div></div>`;
+
+if (!element)
+    return;
+
+
+const weeks =
+    historyWeeksAvailable();
+
+
+element.innerHTML =
+    weeks.length
+
+    ?
+
+    weeks
+        .map(
+            historyWeekHTML
+        )
+        .join("")
+
+    :
+
+    `<div class="card">
+
+        <div class="history-empty">
+            No past weeks to show yet.
+            Complete some goals and your history
+            will appear here next week.
+        </div>
+
+    </div>`;
+```
+
 }
 
+/* =========================================================
+RENDER
+========================================================= */
 
 function render() {
 
-    renderDashboard();
-    renderTracking();
-    renderHistory();
+```
+renderDashboard();
 
-    renderBooks();
+renderTracking();
 
-    renderLearning();
+renderHistory();
 
+renderBooks();
 
-    const active =
-        document.querySelector(
-            "#goalTabs button.active"
-        );
+renderLearning();
 
 
-    renderGoals(
-        active
-            ? active.dataset.horizon
-            : "daily"
+const active =
+    document.querySelector(
+        "#goalTabs button.active"
     );
+
+
+renderGoals(
+    active
+        ? active.dataset.horizon
+        : "daily"
+);
+```
 
 }
 
-
 /* =========================================================
-   AUTH STATE
-========================================================= */
-
-/* =========================================================
-   AUTH INITIALIZATION
+AUTH INITIALIZATION
 ========================================================= */
 
 async function initializeApp() {
 
-    try {
+```
+try {
 
-        const {
-            data: {
-                session
-            },
-            error
-        } = await db.auth.getSession();
-
-
-        if (error) {
-            throw error;
-        }
+    const {
+        data:{
+            session
+        },
+        error
+    } =
+        await db.auth.getSession();
 
 
-        if (session?.user) {
-
-            currentUser =
-                session.user;
+    if (error)
+        throw error;
 
 
-            document.getElementById(
-                "authScreen"
-            ).style.display = "none";
+    if (
+        session?.user
+    ) {
+
+        currentUser =
+            session.user;
 
 
-            document.getElementById(
-                "app"
-            ).style.display = "flex";
+        /* Apply the correct user theme */
 
-
-            document.getElementById(
-                "userEmail"
-            ).textContent =
-                currentUser.email;
-
-
-            await loadData();
-
-        }
-
-        else {
-
-            currentUser = null;
-
-
-            document.getElementById(
-                "app"
-            ).style.display = "none";
-
-
-            document.getElementById(
-                "authScreen"
-            ).style.display = "flex";
-
-        }
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "Focus startup error:",
-            error
+        applyUserTheme(
+            currentUser
         );
 
 
         document.getElementById(
             "authScreen"
-        ).style.display = "flex";
+        ).style.display =
+            "none";
 
 
         document.getElementById(
             "app"
-        ).style.display = "none";
+        ).style.display =
+            "flex";
 
 
-        showAuthMessage(
-            "Could not connect to Focus: " +
-            error.message
-        );
+        document.getElementById(
+            "userEmail"
+        ).textContent =
+            currentUser.email;
+
+
+        await loadData();
 
     }
 
-    finally {
+    else {
+
+        currentUser =
+            null;
+
+
+        applyUserTheme(
+            null
+        );
+
 
         document.getElementById(
-            "loading"
-        ).style.display = "none";
+            "app"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "authScreen"
+        ).style.display =
+            "flex";
 
     }
 
 }
 
+catch(error) {
+
+    console.error(
+        "Focus startup error:",
+        error
+    );
+
+
+    document.getElementById(
+        "authScreen"
+    ).style.display =
+        "flex";
+
+
+    document.getElementById(
+        "app"
+    ).style.display =
+        "none";
+
+
+    showAuthMessage(
+        "Could not connect to Focus: " +
+        error.message
+    );
+
+}
+
+finally {
+
+    document.getElementById(
+        "loading"
+    ).style.display =
+        "none";
+
+}
+```
+
+}
 
 /* =========================================================
-   AUTH STATE CHANGES
+AUTH STATE CHANGES
 ========================================================= */
 
 db.auth.onAuthStateChange(
-    (event, session) => {
+(
+event,
+session
+) => {
 
-        /*
-           Supabase fires SIGNED_IN after a successful login.
-           Previously this listener only handled SIGNED_OUT,
-           so the login succeeded but the UI stayed on the
-           sign-in screen until the page was refreshed.
-        */
+```
+    /*
+       Supabase fires SIGNED_IN after a successful login.
+       This listener loads the app immediately instead of
+       requiring a refresh.
+    */
 
-        if (event === "SIGNED_IN" && session?.user) {
+    if (
+        event ===
+        "SIGNED_IN" &&
+        session?.user
+    ) {
 
-            // Let Supabase finish its auth callback before doing
-            // database work. This avoids auth callback deadlocks.
-            setTimeout(async () => {
+        setTimeout(
+            async () => {
 
                 try {
 
-                    currentUser = session.user;
+                    currentUser =
+                        session.user;
 
-                    document.getElementById(
-                        "authScreen"
-                    ).style.display = "none";
 
-                    document.getElementById(
-                        "app"
-                    ).style.display = "flex";
+                    /* Apply correct theme */
 
-                    document.getElementById(
-                        "userEmail"
-                    ).textContent = currentUser.email || "";
+                    applyUserTheme(
+                        currentUser
+                    );
+
+
+                    document
+                        .getElementById(
+                            "authScreen"
+                        )
+                        .style.display =
+                            "none";
+
+
+                    document
+                        .getElementById(
+                            "app"
+                        )
+                        .style.display =
+                            "flex";
+
+
+                    document
+                        .getElementById(
+                            "userEmail"
+                        )
+                        .textContent =
+                            currentUser.email ||
+                            "";
+
 
                     await loadData();
 
-                } catch (error) {
+                }
+
+                catch(error) {
 
                     console.error(
                         "Focus sign-in load error:",
                         error
                     );
 
-                    document.getElementById(
-                        "authScreen"
-                    ).style.display = "flex";
 
-                    document.getElementById(
-                        "app"
-                    ).style.display = "none";
+                    document
+                        .getElementById(
+                            "authScreen"
+                        )
+                        .style.display =
+                            "flex";
+
+
+                    document
+                        .getElementById(
+                            "app"
+                        )
+                        .style.display =
+                            "none";
+
 
                     showAuthMessage(
                         "Signed in, but Focus could not load your data: " +
@@ -5130,82 +7034,110 @@ db.auth.onAuthStateChange(
 
                 }
 
-            }, 0);
-
-        }
-
-        if (event === "SIGNED_OUT") {
-
-            currentUser = null;
-
-            document.getElementById(
-                "app"
-            ).style.display = "none";
-
-            document.getElementById(
-                "authScreen"
-            ).style.display = "flex";
-
-        }
+            },
+            0
+        );
 
     }
+
+
+    if (
+        event ===
+        "SIGNED_OUT"
+    ) {
+
+        currentUser =
+            null;
+
+
+        /* Remove user-specific theme */
+
+        applyUserTheme(
+            null
+        );
+
+
+        document
+            .getElementById(
+                "app"
+            )
+            .style.display =
+                "none";
+
+
+        document
+            .getElementById(
+                "authScreen"
+            )
+            .style.display =
+                "flex";
+
+    }
+
+}
+```
+
 );
 
-
-/* Start application */
+/* =========================================================
+START APPLICATION
+========================================================= */
 
 initializeApp();
 
 /* =========================================================
-   DATE
+DATE
 ========================================================= */
 
 document.getElementById(
-    "date"
+"date"
 ).textContent =
-    new Date().toLocaleDateString(
-        undefined,
-        {
-            weekday:"long",
-            month:"long",
-            day:"numeric",
-            year:"numeric"
-        }
-    );
-
+new Date().toLocaleDateString(
+undefined,
+{
+weekday:"long",
+month:"long",
+day:"numeric",
+year:"numeric"
+}
+);
 
 /* =========================================================
-   MIDNIGHT RESET CHECK
+MIDNIGHT RESET CHECK
 ========================================================= */
 
 let lastDate =
-    getDateKey();
-
+getDateKey();
 
 setInterval(
-    async () => {
+async () => {
 
-        const currentDate =
-            getDateKey();
-
-
-        if (
-            currentDate !== lastDate &&
-            currentUser
-        ) {
-
-            lastDate =
-                currentDate;
+```
+    const currentDate =
+        getDateKey();
 
 
-            await resetRecurringGoals();
+    if (
+        currentDate !==
+        lastDate &&
+        currentUser
+    ) {
 
-            render();
+        lastDate =
+            currentDate;
 
-        }
 
-    },
-    60000
+        await resetRecurringGoals();
+
+
+        render();
+
+    }
+
+},
+60000
+```
+
 );
 
 </script>
