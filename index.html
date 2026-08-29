@@ -917,18 +917,30 @@ select:focus {
     justify-content:space-between;
     align-items:center;
     gap:14px;
-    margin-bottom:9px;
+    margin-bottom:10px;
 }
 
 .tracking-name {
     font-weight:700;
     font-size:14px;
+    line-height:1.35;
 }
 
 .tracking-percent {
-    font-size:13px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:52px;
+    height:30px;
+    padding:0 9px;
+    border-radius:10px;
+    background:var(--ink);
+    color:white;
+    font-size:12px;
     font-weight:800;
+    letter-spacing:.2px;
     white-space:nowrap;
+    flex:none;
 }
 
 .tracking-meta {
@@ -963,8 +975,23 @@ select:focus {
     margin-top:11px;
 }
 
+.day-cell {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:5px;
+}
+
+.day-label {
+    font-size:9px;
+    line-height:1;
+    color:var(--muted);
+    font-weight:700;
+}
+
 .day-dot {
-    height:7px;
+    width:100%;
+    height:6px;
     border-radius:99px;
     background:#e5e5df;
 }
@@ -1025,6 +1052,156 @@ select:focus {
 
     .tracking-head {
         align-items:flex-start;
+    }
+}
+
+/* =========================================================
+   PAST WEEKS
+========================================================= */
+
+.history-week {
+    margin-bottom:18px;
+}
+
+.history-week:last-child {
+    margin-bottom:0;
+}
+
+.history-week-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    margin-bottom:16px;
+}
+
+.history-week-title {
+    font-size:18px;
+    font-weight:800;
+    letter-spacing:-.3px;
+}
+
+.history-week-sub {
+    color:var(--muted);
+    font-size:11px;
+    margin-top:4px;
+}
+
+.history-week-metrics {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex:none;
+}
+
+.history-metric {
+    text-align:right;
+}
+
+.history-metric b {
+    display:block;
+    font-size:18px;
+}
+
+.history-metric span {
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.history-grid {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+}
+
+.history-section {
+    border-top:1px solid var(--line);
+    padding-top:15px;
+}
+
+.history-section h3 {
+    margin:0 0 3px;
+    font-size:13px;
+}
+
+.history-section p {
+    margin:0 0 12px;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.history-empty {
+    padding:20px;
+    background:#fafaf7;
+    border:1px dashed var(--line);
+    border-radius:12px;
+    color:var(--muted);
+    text-align:center;
+    font-size:12px;
+}
+
+.history-goal {
+    padding:12px 0;
+    border-top:1px solid var(--line);
+}
+
+.history-goal:first-child {
+    border-top:0;
+    padding-top:0;
+}
+
+.history-goal-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:8px;
+}
+
+.history-goal-name {
+    font-size:13px;
+    font-weight:700;
+}
+
+.history-goal-percent {
+    color:var(--muted);
+    font-size:11px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.history-goal-meta {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:6px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.history-week .tracking-bar {
+    height:8px;
+}
+
+@media(max-width:700px) {
+    .history-grid {
+        grid-template-columns:1fr;
+    }
+
+    .history-week-header {
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .history-week-metrics {
+        width:100%;
+        justify-content:flex-start;
+        text-align:left;
+    }
+
+    .history-metric {
+        text-align:left;
     }
 }
 
@@ -1427,6 +1604,17 @@ select:focus {
 
             <span class="nav-label">
                 Tracking
+            </span>
+
+        </button>
+
+
+        <button data-page="history">
+
+            <span class="nav-icon">↺</span>
+
+            <span class="nav-label">
+                Past weeks
             </span>
 
         </button>
@@ -1900,6 +2088,28 @@ select:focus {
         <div id="trackingWeekly"></div>
     </div>
 </div>
+
+</section>
+
+
+<!-- =========================================================
+     PAST WEEKS
+========================================================= -->
+
+<section
+    id="history"
+    class="page">
+
+<header>
+    <div>
+        <div class="eyebrow">History</div>
+        <div class="title">Past weeks.</div>
+        <p class="sub">Review your daily consistency and weekly targets from previous weeks.</p>
+    </div>
+    <div class="today">From today backwards</div>
+</header>
+
+<div id="historyWeeks"></div>
 
 </section>
 
@@ -4101,13 +4311,16 @@ function trackingDailyHTML(goal) {
         <div class="day-dots">
             ${stats.dates.map(
                 (date,index) => `
-                    <div
-                        class="day-dot ${
-                            stats.completedDates.has(date)
-                                ? "done"
-                                : ""
-                        }"
-                        title="${dayLabels[index]}">
+                    <div class="day-cell">
+                        <div class="day-label">${dayLabels[index]}</div>
+                        <div
+                            class="day-dot ${
+                                stats.completedDates.has(date)
+                                    ? "done"
+                                    : ""
+                            }"
+                            title="${dayLabels[index]}">
+                        </div>
                     </div>
                 `
             ).join("")}
@@ -4469,10 +4682,268 @@ function exportBackup() {
    RENDER
 ========================================================= */
 
+function historyWeekDates(weekKey) {
+    const start = new Date(weekKey + "T00:00:00");
+    return Array.from({length:7}, (_,i) => {
+        const d = new Date(start);
+        d.setDate(d.getDate() + i);
+        return getDateKey(d);
+    });
+}
+
+
+function historyWeeksAvailable() {
+    const keys = [];
+
+    for (const completion of data.completions) {
+        if (!completion.completed_at)
+            continue;
+        keys.push(getWeekKey(new Date(completion.completed_at)));
+    }
+
+    for (const goal of data.goals) {
+        if (goal.created_at)
+            keys.push(getWeekKey(new Date(goal.created_at)));
+    }
+
+    if (!keys.length)
+        return [];
+
+    const currentWeek = getWeekKey();
+    const earliest = keys.sort()[0];
+    const weeks = [];
+    let cursor = new Date(earliest + "T00:00:00");
+    const current = new Date(currentWeek + "T00:00:00");
+
+    while (cursor < current) {
+        weeks.push(getDateKey(cursor));
+        cursor.setDate(cursor.getDate() + 7);
+    }
+
+    return weeks.reverse();
+}
+
+
+function goalWasActiveInWeek(goal, weekDates) {
+    if (!goal.created_at)
+        return true;
+
+    const created = new Date(goal.created_at);
+    const createdKey = getDateKey(created);
+
+    return weekDates.some(date => date >= createdKey);
+}
+
+
+function historicalDailyStats(goal, weekDates) {
+    const activeDates = weekDates.filter(
+        date => goalWasActiveOnDate(goal, date)
+    );
+
+    const completedDates = new Set(
+        data.completions
+            .filter(c =>
+                c.goal_id === goal.id &&
+                weekDates.includes(completionDateKey(c))
+            )
+            .map(completionDateKey)
+    );
+
+    const completed = activeDates.filter(
+        date => completedDates.has(date)
+    ).length;
+
+    const percentage = activeDates.length
+        ? Math.round(completed / activeDates.length * 100)
+        : 0;
+
+    return {
+        activeDates,
+        completedDates,
+        completed,
+        percentage
+    };
+}
+
+
+function goalWasActiveOnDate(goal, date) {
+    if (!goal.created_at)
+        return true;
+
+    return date >= getDateKey(new Date(goal.created_at));
+}
+
+
+function historicalWeekCompletions(goalId, weekKey) {
+    return data.completions.filter(c =>
+        c.goal_id === goalId &&
+        getWeekKey(new Date(c.completed_at)) === weekKey
+    );
+}
+
+
+function historyDailyHTML(goal, weekDates) {
+    const stats = historicalDailyStats(goal, weekDates);
+    const labels = ["M","T","W","T","F","S","S"];
+
+    return `
+    <div class="history-goal">
+        <div class="history-goal-head">
+            <div class="history-goal-name">${esc(goal.name)}</div>
+            <div class="history-goal-percent">${stats.percentage}%</div>
+        </div>
+
+        <div class="tracking-bar">
+            <div class="tracking-fill" style="width:${stats.percentage}%"></div>
+        </div>
+
+        <div class="day-dots">
+            ${weekDates.map((date,index) => `
+                <div class="day-cell">
+                    <div class="day-label">${labels[index]}</div>
+                    <div class="day-dot ${stats.completedDates.has(date) ? "done" : ""}"
+                         title="${date}"></div>
+                </div>
+            `).join("")}
+        </div>
+
+        <div class="history-goal-meta">
+            <span>${stats.completed}/${stats.activeDates.length} days completed</span>
+            <span>${stats.activeDates.length < 7 ? "Goal started during this week" : "7 days"}</span>
+        </div>
+    </div>
+    `;
+}
+
+
+function historyWeeklyHTML(goal, weekKey) {
+    const count = historicalWeekCompletions(goal.id, weekKey).length;
+    const target = weeklyTarget(goal);
+    const percentage = Math.min(100, Math.round(count / target * 100));
+
+    return `
+    <div class="history-goal">
+        <div class="history-goal-head">
+            <div class="history-goal-name">${esc(goal.name)}</div>
+            <div class="history-goal-percent">${count}/${target}</div>
+        </div>
+
+        <div class="tracking-bar">
+            <div class="tracking-fill" style="width:${percentage}%"></div>
+        </div>
+
+        <div class="history-goal-meta">
+            <span>${percentage}%</span>
+            <span>${count >= target ? "Target complete" : `${target-count} more to go`}</span>
+        </div>
+    </div>
+    `;
+}
+
+
+function historyWeekHTML(weekKey) {
+    const weekDates = historyWeekDates(weekKey);
+
+    const daily = data.goals.filter(g =>
+        g.horizon === "daily" &&
+        goalWasActiveInWeek(g, weekDates)
+    );
+
+    const weekly = data.goals.filter(g =>
+        g.horizon === "weekly" &&
+        goalWasActiveInWeek(g, weekDates)
+    );
+
+    const dailyStats = daily.map(g => historicalDailyStats(g, weekDates));
+    const dailyPercent = daily.length
+        ? Math.round(dailyStats.reduce((sum,s) => sum + s.percentage, 0) / daily.length)
+        : 0;
+
+    const targetTotal = weekly.reduce((sum,g) => sum + weeklyTarget(g), 0);
+    const doneTotal = weekly.reduce((sum,g) =>
+        sum + Math.min(historicalWeekCompletions(g.id, weekKey).length, weeklyTarget(g)), 0);
+    const weeklyPercent = targetTotal
+        ? Math.round(doneTotal / targetTotal * 100)
+        : 0;
+
+    const fullyComplete = weekly.filter(g =>
+        historicalWeekCompletions(g.id, weekKey).length >= weeklyTarget(g)
+    ).length;
+
+    const start = new Date(weekKey + "T00:00:00");
+    const end = new Date(start);
+    end.setDate(end.getDate() + 6);
+
+    const format = d => d.toLocaleDateString(undefined, {
+        month:"short",
+        day:"numeric",
+        year:"numeric"
+    });
+
+    return `
+    <div class="card history-week">
+        <div class="history-week-header">
+            <div>
+                <div class="history-week-title">${format(start)} – ${format(end)}</div>
+                <div class="history-week-sub">Week of ${format(start)}</div>
+            </div>
+
+            <div class="history-week-metrics">
+                <div class="history-metric">
+                    <b>${dailyPercent}%</b>
+                    <span>daily</span>
+                </div>
+                <div class="history-metric">
+                    <b>${weeklyPercent}%</b>
+                    <span>weekly</span>
+                </div>
+                <div class="history-metric">
+                    <b>${fullyComplete}/${weekly.length}</b>
+                    <span>weekly goals</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-grid">
+            <div class="history-section">
+                <h3>Daily goals</h3>
+                <p>Completion across the full week</p>
+                ${daily.length
+                    ? daily.map(g => historyDailyHTML(g, weekDates)).join("")
+                    : `<div class="history-empty">No daily goals recorded for this week.</div>`}
+            </div>
+
+            <div class="history-section">
+                <h3>Weekly goals</h3>
+                <p>Progress toward each weekly target</p>
+                ${weekly.length
+                    ? weekly.map(g => historyWeeklyHTML(g, weekKey)).join("")
+                    : `<div class="history-empty">No weekly goals recorded for this week.</div>`}
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+
+function renderHistory() {
+    const element = document.getElementById("historyWeeks");
+    if (!element)
+        return;
+
+    const weeks = historyWeeksAvailable();
+
+    element.innerHTML = weeks.length
+        ? weeks.map(historyWeekHTML).join("")
+        : `<div class="card"><div class="history-empty">No past weeks to show yet. Complete some goals and your history will appear here next week.</div></div>`;
+}
+
+
 function render() {
 
     renderDashboard();
     renderTracking();
+    renderHistory();
 
     renderBooks();
 
