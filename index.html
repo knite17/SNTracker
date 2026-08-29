@@ -1,2762 +1,1400 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Focus — Goals, Books & Learning</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
-/* =========================================================
-   BASE / DEFAULT THEME
-========================================================= */
-
-:root {
+:root{
     --bg:#f5f5f3;
     --card:#fff;
     --text:#20211f;
     --muted:#777873;
     --line:#e6e6e1;
-
     --accent:#5d6b52;
     --accent-light:#dfe6d8;
-
     --sidebar:#5d6b52;
     --sidebar-hover:#343831;
-
     --theme-soft:#f0f3ed;
     --theme-medium:#dfe6d8;
     --theme-text:#394333;
-
     --danger:#a94a45;
-
     --sidebar-width:245px;
     --sidebar-collapsed:72px;
-
     --shadow:0 8px 30px rgba(30,30,20,.06);
 }
 
-
-/* =========================================================
-   USER THEMES
-========================================================= */
-
-/* Sam — green */
-
-body.theme-green {
+body.theme-green{
     --accent:#49c70f;
     --accent-light:#e2f5d9;
-
     --sidebar:#49c70f;
     --sidebar-hover:#32940b;
-
     --theme-soft:#f0faeb;
     --theme-medium:#d9f1cd;
     --theme-text:#347d17;
 }
 
-
-/* Anna — pink */
-
-body.theme-pink {
+body.theme-pink{
     --accent:#d96b9d;
     --accent-light:#f6dfeb;
-
     --sidebar:#d96b9d;
     --sidebar-hover:#b95080;
-
     --theme-soft:#fcf1f6;
     --theme-medium:#f5d9e7;
     --theme-text:#9d426b;
 }
 
+*{box-sizing:border-box}
 
-* {
-    box-sizing:border-box;
-}
-
-
-body {
+body{
     margin:0;
-
-    font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     background:var(--bg);
     color:var(--text);
 }
 
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
 
-button,
-input,
-textarea,
-select {
-    font:inherit;
-}
-
-
-button {
-    cursor:pointer;
-}
-
-
-/* =========================================================
-   APP
-========================================================= */
-
-.app {
+.app{
     display:flex;
     min-height:100vh;
 }
 
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
-.sidebar {
+.sidebar{
     width:var(--sidebar-width);
-
     background:var(--sidebar);
     color:white;
-
     padding:28px 18px;
-
     position:fixed;
     inset:0 auto 0 0;
-
-    transition:
-        width .25s ease,
-        padding .25s ease,
-        background .25s ease;
-
+    transition:width .25s ease,padding .25s ease,background .25s ease;
     overflow:hidden;
     z-index:20;
 }
 
-
-.sidebar.collapsed {
+.sidebar.collapsed{
     width:var(--sidebar-collapsed);
     padding:28px 10px;
 }
 
-
-/* Logo */
-
-.logo {
+.logo{
     font-weight:800;
     font-size:22px;
-
     padding:0 12px 28px;
-
     white-space:nowrap;
 }
 
+.logo-dot{color:var(--accent-light)}
 
-.logo-dot {
-    color:var(--accent-light);
-}
-
-
-/* Collapse button */
-
-.sidebar-toggle {
+.sidebar-toggle{
     position:absolute;
-
     top:20px;
     right:14px;
-
     width:30px;
     height:30px;
-
     border:0;
     border-radius:8px;
-
     background:#ffffff10;
     color:#c7c8c4;
-
     font-size:16px;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
-    transition:
-        background .2s ease,
-        color .2s ease;
 }
 
-
-.sidebar-toggle:hover {
+.sidebar-toggle:hover{
     background:#ffffff20;
     color:white;
 }
 
-
-/* User */
-
-.user-box {
+.user-box{
     padding:12px;
-
     margin-bottom:15px;
-
     border-bottom:1px solid #ffffff14;
-
     white-space:nowrap;
 }
 
-
-.user-email {
+.user-email{
     color:#ffffffb8;
-
     font-size:11px;
-
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
-
-/* Navigation */
-
-.nav button {
+.nav button{
     display:flex;
     align-items:center;
-
     width:100%;
-
     text-align:left;
-
     border:0;
     background:transparent;
-
     color:#ffffffb8;
-
     padding:12px 14px;
-
     border-radius:10px;
     margin:3px 0;
-
     white-space:nowrap;
-
-    transition:
-        background .2s ease,
-        color .2s ease;
+    transition:background .2s ease,color .2s ease;
 }
 
-
 .nav button:hover,
-.nav button.active {
+.nav button.active{
     background:var(--sidebar-hover);
     color:white;
 }
 
-
-.nav-icon {
+.nav-icon{
     width:22px;
     min-width:22px;
-
     display:inline-flex;
     justify-content:center;
-
     margin-right:10px;
-
     font-size:15px;
 }
 
-
-.nav-label {
-    transition:opacity .15s ease;
-}
-
-
-.nav small {
+.nav small{
     display:block;
-
     color:#ffffff80;
-
     padding:22px 14px 8px;
-
     text-transform:uppercase;
-
     letter-spacing:1.2px;
-
     font-size:10px;
-
     white-space:nowrap;
 }
 
-
-/* Collapsed sidebar */
-
-.sidebar.collapsed .logo {
+.sidebar.collapsed .logo{
     font-size:0;
-
     padding-left:12px;
     padding-right:12px;
 }
 
-
-.sidebar.collapsed .logo span {
+.sidebar.collapsed .logo span{
     display:none;
 }
-
 
 .sidebar.collapsed .user-box,
-.sidebar.collapsed .nav small {
+.sidebar.collapsed .nav small{
     display:none;
 }
 
-
-.sidebar.collapsed .nav button {
+.sidebar.collapsed .nav button{
     justify-content:center;
     padding:12px 0;
 }
 
-
-.sidebar.collapsed .nav-icon {
+.sidebar.collapsed .nav-icon{
     margin-right:0;
 }
 
-
-.sidebar.collapsed .nav-label {
+.sidebar.collapsed .nav-label{
     display:none;
 }
 
-
-.sidebar.collapsed .sidebar-toggle {
+.sidebar.collapsed .sidebar-toggle{
     right:21px;
 }
 
-
-/* =========================================================
-   MAIN
-========================================================= */
-
-.main {
+.main{
     margin-left:var(--sidebar-width);
-
     width:calc(100% - var(--sidebar-width));
-
     padding:38px clamp(22px,5vw,70px);
-
     max-width:1450px;
-
-    transition:
-        margin-left .25s ease,
-        width .25s ease;
+    transition:margin-left .25s ease,width .25s ease;
 }
 
-
-body.sidebar-collapsed .main {
+body.sidebar-collapsed .main{
     margin-left:var(--sidebar-collapsed);
-
     width:calc(100% - var(--sidebar-collapsed));
 }
 
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-header {
+header{
     display:flex;
-
     justify-content:space-between;
     align-items:flex-start;
-
     margin-bottom:28px;
-
     gap:20px;
 }
 
-
-.eyebrow {
+.eyebrow{
     font-size:12px;
-
     text-transform:uppercase;
-
     letter-spacing:1.6px;
-
     color:var(--muted);
-
     font-weight:700;
 }
 
-
-.title {
+.title{
     font-size:38px;
-
     line-height:1.05;
-
     letter-spacing:-1.5px;
-
     margin:7px 0;
 }
 
-
-.sub {
+.sub{
     color:var(--muted);
     margin:0;
 }
 
-
-.today {
+.today{
     font-size:13px;
-
     color:var(--muted);
-
     padding-top:8px;
-
     text-align:right;
-
     white-space:nowrap;
 }
 
-
-/* =========================================================
-   GRID
-========================================================= */
-
-.grid {
+.grid{
     display:grid;
-
-    grid-template-columns:
-        repeat(12,minmax(0,1fr));
-
+    grid-template-columns:repeat(12,minmax(0,1fr));
     gap:18px;
 }
 
-
-.card {
+.card{
     background:var(--card);
-
     border:1px solid var(--line);
-
     border-radius:16px;
-
     padding:20px;
-
     box-shadow:var(--shadow);
-
     min-width:0;
 }
 
+.span12{grid-column:span 12}
+.span8{grid-column:span 8}
+.span6{grid-column:span 6}
+.span4{grid-column:span 4}
 
-.span12 {
-    grid-column:span 12;
-}
-
-
-.span8 {
-    grid-column:span 8;
-}
-
-
-.span6 {
-    grid-column:span 6;
-}
-
-
-.span4 {
-    grid-column:span 4;
-}
-
-
-/* =========================================================
-   CARD HEADERS
-========================================================= */
-
-.card h2 {
+.card h2{
     font-size:17px;
-
     margin:0 0 5px;
 }
 
-
-.card p {
+.card p{
     color:var(--muted);
-
     font-size:13px;
 }
 
-
-.section-head {
+.section-head{
     display:flex;
-
     justify-content:space-between;
     align-items:center;
-
     gap:12px;
-
     margin-bottom:16px;
 }
 
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-.btn {
+.btn{
     border:0;
-
     background:var(--text);
     color:white;
-
     padding:10px 14px;
-
     border-radius:9px;
-
     font-weight:650;
     font-size:13px;
-
     white-space:nowrap;
-
-    transition:
-        background .2s ease,
-        opacity .2s ease,
-        transform .1s ease;
+    transition:background .2s ease,opacity .2s ease,transform .1s ease;
 }
 
+.btn:hover{opacity:.88}
+.btn:active{transform:translateY(1px)}
 
-.btn:hover {
-    opacity:.88;
-}
-
-
-.btn:active {
-    transform:translateY(1px);
-}
-
-
-.btn.secondary {
+.btn.secondary{
     background:var(--accent-light);
     color:var(--theme-text);
 }
 
-
-.btn.danger {
+.btn.danger{
     background:#f4dfdd;
     color:var(--danger);
 }
 
-
-/* =========================================================
-   GOALS
-========================================================= */
-
-.goal {
+.goal{
     padding:14px 0;
-
     border-top:1px solid var(--line);
 }
 
-
-.goal:first-child {
+.goal:first-child{
     border-top:0;
     padding-top:0;
 }
 
-
-.goal-row {
+.goal-row{
     display:flex;
-
     align-items:center;
-
     gap:12px;
-
     min-width:0;
 }
 
-
-.check {
+.check{
     width:21px;
     height:21px;
-
     border:1.5px solid #aaa;
-
     border-radius:6px;
-
     background:white;
-
     flex:none;
-
     position:relative;
-
-    transition:
-        background .2s ease,
-        border-color .2s ease;
 }
 
-
-.check.done {
+.check.done{
     background:var(--accent);
-
     border-color:var(--accent);
 }
 
-
-.check.done:after {
+.check.done:after{
     content:"✓";
-
     color:white;
-
     position:absolute;
-
     font-size:14px;
-
     left:4px;
     top:0;
 }
 
-
-.goal-name {
+.goal-name{
     flex:1;
-
     min-width:0;
-
     font-weight:650;
-
     font-size:14px;
-
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
-
-.goal.done .goal-name {
+.goal.done .goal-name{
     text-decoration:line-through;
-
     color:#999;
 }
 
-
-.icon {
+.icon{
     border:0;
-
     background:transparent;
-
     color:#999;
-
     padding:4px 6px;
-
     flex:none;
 }
 
+.icon:hover{color:var(--danger)}
 
-.icon:hover {
-    color:var(--danger);
-}
-
-
-/* =========================================================
-   BADGES
-========================================================= */
-
-.badge {
+.badge{
     font-size:11px;
-
     background:var(--theme-soft);
-
     color:var(--theme-text);
-
     border-radius:99px;
-
     padding:4px 8px;
-
     white-space:nowrap;
 }
 
-
-/* =========================================================
-   BOOKS
-========================================================= */
-
-.book {
+.book{
     display:flex;
-
     gap:14px;
-
     align-items:center;
-
     min-width:0;
 }
 
-
-.cover {
+.cover{
     width:48px;
     height:66px;
-
     border-radius:5px;
-
     background:var(--theme-medium);
-
     display:flex;
-
     align-items:center;
     justify-content:center;
-
     color:var(--theme-text);
-
     font-size:10px;
-
     text-align:center;
-
     padding:4px;
-
     flex-shrink:0;
 }
 
-
-.book h3 {
+.book h3{
     font-size:15px;
-
     margin:0 0 4px;
-
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
-
-.author {
+.author{
     font-size:12px;
-
     color:var(--muted);
-
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
-
-.list {
+.list{
     display:grid;
-
     gap:10px;
 }
 
-
-.list-item {
+.list-item{
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
-
     gap:12px;
-
     padding:12px;
-
     border:1px solid var(--line);
-
     border-radius:10px;
-
     background:white;
-
     min-width:0;
 }
 
+.list-item>div:first-child{min-width:0}
 
-.list-item > div:first-child {
-    min-width:0;
-}
+.list-item strong{font-size:13px}
+.list-item span{font-size:11px;color:var(--muted)}
 
-
-.list-item strong {
-    font-size:13px;
-}
-
-
-.list-item span {
-    font-size:11px;
-
-    color:var(--muted);
-}
-
-
-/* =========================================================
-   TABS
-========================================================= */
-
-.tabs {
+.tabs{
     display:flex;
-
     gap:5px;
-
     background:#ecece7;
-
     padding:4px;
-
     border-radius:10px;
-
     max-width:100%;
 }
 
-
-.tabs button {
+.tabs button{
     border:0;
-
     background:transparent;
-
     padding:8px 12px;
-
     border-radius:7px;
-
     font-size:12px;
-
     color:#666;
-
     white-space:nowrap;
 }
 
-
-.tabs button.active {
+.tabs button.active{
     background:white;
-
     color:var(--theme-text);
-
     box-shadow:0 1px 5px #00000010;
 }
 
+.page{display:none}
+.page.active{display:block}
 
-/* =========================================================
-   PAGES
-========================================================= */
-
-.page {
-    display:none;
-}
-
-
-.page.active {
-    display:block;
-}
-
-
-/* =========================================================
-   FORMS
-========================================================= */
-
-.form {
+.form{
     display:grid;
-
     grid-template-columns:1fr 1fr;
-
     gap:12px;
 }
 
+.form .full{grid-column:1/-1}
 
-.form .full {
-    grid-column:1/-1;
-}
-
-
-label {
+label{
     font-size:11px;
-
     color:var(--muted);
-
     font-weight:700;
-
     display:block;
-
     margin-bottom:5px;
 }
 
-
-input,
-textarea,
-select {
+input,textarea,select{
     width:100%;
-
     padding:11px 12px;
-
     border:1px solid var(--line);
-
     border-radius:9px;
-
     background:white;
-
     outline:none;
-
-    transition:
-        border-color .2s ease,
-        box-shadow .2s ease;
 }
-
 
 input:focus,
 textarea:focus,
-select:focus {
+select:focus{
     border-color:var(--accent);
-
-    box-shadow:
-        0 0 0 3px var(--accent-light);
+    box-shadow:0 0 0 3px var(--accent-light);
 }
 
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal {
+.modal{
     position:fixed;
-
     inset:0;
-
     background:#0008;
-
     display:none;
-
     align-items:center;
     justify-content:center;
-
     padding:20px;
-
     z-index:100;
 }
 
+.modal.show{display:flex}
 
-.modal.show {
-    display:flex;
-}
-
-
-.modal-box {
+.modal-box{
     background:white;
-
     border-radius:16px;
-
     padding:24px;
-
     width:min(520px,100%);
-
     box-shadow:0 20px 70px #0003;
 }
 
-
-.modal-head {
+.modal-head{
     display:flex;
-
     justify-content:space-between;
     align-items:center;
-
     margin-bottom:18px;
 }
 
-
-.modal-head h2 {
+.modal-head h2{
     margin:0;
-
     font-size:20px;
 }
 
-
-.close {
+.close{
     border:0;
-
     background:#eee;
-
     border-radius:50%;
-
     width:30px;
     height:30px;
 }
 
-
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-.progress-card {
+.progress-card{
     display:flex;
-
     flex-direction:column;
 }
 
-
-.progress-stats {
+.progress-stats{
     display:grid;
-
-    grid-template-columns:
-        repeat(3,minmax(0,1fr));
-
+    grid-template-columns:repeat(3,minmax(0,1fr));
     gap:8px;
-
     width:100%;
 }
 
-
-.progress-stat {
+.progress-stat{
     background:var(--theme-soft);
-
     border-radius:12px;
-
     padding:13px 10px;
-
     min-width:0;
-
     text-align:center;
-
-    transition:background .2s ease;
 }
 
-
-.progress-stat b {
+.progress-stat b{
     display:block;
-
     font-size:clamp(20px,2.4vw,28px);
-
     line-height:1.1;
-
     margin-bottom:5px;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
 }
 
-
-.progress-stat span {
+.progress-stat span{
     display:block;
-
     font-size:10px;
-
     color:var(--muted);
-
     white-space:nowrap;
-
     overflow:hidden;
-
     text-overflow:ellipsis;
 }
 
-
-/* Progress bar */
-
-.progress-bar {
+.progress-bar{
     width:100%;
-
     height:7px;
-
     background:#ecece7;
-
     border-radius:99px;
-
     overflow:hidden;
-
     margin-top:16px;
 }
 
-
-.progress-fill {
+.progress-fill,
+.tracking-fill{
     height:100%;
-
     background:var(--accent);
-
     border-radius:99px;
-
-    width:0%;
-
-    transition:
-        width .3s ease,
-        background .2s ease;
+    transition:width .3s ease;
 }
 
+.progress-fill{width:0}
 
-/* =========================================================
-   TRACKING
-========================================================= */
-
-.tracking-summary {
+.tracking-summary{
     display:grid;
-
-    grid-template-columns:
-        repeat(3,minmax(0,1fr));
-
+    grid-template-columns:repeat(3,minmax(0,1fr));
     gap:12px;
-
     margin-bottom:18px;
 }
 
+.tracking-summary .progress-stat{text-align:left}
 
-.tracking-summary .progress-stat {
-    text-align:left;
-}
-
-
-.tracking-goal {
+.tracking-goal{
     padding:16px 0;
-
     border-top:1px solid var(--line);
 }
 
-
-.tracking-goal:first-child {
+.tracking-goal:first-child{
     border-top:0;
-
     padding-top:0;
 }
 
-
-.tracking-head {
+.tracking-head{
     display:flex;
-
     justify-content:space-between;
     align-items:center;
-
     gap:14px;
-
     margin-bottom:10px;
 }
 
-
-.tracking-name {
+.tracking-name{
     font-weight:700;
-
     font-size:14px;
-
     line-height:1.35;
 }
 
-
-.tracking-percent {
+.tracking-percent{
     display:inline-flex;
-
     align-items:center;
     justify-content:center;
-
     min-width:52px;
     height:30px;
-
     padding:0 9px;
-
     border-radius:10px;
-
     background:var(--accent);
-
     color:white;
-
     font-size:12px;
-
     font-weight:800;
-
-    letter-spacing:.2px;
-
-    white-space:nowrap;
-
     flex:none;
 }
 
-
-.tracking-meta {
+.tracking-meta{
     display:flex;
-
     justify-content:space-between;
-
     gap:10px;
-
     color:var(--muted);
-
     font-size:11px;
-
     margin-top:7px;
 }
 
-
-.tracking-bar {
+.tracking-bar{
     width:100%;
-
     height:9px;
-
     background:#ecece7;
-
     border-radius:99px;
-
     overflow:hidden;
 }
 
+.tracking-fill{width:0}
 
-.tracking-fill {
-    height:100%;
-
-    width:0;
-
-    background:var(--accent);
-
-    border-radius:99px;
-
-    transition:
-        width .3s ease,
-        background .2s ease;
-}
-
-
-.day-dots {
+.day-dots{
     display:grid;
-
-    grid-template-columns:
-        repeat(7,1fr);
-
+    grid-template-columns:repeat(7,1fr);
     gap:5px;
-
     margin-top:11px;
 }
 
-
-.day-cell {
+.day-cell{
     display:flex;
-
     flex-direction:column;
-
     align-items:center;
-
     gap:5px;
 }
 
-
-.day-label {
+.day-label{
     font-size:9px;
-
     line-height:1;
-
     color:var(--muted);
-
     font-weight:700;
 }
 
-
-.day-dot {
+.day-dot{
     width:100%;
-
     height:6px;
-
     border-radius:99px;
-
     background:#e5e5df;
 }
 
+.day-dot.done{background:var(--accent)}
 
-.day-dot.done {
-    background:var(--accent);
-}
-
-
-.weekly-progress {
+.weekly-progress{
     display:flex;
-
     align-items:center;
-
     gap:10px;
-
     margin-top:10px;
 }
 
+.weekly-progress .tracking-bar{flex:1}
 
-.weekly-progress .tracking-bar {
-    flex:1;
-}
-
-
-.weekly-count {
+.weekly-count{
     font-size:11px;
-
     color:var(--muted);
-
     white-space:nowrap;
 }
 
+.goal-repeat-control{display:none}
+.goal-repeat-control.show{display:block}
 
-.goal-repeat-control {
-    display:none;
-}
-
-
-.goal-repeat-control.show {
-    display:block;
-}
-
-
-.goal-helper {
+.goal-helper{
     color:var(--muted);
-
     font-size:11px;
-
     margin-top:5px;
-
     line-height:1.4;
 }
 
+.history-week{margin-bottom:18px}
+.history-week:last-child{margin-bottom:0}
 
-.goal-action-count {
-    display:inline-flex;
-
-    align-items:center;
-
-    gap:7px;
-
-    margin-left:auto;
-
-    flex:none;
-}
-
-
-.goal-action-count .btn {
-    padding:6px 9px;
-
-    font-size:11px;
-}
-
-
-@media(max-width:500px) {
-
-    .tracking-summary {
-        grid-template-columns:1fr;
-    }
-
-    .tracking-head {
-        align-items:flex-start;
-    }
-
-}
-
-
-/* =========================================================
-   PAST WEEKS
-========================================================= */
-
-.history-week {
-    margin-bottom:18px;
-}
-
-
-.history-week:last-child {
-    margin-bottom:0;
-}
-
-
-.history-week-header {
+.history-week-header{
     display:flex;
-
     justify-content:space-between;
     align-items:center;
-
     gap:16px;
-
     margin-bottom:16px;
 }
 
-
-.history-week-title {
+.history-week-title{
     font-size:18px;
-
     font-weight:800;
-
-    letter-spacing:-.3px;
 }
 
-
-.history-week-sub {
+.history-week-sub{
     color:var(--muted);
-
     font-size:11px;
-
     margin-top:4px;
 }
 
-
-.history-week-metrics {
+.history-week-metrics{
     display:flex;
-
     align-items:center;
-
     gap:10px;
-
-    flex:none;
 }
 
+.history-metric{text-align:right}
+.history-metric b{display:block;font-size:18px}
+.history-metric span{display:block;color:var(--muted);font-size:10px}
 
-.history-metric {
-    text-align:right;
-}
-
-
-.history-metric b {
-    display:block;
-
-    font-size:18px;
-}
-
-
-.history-metric span {
-    display:block;
-
-    color:var(--muted);
-
-    font-size:10px;
-}
-
-
-.history-grid {
+.history-grid{
     display:grid;
-
-    grid-template-columns:
-        repeat(2,minmax(0,1fr));
-
+    grid-template-columns:repeat(2,minmax(0,1fr));
     gap:18px;
 }
 
-
-.history-section {
+.history-section{
     border-top:1px solid var(--line);
-
     padding-top:15px;
 }
 
-
-.history-section h3 {
+.history-section h3{
     margin:0 0 3px;
-
     font-size:13px;
 }
 
-
-.history-section p {
+.history-section p{
     margin:0 0 12px;
-
     color:var(--muted);
-
     font-size:11px;
 }
 
-
-.history-empty {
+.history-empty{
     padding:20px;
-
     background:var(--theme-soft);
-
     border:1px dashed var(--line);
-
     border-radius:12px;
-
     color:var(--muted);
-
     text-align:center;
-
     font-size:12px;
 }
 
-
-.history-goal {
+.history-goal{
     padding:12px 0;
-
     border-top:1px solid var(--line);
 }
 
-
-.history-goal:first-child {
+.history-goal:first-child{
     border-top:0;
-
     padding-top:0;
 }
 
-
-.history-goal-head {
+.history-goal-head{
     display:flex;
-
     justify-content:space-between;
     align-items:center;
-
     gap:12px;
-
     margin-bottom:8px;
 }
 
-
-.history-goal-name {
+.history-goal-name{
     font-size:13px;
-
     font-weight:700;
 }
 
-
-.history-goal-percent {
+.history-goal-percent{
     color:var(--muted);
-
     font-size:11px;
-
     font-weight:700;
-
-    white-space:nowrap;
 }
 
-
-.history-goal-meta {
+.history-goal-meta{
     display:flex;
-
     justify-content:space-between;
-
     gap:10px;
-
     margin-top:6px;
-
     color:var(--muted);
-
     font-size:10px;
 }
 
-
-.history-week .tracking-bar {
-    height:8px;
-}
-
-
-@media(max-width:700px) {
-
-    .history-grid {
-        grid-template-columns:1fr;
-    }
-
-    .history-week-header {
-        align-items:flex-start;
-
-        flex-direction:column;
-    }
-
-    .history-week-metrics {
-        width:100%;
-
-        justify-content:flex-start;
-
-        text-align:left;
-    }
-
-    .history-metric {
-        text-align:left;
-    }
-
-}
-
-
-/* =========================================================
-   EMPTY
-========================================================= */
-
-.empty {
+.empty{
     padding:30px;
-
     text-align:center;
-
     color:var(--muted);
-
     border:1px dashed #d5d5ce;
-
     border-radius:12px;
 }
 
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-.auth-screen {
+.auth-screen{
     min-height:100vh;
-
     display:none;
-
     align-items:center;
     justify-content:center;
-
     padding:20px;
 }
 
-
-.auth-card {
+.auth-card{
     width:min(430px,100%);
-
     background:white;
-
     border:1px solid var(--line);
-
     border-radius:18px;
-
     padding:30px;
-
     box-shadow:var(--shadow);
 }
 
-
-.auth-logo {
+.auth-logo{
     font-size:28px;
-
     font-weight:800;
-
     margin-bottom:8px;
 }
 
+.auth-logo .logo-dot{color:var(--accent)}
 
-.auth-logo .logo-dot {
-    color:var(--accent);
-}
-
-
-.auth-card p {
+.auth-card p{
     color:var(--muted);
-
     font-size:13px;
 }
 
+.auth-card .field{margin:15px 0}
 
-.auth-card .field {
-    margin:15px 0;
-}
-
-
-.auth-message {
+.auth-message{
     margin-top:15px;
-
     font-size:12px;
-
     color:var(--muted);
+    min-height:18px;
 }
 
-
-/* =========================================================
-   LOADING
-========================================================= */
-
-.loading {
+.loading{
     position:fixed;
-
     inset:0;
-
     background:var(--bg);
-
     display:flex;
-
     align-items:center;
     justify-content:center;
-
     z-index:1000;
-
     font-weight:700;
-
     color:var(--theme-text);
 }
 
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media(max-width:1000px) {
-
-    .span8,
-    .span6,
-    .span4 {
-        grid-column:span 12;
-    }
-
-    .progress-stats {
-        gap:10px;
-    }
-
+@media(max-width:1000px){
+    .span8,.span6,.span4{grid-column:span 12}
 }
 
-
-@media(max-width:850px) {
-
-    .sidebar {
+@media(max-width:850px){
+    .sidebar{
         width:68px;
-
         padding:20px 9px;
     }
 
-    .sidebar.collapsed {
-        width:68px;
-    }
+    .sidebar.collapsed{width:68px}
 
-    .sidebar-toggle {
-        display:none;
-    }
+    .sidebar-toggle{display:none}
 
-    .logo {
+    .logo{
         font-size:0;
-
         padding:0 10px 25px;
     }
 
-    .logo:first-letter {
+    .logo:before{
+        content:"F";
         font-size:22px;
     }
 
-    .user-box,
-    .nav small {
-        display:none;
-    }
+    .user-box,.nav small{display:none}
 
-    .nav button {
+    .nav button{
         justify-content:center;
-
         font-size:0;
-
         text-align:center;
     }
 
-    .nav-icon {
-        margin-right:0;
-    }
-
-    .nav-label {
-        display:none;
-    }
+    .nav-icon{margin-right:0}
+    .nav-label{display:none}
 
     .main,
-    body.sidebar-collapsed .main {
+    body.sidebar-collapsed .main{
         margin-left:68px;
-
         width:calc(100% - 68px);
-
         padding:25px 18px;
     }
 
-    .title {
-        font-size:30px;
-    }
+    .title{font-size:30px}
 
-    .form {
-        grid-template-columns:1fr;
-    }
+    .form{grid-template-columns:1fr}
+    .form .full{grid-column:auto}
 
-    .form .full {
-        grid-column:auto;
-    }
+    header{flex-direction:column}
 
-    header {
+    .today{
+        text-align:left;
+        padding-top:0;
+    }
+}
+
+@media(max-width:700px){
+    .history-grid{grid-template-columns:1fr}
+
+    .history-week-header{
+        align-items:flex-start;
         flex-direction:column;
     }
 
-    .today {
-        text-align:left;
-
-        padding-top:0;
+    .history-week-metrics{
+        width:100%;
+        justify-content:flex-start;
     }
 
+    .history-metric{text-align:left}
 }
 
-
-@media(max-width:500px) {
-
+@media(max-width:500px){
     .main,
-    body.sidebar-collapsed .main {
+    body.sidebar-collapsed .main{
         padding:20px 12px;
     }
 
-    .card {
+    .card{
         padding:16px;
-
         border-radius:14px;
     }
 
-    .progress-stats {
+    .progress-stats,
+    .tracking-summary{
         grid-template-columns:1fr;
     }
 
-    .progress-stat {
+    .progress-stat{
         display:flex;
-
         align-items:center;
         justify-content:space-between;
-
         text-align:left;
-
         padding:11px 14px;
     }
 
-    .progress-stat b {
+    .progress-stat b{
         margin:0;
-
         font-size:22px;
     }
 
-    .progress-stat span {
-        font-size:11px;
-    }
+    .progress-stat span{font-size:11px}
 
-    .section-head {
-        align-items:flex-start;
-    }
+    .section-head{align-items:flex-start}
 
-    .tabs {
-        overflow-x:auto;
-    }
+    .tabs{overflow-x:auto}
 
+    .tracking-head{align-items:flex-start}
 }
-
 </style>
-
 </head>
 
 <body>
 
-<!-- =========================================================
-     LOADING
-========================================================= -->
-
-<div id="loading" class="loading">
-    Loading Focus...
-</div>
-
-<!-- =========================================================
-     LOGIN
-========================================================= -->
+<div id="loading" class="loading">Loading Focus...</div>
 
 <section id="authScreen" class="auth-screen">
+    <form class="auth-card" id="authForm">
+        <div class="auth-logo">
+            Focus<span class="logo-dot">.</span>
+        </div>
 
-```
-<div class="auth-card">
+        <p>Your personal goals, books and learning system.</p>
 
-    <div class="auth-logo">
+        <div class="field">
+            <label>EMAIL</label>
+            <input
+                id="authEmail"
+                type="email"
+                autocomplete="email"
+                placeholder="you@example.com"
+                required>
+        </div>
+
+        <div class="field">
+            <label>PASSWORD</label>
+            <input
+                id="authPassword"
+                type="password"
+                autocomplete="current-password"
+                placeholder="At least 6 characters"
+                required>
+        </div>
+
+        <button class="btn" style="width:100%" type="submit">
+            Sign In
+        </button>
+
+        <button
+            class="btn secondary"
+            style="width:100%;margin-top:8px"
+            type="button"
+            onclick="signUp()">
+            Create account
+        </button>
+
+        <div id="authMessage" class="auth-message"></div>
+    </form>
+</section>
+
+<div id="app" class="app" style="display:none">
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
         Focus<span class="logo-dot">.</span>
     </div>
 
-    <p>
-        Your personal goals, books and learning system.
-    </p>
-
-    <div class="field">
-
-        <label>EMAIL</label>
-
-        <input
-            id="authEmail"
-            type="email"
-            placeholder="you@example.com">
-
-    </div>
-
-    <div class="field">
-
-        <label>PASSWORD</label>
-
-        <input
-            id="authPassword"
-            type="password"
-            placeholder="At least 6 characters">
-
-    </div>
     <button
-      id="loginForm"
-        class="btn"
-        style="width:100%" 
-        type="submit">
-       
-       Sign In
+        class="sidebar-toggle"
+        id="sidebarToggle"
+        onclick="toggleSidebar()"
+        aria-label="Collapse sidebar">
+        ‹
     </button>
 
-    <button
-        class="btn secondary"
-        style="width:100%;margin-top:8px"
-        onclick="signUp()">
-
-        Create account
-
-    </button>
-
-    <div
-        id="authMessage"
-        class="auth-message">
+    <div class="user-box">
+        <div class="user-email" id="userEmail"></div>
     </div>
 
-</div>
-```
+    <nav class="nav">
 
-</section>
+        <button class="active" data-page="dashboard">
+            <span class="nav-icon">⌂</span>
+            <span class="nav-label">Dashboard</span>
+        </button>
 
-<!-- =========================================================
-     APP
-========================================================= -->
+        <button data-page="goals">
+            <span class="nav-icon">✓</span>
+            <span class="nav-label">Goals</span>
+        </button>
 
-<div
-    id="app"
-    class="app"
-    style="display:none">
+        <button data-page="tracking">
+            <span class="nav-icon">◔</span>
+            <span class="nav-label">Tracking</span>
+        </button>
 
-<!-- =========================================================
-     SIDEBAR
-========================================================= -->
+        <button data-page="history">
+            <span class="nav-icon">↺</span>
+            <span class="nav-label">Past weeks</span>
+        </button>
 
-<aside
-    class="sidebar"
-    id="sidebar">
+        <button data-page="books">
+            <span class="nav-icon">▣</span>
+            <span class="nav-label">Books</span>
+        </button>
 
-```
-<div class="logo">
-    Focus<span class="logo-dot">.</span>
-</div>
+        <button data-page="learning">
+            <span class="nav-icon">◇</span>
+            <span class="nav-label">Learning</span>
+        </button>
 
+        <small>Account</small>
 
-<button
-    class="sidebar-toggle"
-    id="sidebarToggle"
-    onclick="toggleSidebar()"
-    aria-label="Collapse sidebar">
+        <button onclick="exportBackup()">
+            <span class="nav-icon">↓</span>
+            <span class="nav-label">Export backup</span>
+        </button>
 
-    ‹
+        <button onclick="signOut()">
+            <span class="nav-icon">↪</span>
+            <span class="nav-label">Sign out</span>
+        </button>
 
-</button>
-
-
-<div class="user-box">
-
-    <div
-        class="user-email"
-        id="userEmail">
-    </div>
-
-</div>
-
-
-<nav class="nav">
-
-
-    <button
-        class="active"
-        data-page="dashboard">
-
-        <span class="nav-icon">⌂</span>
-
-        <span class="nav-label">
-            Dashboard
-        </span>
-
-    </button>
-
-
-    <button data-page="goals">
-
-        <span class="nav-icon">✓</span>
-
-        <span class="nav-label">
-            Goals
-        </span>
-
-    </button>
-
-
-    <button data-page="tracking">
-
-        <span class="nav-icon">◔</span>
-
-        <span class="nav-label">
-            Tracking
-        </span>
-
-    </button>
-
-
-    <button data-page="history">
-
-        <span class="nav-icon">↺</span>
-
-        <span class="nav-label">
-            Past weeks
-        </span>
-
-    </button>
-
-
-    <button data-page="books">
-
-        <span class="nav-icon">▣</span>
-
-        <span class="nav-label">
-            Books
-        </span>
-
-    </button>
-
-
-    <button data-page="learning">
-
-        <span class="nav-icon">◇</span>
-
-        <span class="nav-label">
-            Learning
-        </span>
-
-    </button>
-
-
-    <small>
-        Account
-    </small>
-
-
-    <button onclick="exportBackup()">
-
-        <span class="nav-icon">↓</span>
-
-        <span class="nav-label">
-            Export backup
-        </span>
-
-    </button>
-
-
-    <button onclick="signOut()">
-
-        <span class="nav-icon">↪</span>
-
-        <span class="nav-label">
-            Sign out
-        </span>
-
-    </button>
-
-
-</nav>
-```
-
+    </nav>
 </aside>
-
-<!-- =========================================================
-     MAIN
-========================================================= -->
 
 <main class="main">
 
-<!-- =========================================================
-     DASHBOARD
-========================================================= -->
-
-<section
-    id="dashboard"
-    class="page active">
+<section id="dashboard" class="page active">
 
 <header>
-
-```
-<div>
-
-    <div class="eyebrow">
-        Your personal system
+    <div>
+        <div class="eyebrow">Your personal system</div>
+        <div class="title">Good to see you.</div>
+        <p class="sub">Keep the important things moving, one day at a time.</p>
     </div>
 
-    <div class="title">
-        Good to see you.
-    </div>
-
-    <p class="sub">
-        Keep the important things moving, one day at a time.
-    </p>
-
-</div>
-
-<div
-    class="today"
-    id="date">
-</div>
-```
-
+    <div class="today" id="date"></div>
 </header>
 
 <div class="grid">
 
-<!-- TODAY -->
-
 <div class="card span8">
-
-```
-<div class="section-head">
-
-    <div>
-
-        <h2>
-            Today
-        </h2>
-
-        <p>
-            Daily goals
-        </p>
-
+    <div class="section-head">
+        <div>
+            <h2>Today</h2>
+            <p>Daily goals</p>
+        </div>
+        <button class="btn" onclick="openGoal()">+ Goal</button>
     </div>
-
-    <button
-        class="btn"
-        onclick="openGoal()">
-
-        + Goal
-
-    </button>
-
+    <div id="dashDaily"></div>
 </div>
-
-<div id="dashDaily"></div>
-```
-
-</div>
-
-<!-- PROGRESS -->
 
 <div class="card span4 progress-card">
-
-```
-<div class="section-head">
-
-    <div>
-
-        <h2>
-            Progress
-        </h2>
-
-        <p>
-            Current goals
-        </p>
-
+    <div class="section-head">
+        <div>
+            <h2>Progress</h2>
+            <p>Current goals</p>
+        </div>
     </div>
 
-</div>
+    <div class="progress-stats" id="stats"></div>
 
-
-<div
-    class="progress-stats"
-    id="stats">
-</div>
-
-
-<div class="progress-bar">
-
-    <div
-        class="progress-fill"
-        id="progressFill">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
     </div>
-
 </div>
-```
-
-</div>
-
-<!-- WEEK -->
 
 <div class="card span6">
-
-```
-<div class="section-head">
-
-    <div>
-
-        <h2>
-            This week
-        </h2>
-
-        <p>
-            Weekly goals
-        </p>
-
+    <div class="section-head">
+        <div>
+            <h2>This week</h2>
+            <p>Weekly goals</p>
+        </div>
+        <button class="btn secondary" onclick="showPage('goals')">View all</button>
     </div>
-
-    <button
-        class="btn secondary"
-        onclick="showPage('goals')">
-
-        View all
-
-    </button>
-
+    <div id="dashWeekly"></div>
 </div>
-
-<div id="dashWeekly"></div>
-```
-
-</div>
-
-<!-- MONTH -->
 
 <div class="card span6">
-
-```
-<div class="section-head">
-
-    <div>
-
-        <h2>
-            This month
-        </h2>
-
-        <p>
-            Monthly goals
-        </p>
-
+    <div class="section-head">
+        <div>
+            <h2>This month</h2>
+            <p>Monthly goals</p>
+        </div>
+        <button class="btn secondary" onclick="showPage('goals')">View all</button>
     </div>
-
-    <button
-        class="btn secondary"
-        onclick="showPage('goals')">
-
-        View all
-
-    </button>
-
+    <div id="dashMonthly"></div>
 </div>
-
-<div id="dashMonthly"></div>
-```
-
-</div>
-
-<!-- FICTION -->
 
 <div class="card span6">
-
-```
-<div class="section-head">
-
-    <div>
-
-        <h2>
-            Next fiction
-        </h2>
-
-        <p>
-            From your reading queue
-        </p>
-
+    <div class="section-head">
+        <div>
+            <h2>Next fiction</h2>
+            <p>From your reading queue</p>
+        </div>
+        <button class="btn secondary" onclick="showPage('books')">Books</button>
     </div>
-
-    <button
-        class="btn secondary"
-        onclick="showPage('books')">
-
-        Books
-
-    </button>
-
+    <div id="nextFiction"></div>
 </div>
-
-<div id="nextFiction"></div>
-```
-
-</div>
-
-<!-- NONFICTION -->
 
 <div class="card span6">
-
-```
-<div class="section-head">
-
-    <div>
-
-        <h2>
-            Next non-fiction
-        </h2>
-
-        <p>
-            From your reading queue
-        </p>
-
+    <div class="section-head">
+        <div>
+            <h2>Next non-fiction</h2>
+            <p>From your reading queue</p>
+        </div>
+        <button class="btn secondary" onclick="showPage('books')">Books</button>
     </div>
-
-    <button
-        class="btn secondary"
-        onclick="showPage('books')">
-
-        Books
-
-    </button>
-
+    <div id="nextNonfiction"></div>
 </div>
-
-<div id="nextNonfiction"></div>
-```
-
-</div>
-
-<!-- LEARNING -->
 
 <div class="card span12">
-
-```
-<div class="section-head">
-
-    <div>
-
-        <h2>
-            Next learning focus
-        </h2>
-
-        <p>
-            Your active learning queue
-        </p>
-
+    <div class="section-head">
+        <div>
+            <h2>Next learning focus</h2>
+            <p>Your active learning queue</p>
+        </div>
+        <button class="btn secondary" onclick="showPage('learning')">Learning</button>
     </div>
-
-    <button
-        class="btn secondary"
-        onclick="showPage('learning')">
-
-        Learning
-
-    </button>
-
-</div>
-
-<div id="nextLearning"></div>
-```
-
+    <div id="nextLearning"></div>
 </div>
 
 </div>
-
 </section>
 
-<!-- =========================================================
-     GOALS
-========================================================= -->
-
-<section
-    id="goals"
-    class="page">
+<section id="goals" class="page">
 
 <header>
-
-```
-<div>
-
-    <div class="eyebrow">
-        Goals
+    <div>
+        <div class="eyebrow">Goals</div>
+        <div class="title">Your goals.</div>
+        <p class="sub">Daily, weekly and monthly.</p>
     </div>
 
-    <div class="title">
-        Your goals.
-    </div>
-
-    <p class="sub">
-        Daily, weekly and monthly.
-    </p>
-
-</div>
-
-<button
-    class="btn"
-    onclick="openGoal()">
-
-    + Add goal
-
-</button>
-```
-
+    <button class="btn" onclick="openGoal()">+ Add goal</button>
 </header>
 
 <div class="card">
-
-```
-<div class="section-head">
-
-    <div
-        class="tabs"
-        id="goalTabs">
-
-        <button
-            class="active"
-            data-horizon="daily">
-
-            Daily
-
-        </button>
-
-        <button
-            data-horizon="weekly">
-
-            Weekly
-
-        </button>
-
-        <button
-            data-horizon="monthly">
-
-            Monthly
-
-        </button>
-
+    <div class="section-head">
+        <div class="tabs" id="goalTabs">
+            <button class="active" data-horizon="daily">Daily</button>
+            <button data-horizon="weekly">Weekly</button>
+            <button data-horizon="monthly">Monthly</button>
+        </div>
     </div>
 
-</div>
-
-<div id="goalList"></div>
-```
-
+    <div id="goalList"></div>
 </div>
 
 </section>
 
-<!-- =========================================================
-     TRACKING
-========================================================= -->
-
-<section
-    id="tracking"
-    class="page">
+<section id="tracking" class="page">
 
 <header>
-
-```
-<div>
-
-    <div class="eyebrow">
-        Tracking
+    <div>
+        <div class="eyebrow">Tracking</div>
+        <div class="title">Your week.</div>
+        <p class="sub">
+            See how consistently you are completing your daily and weekly goals.
+        </p>
     </div>
 
-    <div class="title">
-        Your week.
-    </div>
-
-    <p class="sub">
-        See how consistently you are completing your daily and weekly goals.
-    </p>
-
-</div>
-
-<div
-    class="today"
-    id="trackingWeekLabel">
-</div>
-```
-
+    <div class="today" id="trackingWeekLabel"></div>
 </header>
 
-<div class="card span12">
-
-```
-<div class="section-head">
-
-    <div>
-
-        <h2>
-            Weekly overview
-        </h2>
-
-        <p>
-            Daily goals are measured across the current week. Weekly goals fill up as you complete their targets.
-        </p>
-
+<div class="card">
+    <div class="section-head">
+        <div>
+            <h2>Weekly overview</h2>
+            <p>
+                Daily goals are measured across the current week.
+                Weekly goals fill up as you complete their targets.
+            </p>
+        </div>
     </div>
 
+    <div id="trackingSummary" class="tracking-summary"></div>
 </div>
 
-<div
-    id="trackingSummary"
-    class="tracking-summary">
-</div>
-```
-
-</div>
+<br>
 
 <div class="grid">
 
-```
 <div class="card span6">
-
     <div class="section-head">
-
         <div>
-
-            <h2>
-                Daily goals
-            </h2>
-
-            <p>
-                Completion this week
-            </p>
-
+            <h2>Daily goals</h2>
+            <p>Completion this week</p>
         </div>
-
     </div>
-
     <div id="trackingDaily"></div>
-
 </div>
-
 
 <div class="card span6">
-
     <div class="section-head">
-
         <div>
-
-            <h2>
-                Weekly goals
-            </h2>
-
-            <p>
-                Progress toward each weekly target
-            </p>
-
+            <h2>Weekly goals</h2>
+            <p>Progress toward each weekly target</p>
         </div>
-
     </div>
-
     <div id="trackingWeekly"></div>
-
 </div>
-```
 
 </div>
 
 </section>
 
-<!-- =========================================================
-     PAST WEEKS
-========================================================= -->
-
-<section
-    id="history"
-    class="page">
+<section id="history" class="page">
 
 <header>
-
-```
-<div>
-
-    <div class="eyebrow">
-        History
+    <div>
+        <div class="eyebrow">History</div>
+        <div class="title">Past weeks.</div>
+        <p class="sub">
+            Review your daily consistency and weekly targets from previous weeks.
+        </p>
     </div>
 
-    <div class="title">
-        Past weeks.
-    </div>
-
-    <p class="sub">
-        Review your daily consistency and weekly targets from previous weeks.
-    </p>
-
-</div>
-
-<div class="today">
-    From today backwards
-</div>
-```
-
+    <div class="today">From today backwards</div>
 </header>
 
 <div id="historyWeeks"></div>
 
 </section>
 
-<!-- =========================================================
-     BOOKS
-========================================================= -->
-
-<section
-    id="books"
-    class="page">
+<section id="books" class="page">
 
 <header>
-
-```
-<div>
-
-    <div class="eyebrow">
-        Reading
+    <div>
+        <div class="eyebrow">Reading</div>
+        <div class="title">Books.</div>
+        <p class="sub">Build your reading queue.</p>
     </div>
 
-    <div class="title">
-        Books.
-    </div>
-
-    <p class="sub">
-        Build your reading queue.
-    </p>
-
-</div>
-
-<button
-    class="btn"
-    onclick="openBook()">
-
-    + Add book
-
-</button>
-```
-
+    <button class="btn" onclick="openBook()">+ Add book</button>
 </header>
 
 <div class="grid">
 
 <div class="card span6">
-
-```
-<div class="section-head">
-
-    <div>
-
-        <h2>
-            Fiction
-        </h2>
-
-        <p>
-            Reading queue
-        </p>
-
+    <div class="section-head">
+        <div>
+            <h2>Fiction</h2>
+            <p>Reading queue</p>
+        </div>
     </div>
-
-</div>
-
-<div
-    id="fictionList"
-    class="list">
-</div>
-```
-
+    <div id="fictionList" class="list"></div>
 </div>
 
 <div class="card span6">
-
-```
-<div class="section-head">
-
-    <div>
-
-        <h2>
-            Non-fiction
-        </h2>
-
-        <p>
-            Reading queue
-        </p>
-
+    <div class="section-head">
+        <div>
+            <h2>Non-fiction</h2>
+            <p>Reading queue</p>
+        </div>
     </div>
-
-</div>
-
-<div
-    id="nonfictionList"
-    class="list">
-</div>
-```
-
+    <div id="nonfictionList" class="list"></div>
 </div>
 
 </div>
 
 </section>
 
-<!-- =========================================================
-     LEARNING
-========================================================= -->
-
-<section
-    id="learning"
-    class="page">
+<section id="learning" class="page">
 
 <header>
-
-```
-<div>
-
-    <div class="eyebrow">
-        Learning
+    <div>
+        <div class="eyebrow">Learning</div>
+        <div class="title">Learning.</div>
+        <p class="sub">Your learning queue.</p>
     </div>
 
-    <div class="title">
-        Learning.
-    </div>
-
-    <p class="sub">
-        Your learning queue.
-    </p>
-
-</div>
-
-<button
-    class="btn"
-    onclick="openLearning()">
-
-    + Add learning goal
-
-</button>
-```
-
+    <button class="btn" onclick="openLearning()">+ Add learning goal</button>
 </header>
 
 <div class="card">
-
-```
-<div
-    id="learningList"
-    class="list">
-</div>
-```
-
+    <div id="learningList" class="list"></div>
 </div>
 
 </section>
 
 </main>
-
 </div>
 
-<!-- =========================================================
-     MODAL
-========================================================= -->
-
-<div
-    class="modal"
-    id="modal">
-
-```
-<div
-    class="modal-box"
-    id="modalContent">
-</div>
-```
-
+<div class="modal" id="modal">
+    <div class="modal-box" id="modalContent"></div>
 </div>
 
 <script>
-
+"use strict";
 
 /* =========================================================
-   SUPABASE CONFIGURATION
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
     "https://eolmzfbnvelnozynpmez.supabase.co";
 
-
 const SUPABASE_KEY =
     "sb_publishable_wHBm6EI9kFXgOhPwEI7VoQ_AaKWIQRh";
 
-
-const { createClient } =
-    supabase;
-
-
-const db =
-    createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY,
-        {
-            auth:{
-                persistSession:true,
-                autoRefreshToken:true,
-                detectSessionInUrl:true
-            }
+const db = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+        auth:{
+            persistSession:true,
+            autoRefreshToken:true,
+            detectSessionInUrl:true
         }
-    );
-
+    }
+);
 
 let currentUser = null;
-
 
 let data = {
     goals:[],
@@ -2765,87 +1403,47 @@ let data = {
     learning:[]
 };
 
+let loadingUser = false;
 
 /* =========================================================
-   USER THEME
+   THEME
 ========================================================= */
 
-function applyUserTheme(user) {
-
+function applyUserTheme(user){
     document.body.classList.remove(
         "theme-green",
         "theme-pink"
     );
 
+    if(!user?.email) return;
 
-    if (!user || !user.email)
-        return;
+    const email = user.email.trim().toLowerCase();
 
-
-    const email =
-        user.email.trim().toLowerCase();
-
-
-    if (
-        email ===
-        "thesambutdifferent@gmail.com"
-    ) {
-
-        document.body.classList.add(
-            "theme-green"
-        );
-
+    if(email === "thesambutdifferent@gmail.com"){
+        document.body.classList.add("theme-green");
     }
 
-    else if (
-        email ===
-        "annahbisley8@gmail.com"
-    ) {
-
-        document.body.classList.add(
-            "theme-pink"
-        );
-
+    if(email === "annahbisley8@gmail.com"){
+        document.body.classList.add("theme-pink");
     }
-
 }
-
 
 /* =========================================================
    SIDEBAR
 ========================================================= */
 
-function toggleSidebar() {
-
-    const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
-
-
-    const collapsed =
-        sidebar.classList.toggle(
-            "collapsed"
-        );
-
+function toggleSidebar(){
+    const sidebar = document.getElementById("sidebar");
+    const collapsed = sidebar.classList.toggle("collapsed");
 
     document.body.classList.toggle(
         "sidebar-collapsed",
         collapsed
     );
 
+    const toggle = document.getElementById("sidebarToggle");
 
-    const toggle =
-        document.getElementById(
-            "sidebarToggle"
-        );
-
-
-    toggle.textContent =
-        collapsed
-            ? "›"
-            : "‹";
-
+    toggle.textContent = collapsed ? "›" : "‹";
 
     toggle.setAttribute(
         "aria-label",
@@ -2854,293 +1452,185 @@ function toggleSidebar() {
             : "Collapse sidebar"
     );
 
-
     localStorage.setItem(
         "focus-sidebar-collapsed",
-        collapsed
-            ? "true"
-            : "false"
+        collapsed ? "true" : "false"
     );
-
 }
 
-
-/* Restore sidebar state */
-
 (function restoreSidebar(){
-
     const collapsed =
-        localStorage.getItem(
-            "focus-sidebar-collapsed"
-        ) === "true";
+        localStorage.getItem("focus-sidebar-collapsed") === "true";
 
+    if(collapsed){
+        document.getElementById("sidebar")
+            .classList.add("collapsed");
 
-    if (collapsed) {
+        document.body.classList.add("sidebar-collapsed");
 
-        document
-            .getElementById(
-                "sidebar"
-            )
-            .classList.add(
-                "collapsed"
-            );
-
-
-        document.body.classList.add(
-            "sidebar-collapsed"
-        );
-
-
-        document
-            .getElementById(
-                "sidebarToggle"
-            )
+        document.getElementById("sidebarToggle")
             .textContent = "›";
-
     }
-
 })();
-
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
-function esc(value) {
-
-    return String(
-        value ?? ""
-    ).replace(
+function esc(value){
+    return String(value ?? "").replace(
         /[&<>"']/g,
-        function(match) {
-
-            return {
-                "&":"&amp;",
-                "<":"&lt;",
-                ">":"&gt;",
-                '"':"&quot;",
-                "'":"&#039;"
-            }[match];
-
-        }
+        match => ({
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+        })[match]
     );
-
 }
 
-
-function getDateKey(
-    date = new Date()
-) {
-
-    /*
-       Uses local browser time rather than UTC.
-       This keeps daily resets aligned with the user's
-       local date.
-    */
-
-    const year =
-        date.getFullYear();
-
-
-    const month =
-        String(
-            date.getMonth()+1
-        ).padStart(2,"0");
-
-
-    const day =
-        String(
-            date.getDate()
-        ).padStart(2,"0");
-
+function getDateKey(date = new Date()){
+    const year = date.getFullYear();
+    const month = String(date.getMonth()+1).padStart(2,"0");
+    const day = String(date.getDate()).padStart(2,"0");
 
     return `${year}-${month}-${day}`;
-
 }
 
+function getWeekKey(date = new Date()){
+    const d = new Date(date);
 
-function getWeekKey(
-    date = new Date()
-) {
+    d.setHours(0,0,0,0);
 
-    const d =
-        new Date(date);
+    const day = d.getDay();
 
+    const diff = day === 0 ? -6 : 1 - day;
 
-    d.setHours(
-        0,0,0,0
-    );
-
-
-    const day =
-        d.getDay();
-
-
-    const diff =
-        day === 0
-            ? -6
-            : 1 - day;
-
-
-    d.setDate(
-        d.getDate() + diff
-    );
-
+    d.setDate(d.getDate()+diff);
 
     return getDateKey(d);
-
 }
 
-
-function getMonthKey(
-    date = new Date()
-) {
-
+function getMonthKey(date = new Date()){
     return `${date.getFullYear()}-${String(
         date.getMonth()+1
     ).padStart(2,"0")}`;
-
 }
 
+function formatDate(date, includeYear = false){
+    return date.toLocaleDateString(
+        undefined,
+        includeYear
+            ? {
+                month:"short",
+                day:"numeric",
+                year:"numeric"
+            }
+            : {
+                month:"short",
+                day:"numeric"
+            }
+    );
+}
 
 /* =========================================================
    AUTH
 ========================================================= */
 
-async function signUp() {
+document.getElementById("authForm").addEventListener(
+    "submit",
+    async event => {
+        event.preventDefault();
+        await signIn();
+    }
+);
 
+async function signIn(){
     const email =
-        document
-            .getElementById(
-                "authEmail"
-            )
-            .value
-            .trim();
-
+        document.getElementById("authEmail").value.trim();
 
     const password =
-        document
-            .getElementById(
-                "authPassword"
-            )
-            .value;
+        document.getElementById("authPassword").value;
 
-
-    if (
-        !email ||
-        password.length < 6
-    ) {
-
-        showAuthMessage(
-            "Enter a valid email and a password of at least 6 characters."
-        );
-
-        return;
-
-    }
-
-
-    const { error } =
-        await db.auth.signUp({
-            email,
-            password
-        });
-
-
-    if (error) {
-
-        showAuthMessage(
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    showAuthMessage(
-        "Account created. Check your email if email confirmation is enabled."
-    );
-
-}
-
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-    await signIn();
-});
-async function signIn() {
-
-    const email =
-        document
-            .getElementById(
-                "authEmail"
-            )
-            .value
-            .trim();
-
-
-    const password =
-        document
-            .getElementById(
-                "authPassword"
-            )
-            .value;
-
-
-    if (!email || !password) {
-
+    if(!email || !password){
         showAuthMessage(
             "Enter your email and password."
         );
-
         return;
-
     }
 
+    showAuthMessage("Signing in...");
 
-    const { error } =
+    const {error} =
         await db.auth.signInWithPassword({
             email,
             password
         });
 
-
-    if (error) {
-
-        showAuthMessage(
-            error.message
-        );
-
+    if(error){
+        showAuthMessage(error.message);
         return;
-
     }
 
+    /*
+       Do not manually initialize here.
+       Supabase will fire SIGNED_IN and the auth
+       listener below will load the application.
+    */
 }
 
+async function signUp(){
+    const email =
+        document.getElementById("authEmail").value.trim();
 
-async function signOut() {
+    const password =
+        document.getElementById("authPassword").value;
 
+    if(!email || password.length < 6){
+        showAuthMessage(
+            "Enter a valid email and a password of at least 6 characters."
+        );
+        return;
+    }
+
+    showAuthMessage("Creating account...");
+
+    const {data:result,error} =
+        await db.auth.signUp({
+            email,
+            password
+        });
+
+    if(error){
+        showAuthMessage(error.message);
+        return;
+    }
+
+    if(result.session){
+        showAuthMessage("Account created. Loading Focus...");
+    }else{
+        showAuthMessage(
+            "Account created. Check your email to confirm your account."
+        );
+    }
+}
+
+async function signOut(){
     await db.auth.signOut();
-
 }
 
-
-function showAuthMessage(message) {
-
-    document
-        .getElementById(
-            "authMessage"
-        )
-        .textContent = message;
-
+function showAuthMessage(message){
+    document.getElementById("authMessage").textContent =
+        message;
 }
-
 
 /* =========================================================
    LOAD DATABASE
 ========================================================= */
 
-async function loadData() {
+async function loadData(){
+    if(!currentUser) return;
 
     const [
         goalsResult,
@@ -3168,731 +1658,341 @@ async function loadData() {
             .from("learning")
             .select("*")
             .order("created_at")
-
     ]);
 
+    if(goalsResult.error) throw goalsResult.error;
+    if(completionsResult.error) throw completionsResult.error;
+    if(booksResult.error) throw booksResult.error;
+    if(learningResult.error) throw learningResult.error;
 
-    if (goalsResult.error)
-        throw goalsResult.error;
-
-
-    if (completionsResult.error)
-        throw completionsResult.error;
-
-
-    if (booksResult.error)
-        throw booksResult.error;
-
-
-    if (learningResult.error)
-        throw learningResult.error;
-
-
-    data.goals =
-        goalsResult.data || [];
-
-
-    data.completions =
-        completionsResult.data || [];
-
+    data.goals = goalsResult.data || [];
+    data.completions = completionsResult.data || [];
+    data.books = booksResult.data || [];
+    data.learning = learningResult.data || [];
 
     await seedLegacyCompletions();
-
-
-    data.books =
-        booksResult.data || [];
-
-
-    data.learning =
-        learningResult.data || [];
-
-
     await resetRecurringGoals();
 
-
     render();
-
 }
-
 
 /* =========================================================
-   AUTOMATIC RESETS
+   COMPLETIONS
 ========================================================= */
 
-async function seedLegacyCompletions() {
-
-    /*
-       Existing versions of Focus stored only the current
-       "done" state.
-
-       If a legacy goal is currently done and has no
-       completion event, create one so tracking does not
-       lose that completion.
-    */
-
-    for (const goal of data.goals) {
-
-        const alreadySeeded =
-            data.completions.some(
-                c =>
-                    c.goal_id === goal.id
-            );
-
-
-        if (
-            !goal.done ||
-            alreadySeeded
-        )
-            continue;
-
-
-        let completedDate = null;
-
-
-        if (
-            goal.horizon ===
-            "daily"
-        )
-            completedDate =
-                goal.completed_date ||
-                getDateKey();
-
-
-        if (
-            goal.horizon ===
-            "weekly"
-        )
-            completedDate =
-                getDateKey();
-
-
-        if (!completedDate)
-            continue;
-
-
-        const {
-            data:created,
-            error
-        } =
-            await db
-                .from(
-                    "goal_completions"
-                )
-                .insert({
-                    user_id:
-                        currentUser.id,
-
-                    goal_id:
-                        goal.id,
-
-                    completed_at:
-                        new Date(
-                            completedDate +
-                            "T12:00:00"
-                        ).toISOString()
-                })
-                .select()
-                .single();
-
-
-        if (
-            !error &&
-            created
-        )
-            data.completions.push(
-                created
-            );
-
-    }
-
-}
-
-
-function completionDateKey(
-    completion
-) {
-
-    if (
-        !completion ||
-        !completion.completed_at
-    )
-        return "";
-
+function completionDateKey(completion){
+    if(!completion?.completed_at) return "";
 
     return getDateKey(
-        new Date(
-            completion.completed_at
-        )
+        new Date(completion.completed_at)
     );
-
 }
 
-
-function weekCompletions(
-    goalId
-) {
-
-    const week =
-        getWeekKey();
-
+function weekCompletions(goalId){
+    const week = getWeekKey();
 
     return data.completions.filter(
         c =>
             c.goal_id === goalId &&
             getWeekKey(
-                new Date(
-                    c.completed_at
-                )
+                new Date(c.completed_at)
             ) === week
     );
-
 }
 
-
-function todayCompletions(
-    goalId
-) {
-
-    const today =
-        getDateKey();
-
+function todayCompletions(goalId){
+    const today = getDateKey();
 
     return data.completions.filter(
         c =>
             c.goal_id === goalId &&
             completionDateKey(c) === today
     );
-
 }
 
-
-function weeklyTarget(goal) {
-
+function weeklyTarget(goal){
     return Math.max(
         1,
-        Number(
-            goal.target_count || 1
-        )
+        Number(goal.target_count || 1)
     );
-
 }
 
-
-function isGoalDoneNow(goal) {
-
-    if (
-        goal.horizon ===
-        "daily"
-    )
-        return todayCompletions(
-            goal.id
-        ).length > 0;
-
-
-    if (
-        goal.horizon ===
-        "weekly"
-    )
-        return weekCompletions(
-            goal.id
-        ).length >=
-        weeklyTarget(goal);
-
-
-    return !!goal.done;
-
-}
-
-
-async function syncGoalDone(
-    goal
-) {
-
-    const doneNow =
-        isGoalDoneNow(goal);
-
-
-    if (
-        goal.horizon ===
-        "daily"
-    ) {
-
-        const date =
-            doneNow
-                ? getDateKey()
-                : null;
-
-
-        if (
-            goal.done !== doneNow ||
-            goal.completed_date !== date
-        ) {
-
-            await db
-                .from("goals")
-                .update({
-                    done:doneNow,
-                    completed_date:date
-                })
-                .eq(
-                    "id",
-                    goal.id
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                );
-
-
-            goal.done =
-                doneNow;
-
-
-            goal.completed_date =
-                date;
-
-        }
-
-
-        return;
-
+function isGoalDoneNow(goal){
+    if(goal.horizon === "daily"){
+        return todayCompletions(goal.id).length > 0;
     }
 
-
-    if (
-        goal.horizon ===
-        "weekly"
-    ) {
-
-        const week =
-            doneNow
-                ? getWeekKey()
-                : null;
-
-
-        if (
-            goal.done !== doneNow ||
-            goal.completed_week !== week
-        ) {
-
-            await db
-                .from("goals")
-                .update({
-                    done:doneNow,
-                    completed_week:week
-                })
-                .eq(
-                    "id",
-                    goal.id
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                );
-
-
-            goal.done =
-                doneNow;
-
-
-            goal.completed_week =
-                week;
-
-        }
-
-    }
-
-}
-
-
-async function resetRecurringGoals() {
-
-    /*
-       Completion history is never erased at the start
-       of a new day/week.
-
-       Only the legacy display flags are refreshed
-       from the completion log.
-    */
-
-    for (
-        const goal of data.goals
-    )
-        await syncGoalDone(
-            goal
+    if(goal.horizon === "weekly"){
+        return (
+            weekCompletions(goal.id).length >=
+            weeklyTarget(goal)
         );
+    }
 
+    if(goal.horizon === "monthly"){
+        return (
+            goal.done === true &&
+            goal.completed_month === getMonthKey()
+        );
+    }
+
+    return false;
 }
-
 
 /* =========================================================
-   GOALS
+   LEGACY COMPLETION MIGRATION
 ========================================================= */
 
-async function toggleGoal(id) {
+async function seedLegacyCompletions(){
+    if(!currentUser) return;
 
-    const goal =
-        data.goals.find(
-            g => g.id === id
+    for(const goal of data.goals){
+
+        if(!goal.done) continue;
+
+        const alreadySeeded =
+            data.completions.some(
+                c => c.goal_id === goal.id
+            );
+
+        if(alreadySeeded) continue;
+
+        let completedDate = null;
+
+        if(goal.horizon === "daily"){
+            completedDate =
+                goal.completed_date || getDateKey();
+        }
+
+        if(goal.horizon === "weekly"){
+            completedDate = getDateKey();
+        }
+
+        if(!completedDate) continue;
+
+        const {
+            data:created,
+            error
+        } = await db
+            .from("goal_completions")
+            .insert({
+                user_id:currentUser.id,
+                goal_id:goal.id,
+                completed_at:
+                    new Date(
+                        completedDate + "T12:00:00"
+                    ).toISOString()
+            })
+            .select()
+            .single();
+
+        if(!error && created){
+            data.completions.push(created);
+        }
+    }
+}
+
+/* =========================================================
+   SYNC LEGACY DONE FLAGS
+========================================================= */
+
+async function syncGoalDone(goal){
+    if(!currentUser) return;
+
+    const doneNow = isGoalDoneNow(goal);
+
+    let update = null;
+
+    if(goal.horizon === "daily"){
+        update = {
+            done:doneNow,
+            completed_date:
+                doneNow ? getDateKey() : null
+        };
+    }
+
+    if(goal.horizon === "weekly"){
+        update = {
+            done:doneNow,
+            completed_week:
+                doneNow ? getWeekKey() : null
+        };
+    }
+
+    if(goal.horizon === "monthly"){
+        update = {
+            done:doneNow,
+            completed_month:
+                doneNow ? getMonthKey() : null
+        };
+    }
+
+    if(!update) return;
+
+    const {error} =
+        await db
+            .from("goals")
+            .update(update)
+            .eq("id",goal.id)
+            .eq("user_id",currentUser.id);
+
+    if(error){
+        console.error(
+            "Could not sync goal:",
+            error
         );
-
-
-    if (!goal)
         return;
+    }
 
+    Object.assign(goal,update);
+}
 
-    /*
-       Daily goals can be completed once per day.
-       Weekly repeat goals add/remove one completion
-       event at a time.
-       Monthly goals keep the original checkbox behaviour.
-    */
+async function resetRecurringGoals(){
+    for(const goal of data.goals){
+        await syncGoalDone(goal);
+    }
+}
 
-    if (
-        goal.horizon ===
-        "monthly"
-    ) {
+/* =========================================================
+   GOAL ACTIONS
+========================================================= */
 
-        const now =
-            new Date();
+async function toggleGoal(id){
+    const goal =
+        data.goals.find(g => g.id === id);
 
+    if(!goal) return;
 
-        const newDone =
-            !goal.done;
+    if(goal.horizon === "monthly"){
 
+        const newDone = !isGoalDoneNow(goal);
 
         const update = {
-
             done:newDone,
-
             completed_date:null,
-
             completed_week:null,
-
             completed_month:
-                newDone
-                    ? getMonthKey(now)
-                    : null
-
+                newDone ? getMonthKey() : null
         };
 
-
-        const { error } =
+        const {error} =
             await db
                 .from("goals")
                 .update(update)
-                .eq(
-                    "id",
-                    id
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                );
+                .eq("id",id)
+                .eq("user_id",currentUser.id);
 
-
-        if (error) {
-
-            alert(
-                error.message
-            );
-
+        if(error){
+            alert(error.message);
             return;
-
         }
 
-
-        Object.assign(
-            goal,
-            update
-        );
-
+        Object.assign(goal,update);
 
         render();
-
         return;
-
     }
 
-
-    if (
-        goal.horizon ===
-        "daily"
-    ) {
-
-        const existing =
-            todayCompletions(
-                id
-            )[0];
-
-
-        if (existing) {
-
-            const { error } =
-                await db
-                    .from(
-                        "goal_completions"
-                    )
-                    .delete()
-                    .eq(
-                        "id",
-                        existing.id
-                    )
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    );
-
-
-            if (error) {
-
-                alert(
-                    error.message
-                );
-
-                return;
-
-            }
-
-
-            data.completions =
-                data.completions.filter(
-                    c =>
-                        c.id !==
-                        existing.id
-                );
-
-        }
-
-        else {
-
-            const {
-                data:created,
-                error
-            } =
-                await db
-                    .from(
-                        "goal_completions"
-                    )
-                    .insert({
-                        user_id:
-                            currentUser.id,
-
-                        goal_id:
-                            id,
-
-                        completed_at:
-                            new Date()
-                                .toISOString()
-                    })
-                    .select()
-                    .single();
-
-
-            if (error) {
-
-                alert(
-                    error.message
-                );
-
-                return;
-
-            }
-
-
-            data.completions.push(
-                created
-            );
-
-        }
-
-
-        await syncGoalDone(
-            goal
-        );
-
-
-        render();
-
-        return;
-
-    }
-
-
-    if (
-        goal.horizon ===
-        "weekly"
-    ) {
+    if(
+        goal.horizon === "daily" ||
+        goal.horizon === "weekly"
+    ){
 
         const completions =
-            weekCompletions(
-                id
-            );
-
+            goal.horizon === "daily"
+                ? todayCompletions(id)
+                : weekCompletions(id);
 
         const target =
-            weeklyTarget(
-                goal
-            );
+            goal.horizon === "daily"
+                ? 1
+                : weeklyTarget(goal);
 
-
-        /*
-           Once the target is reached,
-           the main checkbox removes the
-           latest completion so the goal
-           can be corrected.
-        */
-
-        if (
-            completions.length >=
-            target
-        ) {
+        if(completions.length >= target){
 
             const latest =
                 completions
                     .slice()
                     .sort(
                         (a,b) =>
-                            new Date(
-                                b.completed_at
-                            ) -
-                            new Date(
-                                a.completed_at
-                            )
+                            new Date(b.completed_at) -
+                            new Date(a.completed_at)
                     )[0];
 
-
-            const { error } =
+            const {error} =
                 await db
-                    .from(
-                        "goal_completions"
-                    )
+                    .from("goal_completions")
                     .delete()
-                    .eq(
-                        "id",
-                        latest.id
-                    )
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    );
+                    .eq("id",latest.id)
+                    .eq("user_id",currentUser.id);
 
-
-            if (error) {
-
-                alert(
-                    error.message
-                );
-
+            if(error){
+                alert(error.message);
                 return;
-
             }
-
 
             data.completions =
                 data.completions.filter(
-                    c =>
-                        c.id !==
-                        latest.id
+                    c => c.id !== latest.id
                 );
 
-        }
-
-        else {
+        }else{
 
             const {
                 data:created,
                 error
             } =
                 await db
-                    .from(
-                        "goal_completions"
-                    )
+                    .from("goal_completions")
                     .insert({
-                        user_id:
-                            currentUser.id,
-
-                        goal_id:
-                            id,
-
+                        user_id:currentUser.id,
+                        goal_id:id,
                         completed_at:
-                            new Date()
-                                .toISOString()
+                            new Date().toISOString()
                     })
                     .select()
                     .single();
 
-
-            if (error) {
-
-                alert(
-                    error.message
-                );
-
+            if(error){
+                alert(error.message);
                 return;
-
             }
 
-
-            data.completions.push(
-                created
-            );
-
+            data.completions.push(created);
         }
 
-
-        await syncGoalDone(
-            goal
-        );
-
+        await syncGoalDone(goal);
 
         render();
-
     }
-
 }
 
-
-async function addGoal() {
+async function addGoal(){
 
     const name =
-        document
-            .getElementById(
-                "gName"
-            )
-            .value
-            .trim();
-
+        document.getElementById("gName")
+            .value.trim();
 
     const horizon =
-        document
-            .getElementById(
-                "gH"
-            )
-            .value;
-
+        document.getElementById("gH").value;
 
     const targetInput =
-        document.getElementById(
-            "gTarget"
-        );
-
+        document.getElementById("gTarget");
 
     const targetCount =
         horizon === "weekly"
             ? Math.max(
                 1,
                 Number(
-                    targetInput?.value ||
-                    1
+                    targetInput?.value || 1
                 )
             )
             : 1;
 
-
-    if (!name)
+    if(!name){
+        alert("Please enter a goal.");
         return;
-
+    }
 
     const {
         data:created,
@@ -3901,257 +2001,161 @@ async function addGoal() {
         await db
             .from("goals")
             .insert({
-                user_id:
-                    currentUser.id,
-
+                user_id:currentUser.id,
                 name,
-
                 horizon,
-
-                target_count:
-                    targetCount,
-
+                target_count:targetCount,
                 done:false
             })
             .select()
             .single();
 
-
-    if (error) {
-
-        alert(
-            error.message
-        );
-
+    if(error){
+        alert(error.message);
         return;
-
     }
 
-
-    data.goals.push(
-        created
-    );
-
+    data.goals.push(created);
 
     closeModal();
-
     render();
-
 }
 
+async function deleteGoal(id){
 
-async function deleteGoal(id) {
+    if(!confirm("Delete this goal?")) return;
 
-    if (
-        !confirm(
-            "Delete this goal?"
-        )
-    )
-        return;
-
-
-    const { error } =
+    const {error} =
         await db
             .from("goals")
             .delete()
-            .eq(
-                "id",
-                id
-            )
-            .eq(
-                "user_id",
-                currentUser.id
-            );
+            .eq("id",id)
+            .eq("user_id",currentUser.id);
 
-
-    if (error) {
-
-        alert(
-            error.message
-        );
-
+    if(error){
+        alert(error.message);
         return;
-
     }
-
 
     data.goals =
         data.goals.filter(
-            g =>
-                g.id !== id
+            g => g.id !== id
         );
 
+    data.completions =
+        data.completions.filter(
+            c => c.goal_id !== id
+        );
 
     render();
-
 }
 
-
-function goalHTML(goal) {
+function goalHTML(goal){
 
     const done =
-        isGoalDoneNow(
-            goal
-        );
-
+        isGoalDoneNow(goal);
 
     let suffix = "";
 
-
-    if (
-        goal.horizon ===
-        "weekly"
-    ) {
+    if(goal.horizon === "weekly"){
 
         const count =
-            weekCompletions(
-                goal.id
-            ).length;
-
+            weekCompletions(goal.id).length;
 
         const target =
-            weeklyTarget(
-                goal
-            );
-
+            weeklyTarget(goal);
 
         suffix = `
             <span class="badge">
                 ${count}/${target} this week
-            </span>`;
-
+            </span>
+        `;
     }
 
-
     return `
-    <div class="goal ${done ? "done":""}">
+        <div class="goal ${done ? "done" : ""}">
+            <div class="goal-row">
 
-        <div class="goal-row">
+                <button
+                    class="check ${done ? "done" : ""}"
+                    onclick="toggleGoal(${JSON.stringify(goal.id)})"
+                    aria-label="Toggle goal">
+                </button>
 
-            <button
-                class="check ${done ? "done":""}"
-                onclick="toggleGoal(${goal.id})">
-            </button>
+                <div class="goal-name">
+                    ${esc(goal.name)}
+                </div>
 
-            <div class="goal-name">
-                ${esc(goal.name)}
+                ${suffix}
+
+                <button
+                    class="icon"
+                    onclick="deleteGoal(${JSON.stringify(goal.id)})"
+                    aria-label="Delete goal">
+                    ×
+                </button>
+
             </div>
-
-            ${suffix}
-
-            <button
-                class="icon"
-                onclick="deleteGoal(${goal.id})">
-                ×
-            </button>
-
         </div>
-
-    </div>
     `;
-
 }
 
-
-function renderGoals(
-    horizon
-) {
+function renderGoals(horizon){
 
     const goals =
         data.goals.filter(
-            g =>
-                g.horizon ===
-                horizon
+            g => g.horizon === horizon
         );
 
-
-    document.getElementById(
-        "goalList"
-    ).innerHTML =
-
+    document.getElementById("goalList").innerHTML =
         goals.length
-
-        ?
-
-        goals
-            .map(goalHTML)
-            .join("")
-
-        :
-
-        `<div class="empty">
-            No ${horizon} goals yet.
-        </div>`;
-
+            ? goals.map(goalHTML).join("")
+            : `
+                <div class="empty">
+                    No ${horizon} goals yet.
+                </div>
+            `;
 }
-
 
 /* =========================================================
    BOOKS
 ========================================================= */
 
-async function addBook() {
+async function addBook(){
 
     const title =
-        document
-            .getElementById(
-                "bTitle"
-            )
-            .value
-            .trim();
-
+        document.getElementById("bTitle")
+            .value.trim();
 
     const author =
-        document
-            .getElementById(
-                "bAuthor"
-            )
-            .value
-            .trim();
-
+        document.getElementById("bAuthor")
+            .value.trim();
 
     const type =
-        document
-            .getElementById(
-                "bType"
-            )
-            .value;
-
+        document.getElementById("bType").value;
 
     const status =
-        document
-            .getElementById(
-                "bStatus"
-            )
-            .value;
+        document.getElementById("bStatus").value;
 
-
-    if (!title)
+    if(!title){
+        alert("Please enter a book title.");
         return;
+    }
 
+    if(status === "next"){
 
-    if (
-        status === "next"
-    ) {
+        const {error} =
+            await db
+                .from("books")
+                .update({status:"queued"})
+                .eq("user_id",currentUser.id)
+                .eq("type",type)
+                .eq("status","next");
 
-        await db
-            .from("books")
-            .update({
-                status:"queued"
-            })
-            .eq(
-                "user_id",
-                currentUser.id
-            )
-            .eq(
-                "type",
-                type
-            )
-            .eq(
-                "status",
-                "next"
-            );
-
+        if(error){
+            alert(error.message);
+            return;
+        }
 
         data.books
             .filter(
@@ -4160,13 +2164,9 @@ async function addBook() {
                     b.status === "next"
             )
             .forEach(
-                b =>
-                    b.status =
-                        "queued"
+                b => b.status = "queued"
             );
-
     }
-
 
     const {
         data:created,
@@ -4175,204 +2175,123 @@ async function addBook() {
         await db
             .from("books")
             .insert({
-                user_id:
-                    currentUser.id,
-
+                user_id:currentUser.id,
                 title,
-
                 author,
-
                 type,
-
                 status
             })
             .select()
             .single();
 
-
-    if (error) {
-
-        alert(
-            error.message
-        );
-
+    if(error){
+        alert(error.message);
         return;
-
     }
 
-
-    data.books.push(
-        created
-    );
-
+    data.books.push(created);
 
     closeModal();
-
     render();
-
 }
 
+async function deleteBook(id){
 
-async function deleteBook(
-    id
-) {
+    if(!confirm("Delete this book?")) return;
 
-    if (
-        !confirm(
-            "Delete this book?"
-        )
-    )
-        return;
-
-
-    const { error } =
+    const {error} =
         await db
             .from("books")
             .delete()
-            .eq(
-                "id",
-                id
-            )
-            .eq(
-                "user_id",
-                currentUser.id
-            );
+            .eq("id",id)
+            .eq("user_id",currentUser.id);
 
-
-    if (error) {
-
-        alert(
-            error.message
-        );
-
+    if(error){
+        alert(error.message);
         return;
-
     }
-
 
     data.books =
         data.books.filter(
-            b =>
-                b.id !== id
+            b => b.id !== id
         );
 
-
     render();
-
 }
 
+function renderBooks(){
 
-function renderBooks() {
+    ["fiction","nonfiction"].forEach(type => {
 
-    [
-        "fiction",
-        "nonfiction"
-    ]
-    .forEach(
-        type => {
+        const element =
+            document.getElementById(
+                type === "fiction"
+                    ? "fictionList"
+                    : "nonfictionList"
+            );
 
-            const element =
-                document.getElementById(
-                    type === "fiction"
-                        ? "fictionList"
-                        : "nonfictionList"
-                );
+        const books =
+            data.books.filter(
+                b => b.type === type
+            );
 
-
-            const books =
-                data.books.filter(
-                    b =>
-                        b.type ===
-                        type
-                );
-
-
-            element.innerHTML =
-
-                books.length
-
-                ?
-
-                books.map(
+        element.innerHTML =
+            books.length
+                ? books.map(
                     (book,index) => `
+                        <div class="list-item">
 
-                    <div class="list-item">
+                            <div>
+                                <strong>
+                                    ${index+1}. ${esc(book.title)}
+                                </strong>
+                                <br>
+                                <span>
+                                    ${esc(book.author)}
+                                </span>
+                            </div>
 
-                        <div>
+                            <div>
+                                <span class="badge">
+                                    ${esc(book.status)}
+                                </span>
 
-                            <strong>
-                                ${index+1}.
-                                ${esc(book.title)}
-                            </strong>
-
-                            <br>
-
-                            <span>
-                                ${esc(book.author)}
-                            </span>
-
-                        </div>
-
-                        <div>
-
-                            <span class="badge">
-                                ${esc(book.status)}
-                            </span>
-
-                            <button
-                                class="icon"
-                                onclick="deleteBook(${book.id})">
-
-                                ×
-
-                            </button>
+                                <button
+                                    class="icon"
+                                    onclick="deleteBook(${JSON.stringify(book.id)})">
+                                    ×
+                                </button>
+                            </div>
 
                         </div>
-
-                    </div>
-
                     `
                 ).join("")
-
-                :
-
-                `<div class="empty">
-                    No books yet.
-                </div>`;
-
-        }
-    );
-
+                : `
+                    <div class="empty">
+                        No books yet.
+                    </div>
+                `;
+    });
 }
-
 
 /* =========================================================
    LEARNING
 ========================================================= */
 
-async function addLearning() {
+async function addLearning(){
 
     const title =
-        document
-            .getElementById(
-                "lTitle"
-            )
-            .value
-            .trim();
-
+        document.getElementById("lTitle")
+            .value.trim();
 
     const detail =
-        document
-            .getElementById(
-                "lDetail"
-            )
-            .value
-            .trim();
+        document.getElementById("lDetail")
+            .value.trim();
 
-
-    if (!title)
+    if(!title){
+        alert("Please enter a learning goal.");
         return;
-
+    }
 
     const {
         data:created,
@@ -4381,2767 +2300,1796 @@ async function addLearning() {
         await db
             .from("learning")
             .insert({
-                user_id:
-                    currentUser.id,
-
+                user_id:currentUser.id,
                 title,
-
                 detail,
-
                 status:"queued"
             })
             .select()
             .single();
 
-
-    if (error) {
-
-        alert(
-            error.message
-        );
-
+    if(error){
+        alert(error.message);
         return;
-
     }
 
-
-    data.learning.push(
-        created
-    );
-
+    data.learning.push(created);
 
     closeModal();
-
     render();
-
 }
 
-
-async function cycleLearning(
-    id
-) {
+async function cycleLearning(id){
 
     const learning =
         data.learning.find(
-            l =>
-                l.id === id
+            l => l.id === id
         );
 
-
-    if (!learning)
-        return;
-
+    if(!learning) return;
 
     const states =
-        [
-            "queued",
-            "active",
-            "done"
-        ];
-
+        ["queued","active","done"];
 
     const index =
-        states.indexOf(
-            learning.status
-        );
-
+        states.indexOf(learning.status);
 
     const newStatus =
-        states[
-            (index+1) %
-            states.length
-        ];
+        states[(index+1)%states.length];
 
-
-    const { error } =
+    const {error} =
         await db
             .from("learning")
-            .update({
-                status:newStatus
-            })
-            .eq(
-                "id",
-                id
-            )
-            .eq(
-                "user_id",
-                currentUser.id
-            );
+            .update({status:newStatus})
+            .eq("id",id)
+            .eq("user_id",currentUser.id);
 
-
-    if (error) {
-
-        alert(
-            error.message
-        );
-
+    if(error){
+        alert(error.message);
         return;
-
     }
 
-
-    learning.status =
-        newStatus;
-
+    learning.status = newStatus;
 
     render();
-
 }
 
+async function deleteLearning(id){
 
-async function deleteLearning(
-    id
-) {
+    if(!confirm("Delete this learning goal?")) return;
 
-    if (
-        !confirm(
-            "Delete this learning goal?"
-        )
-    )
-        return;
-
-
-    const { error } =
+    const {error} =
         await db
             .from("learning")
             .delete()
-            .eq(
-                "id",
-                id
-            )
-            .eq(
-                "user_id",
-                currentUser.id
-            );
+            .eq("id",id)
+            .eq("user_id",currentUser.id);
 
-
-    if (error) {
-
-        alert(
-            error.message
-        );
-
+    if(error){
+        alert(error.message);
         return;
-
     }
-
 
     data.learning =
         data.learning.filter(
-            l =>
-                l.id !== id
+            l => l.id !== id
         );
-
 
     render();
-
 }
 
-
-function renderLearning() {
+function renderLearning(){
 
     const element =
-        document.getElementById(
-            "learningList"
-        );
-
+        document.getElementById("learningList");
 
     element.innerHTML =
-
         data.learning.length
+            ? data.learning.map(
+                (item,index) => `
+                    <div class="list-item">
 
-        ?
+                        <div>
+                            <strong>
+                                ${index+1}. ${esc(item.title)}
+                            </strong>
+                            <br>
+                            <span>
+                                ${esc(item.detail)}
+                            </span>
+                        </div>
 
-        data.learning.map(
-            (item,index) => `
+                        <div>
+                            <button
+                                class="btn secondary"
+                                onclick="cycleLearning(${JSON.stringify(item.id)})">
+                                ${esc(item.status)}
+                            </button>
 
-            <div class="list-item">
+                            <button
+                                class="icon"
+                                onclick="deleteLearning(${JSON.stringify(item.id)})">
+                                ×
+                            </button>
+                        </div>
 
-                <div>
-
-                    <strong>
-                        ${index+1}.
-                        ${esc(item.title)}
-                    </strong>
-
-                    <br>
-
-                    <span>
-                        ${esc(item.detail)}
-                    </span>
-
+                    </div>
+                `
+            ).join("")
+            : `
+                <div class="empty">
+                    No learning goals yet.
                 </div>
-
-                <div>
-
-                    <button
-                        class="btn secondary"
-                        onclick="cycleLearning(${item.id})">
-
-                        ${esc(item.status)}
-
-                    </button>
-
-                    <button
-                        class="icon"
-                        onclick="deleteLearning(${item.id})">
-
-                        ×
-
-                    </button>
-
-                </div>
-
-            </div>
-
-            `
-        ).join("")
-
-        :
-
-        `<div class="empty">
-            No learning goals yet.
-        </div>`;
-
+            `;
 }
-
 
 /* =========================================================
    MODALS
 ========================================================= */
 
-function openModal(
-    content
-) {
-
-    document.getElementById(
-        "modalContent"
-    ).innerHTML =
+function openModal(content){
+    document.getElementById("modalContent").innerHTML =
         content;
 
-
-    document.getElementById(
-        "modal"
-    ).classList.add(
-        "show"
-    );
-
+    document.getElementById("modal")
+        .classList.add("show");
 }
 
-
-function closeModal() {
-
-    document.getElementById(
-        "modal"
-    ).classList.remove(
-        "show"
-    );
-
+function closeModal(){
+    document.getElementById("modal")
+        .classList.remove("show");
 }
 
+document.getElementById("modal").addEventListener(
+    "click",
+    event => {
+        if(event.target.id === "modal"){
+            closeModal();
+        }
+    }
+);
 
-document.getElementById(
-    "modal"
-).onclick = e => {
-
-    if (
-        e.target.id ===
-        "modal"
-    )
-        closeModal();
-
-};
-
-
-/* =========================================================
-   GOAL MODAL
-========================================================= */
-
-function openGoal() {
+function openGoal(){
 
     openModal(`
+        <div class="modal-head">
+            <h2>Add goal</h2>
 
-    <div class="modal-head">
-
-        <h2>
-            Add goal
-        </h2>
-
-        <button
-            class="close"
-            onclick="closeModal()">
-
-            ×
-
-        </button>
-
-    </div>
-
-
-    <div class="form">
-
-        <div class="full">
-
-            <label>
-                GOAL
-            </label>
-
-            <input
-                id="gName"
-                placeholder="What do you want to accomplish?">
-
+            <button
+                class="close"
+                onclick="closeModal()">
+                ×
+            </button>
         </div>
 
+        <div class="form">
 
-        <div>
+            <div class="full">
+                <label>GOAL</label>
 
-            <label>
-                TIMEFRAME
-            </label>
+                <input
+                    id="gName"
+                    placeholder="What do you want to accomplish?">
+            </div>
 
-            <select
-                id="gH"
-                onchange="toggleGoalRepeatField()">
+            <div>
+                <label>TIMEFRAME</label>
 
-                <option value="daily">
-                    Daily
-                </option>
+                <select
+                    id="gH"
+                    onchange="toggleGoalRepeatField()">
 
-                <option value="weekly">
-                    Weekly
-                </option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
 
-                <option value="monthly">
-                    Monthly
-                </option>
+                </select>
+            </div>
 
-            </select>
+            <div
+                id="goalRepeatField"
+                class="goal-repeat-control">
 
-        </div>
+                <label>TIMES PER WEEK</label>
 
+                <input
+                    id="gTarget"
+                    type="number"
+                    min="1"
+                    max="100"
+                    value="1">
 
-        <div
-            id="goalRepeatField"
-            class="goal-repeat-control">
+                <div class="goal-helper">
+                    For example, set 3 for "go to the gym" three times this week.
+                </div>
+            </div>
 
-            <label>
-                TIMES PER WEEK
-            </label>
+            <div style="display:flex;align-items:end">
 
-            <input
-                id="gTarget"
-                type="number"
-                min="1"
-                max="100"
-                value="1">
+                <button
+                    class="btn"
+                    style="width:100%"
+                    onclick="addGoal()">
 
-            <div class="goal-helper">
-                For example, set 3 for "go to the gym" three times this week.
+                    Save goal
+
+                </button>
+
             </div>
 
         </div>
-
-
-        <div style="display:flex;align-items:end">
-
-            <button
-                class="btn"
-                style="width:100%"
-                onclick="addGoal()">
-
-                Save goal
-
-            </button>
-
-        </div>
-
-    </div>
-
     `);
-
 
     toggleGoalRepeatField();
 
+    setTimeout(() => {
+        document.getElementById("gName")?.focus();
+    },50);
 }
 
-
-function toggleGoalRepeatField() {
+function toggleGoalRepeatField(){
 
     const horizon =
-        document
-            .getElementById(
-                "gH"
-            )
-            ?.value;
-
+        document.getElementById("gH")?.value;
 
     const field =
-        document.getElementById(
-            "goalRepeatField"
-        );
+        document.getElementById("goalRepeatField");
 
-
-    if (!field)
-        return;
-
+    if(!field) return;
 
     field.classList.toggle(
         "show",
         horizon === "weekly"
     );
-
 }
 
-
-/* =========================================================
-   BOOK MODAL
-========================================================= */
-
-function openBook() {
+function openBook(){
 
     openModal(`
-
-    <div class="modal-head">
-
-        <h2>
-            Add book
-        </h2>
-
-        <button
-            class="close"
-            onclick="closeModal()">
-
-            ×
-
-        </button>
-
-    </div>
-
-
-    <div class="form">
-
-        <div class="full">
-
-            <label>
-                TITLE
-            </label>
-
-            <input
-                id="bTitle"
-                placeholder="Book title">
-
-        </div>
-
-
-        <div>
-
-            <label>
-                AUTHOR
-            </label>
-
-            <input
-                id="bAuthor"
-                placeholder="Author">
-
-        </div>
-
-
-        <div>
-
-            <label>
-                CATEGORY
-            </label>
-
-            <select id="bType">
-
-                <option value="fiction">
-                    Fiction
-                </option>
-
-                <option value="nonfiction">
-                    Non-fiction
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div class="full">
-
-            <label>
-                QUEUE STATUS
-            </label>
-
-            <select id="bStatus">
-
-                <option value="next">
-                    Next to read
-                </option>
-
-                <option value="queued">
-                    Queued
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div class="full">
+        <div class="modal-head">
+            <h2>Add book</h2>
 
             <button
-                class="btn"
-                style="width:100%"
-                onclick="addBook()">
+                class="close"
+                onclick="closeModal()">
+                ×
+            </button>
+        </div>
 
-                Save book
+        <div class="form">
 
+            <div class="full">
+                <label>TITLE</label>
+
+                <input
+                    id="bTitle"
+                    placeholder="Book title">
+            </div>
+
+            <div>
+                <label>AUTHOR</label>
+
+                <input
+                    id="bAuthor"
+                    placeholder="Author">
+            </div>
+
+            <div>
+                <label>CATEGORY</label>
+
+                <select id="bType">
+                    <option value="fiction">Fiction</option>
+                    <option value="nonfiction">Non-fiction</option>
+                </select>
+            </div>
+
+            <div class="full">
+                <label>QUEUE STATUS</label>
+
+                <select id="bStatus">
+                    <option value="next">Next to read</option>
+                    <option value="queued">Queued</option>
+                </select>
+            </div>
+
+            <div class="full">
+
+                <button
+                    class="btn"
+                    style="width:100%"
+                    onclick="addBook()">
+
+                    Save book
+
+                </button>
+
+            </div>
+
+        </div>
+    `);
+
+    setTimeout(() => {
+        document.getElementById("bTitle")?.focus();
+    },50);
+}
+
+function openLearning(){
+
+    openModal(`
+        <div class="modal-head">
+
+            <h2>Add learning goal</h2>
+
+            <button
+                class="close"
+                onclick="closeModal()">
+                ×
             </button>
 
         </div>
 
-    </div>
+        <div class="form">
 
-    `);
+            <div class="full">
 
-}
+                <label>LEARNING GOAL</label>
 
+                <input
+                    id="lTitle"
+                    placeholder="e.g. Learn conversational Spanish">
 
-/* =========================================================
-   LEARNING MODAL
-========================================================= */
+            </div>
 
-function openLearning() {
+            <div class="full">
 
-    openModal(`
+                <label>PLAN / DETAIL</label>
 
-    <div class="modal-head">
+                <textarea
+                    id="lDetail"
+                    rows="3"
+                    placeholder="How will you work on it?"></textarea>
 
-        <h2>
-            Add learning goal
-        </h2>
+            </div>
 
-        <button
-            class="close"
-            onclick="closeModal()">
+            <div class="full">
 
-            ×
+                <button
+                    class="btn"
+                    style="width:100%"
+                    onclick="addLearning()">
 
-        </button>
+                    Save learning goal
 
-    </div>
+                </button>
 
-
-    <div class="form">
-
-        <div class="full">
-
-            <label>
-                LEARNING GOAL
-            </label>
-
-            <input
-                id="lTitle"
-                placeholder="e.g. Learn conversational Spanish">
-
-        </div>
-
-
-        <div class="full">
-
-            <label>
-                PLAN / DETAIL
-            </label>
-
-            <textarea
-                id="lDetail"
-                rows="3"
-                placeholder="How will you work on it?"></textarea>
-
-
-    </div>
-
-
-    <div class="full">
-
-        <button
-            class="btn"
-            style="width:100%"
-            onclick="addLearning()">
-
-            Save learning goal
-
-        </button>
-
-    </div>
-
-</div>
-
-`);
-
-}
-
-/* =========================================================
-DASHBOARD
-========================================================= */
-
-function bookHero(book) {
-
-```
-if (!book)
-
-    return `
-    <div class="empty">
-        No books in this queue.
-    </div>
-   ';
-
-
-return `
-
-<div class="book">
-
-    <div class="cover">
-
-        ${esc(
-            book.title.slice(
-                0,
-                18
-            )
-        )}
-
-    </div>
-
-    <div>
-
-        <h3>
-            ${esc(book.title)}
-        </h3>
-
-        <div class="author">
-            ${esc(book.author)}
-        </div>
-
-    </div>
-
-</div>
-
-`;
-```
-
-}
-
-function renderDashboard() {
-
-```
-const daily =
-    data.goals.filter(
-        g =>
-            g.horizon ===
-            "daily"
-    );
-
-
-const weekly =
-    data.goals.filter(
-        g =>
-            g.horizon ===
-            "weekly"
-    );
-
-
-const monthly =
-    data.goals.filter(
-        g =>
-            g.horizon ===
-            "monthly"
-    );
-
-
-document.getElementById(
-    "dashDaily"
-).innerHTML =
-    daily.length
-
-    ?
-
-    daily
-        .slice(0,5)
-        .map(goalHTML)
-        .join("")
-
-    :
-
-    `<div class="empty">
-        No daily goals yet.
-    </div>`;
-
-
-document.getElementById(
-    "dashWeekly"
-).innerHTML =
-    weekly.length
-
-    ?
-
-    weekly
-        .slice(0,5)
-        .map(goalHTML)
-        .join("")
-
-    :
-
-    `<div class="empty">
-        No weekly goals yet.
-    </div>`;
-
-
-document.getElementById(
-    "dashMonthly"
-).innerHTML =
-    monthly.length
-
-    ?
-
-    monthly
-        .slice(0,5)
-        .map(goalHTML)
-        .join("")
-
-    :
-
-    `<div class="empty">
-        No monthly goals yet.
-    </div>`;
-
-
-/* Progress */
-
-const total =
-    data.goals.length;
-
-
-const completed =
-    data.goals.filter(
-        g =>
-            g.done
-    ).length;
-
-
-const percentage =
-    total
-        ? Math.round(
-            completed /
-            total *
-            100
-        )
-        : 0;
-
-
-document.getElementById(
-    "stats"
-).innerHTML = `
-
-<div class="progress-stat">
-
-    <b>
-        ${completed}
-    </b>
-
-    <span>
-        completed
-    </span>
-
-</div>
-
-
-<div class="progress-stat">
-
-    <b>
-        ${total}
-    </b>
-
-    <span>
-        total goals
-    </span>
-
-</div>
-
-
-<div class="progress-stat">
-
-    <b>
-        ${percentage}%
-    </b>
-
-    <span>
-        completion
-    </span>
-
-</div>
-
-`;
-
-
-const progressFill =
-    document.getElementById(
-        "progressFill"
-    );
-
-
-if (progressFill) {
-
-    progressFill.style.width =
-        percentage + "%";
-
-}
-
-
-/* Books */
-
-function nextBook(
-    type
-) {
-
-    return (
-
-        data.books.find(
-            b =>
-                b.type === type &&
-                b.status === "next"
-        )
-
-        ||
-
-        data.books.find(
-            b =>
-                b.type === type &&
-                b.status === "queued"
-        )
-
-    );
-
-}
-
-
-document.getElementById(
-    "nextFiction"
-).innerHTML =
-    bookHero(
-        nextBook(
-            "fiction"
-        )
-    );
-
-
-document.getElementById(
-    "nextNonfiction"
-).innerHTML =
-    bookHero(
-        nextBook(
-            "nonfiction"
-        )
-    );
-
-
-/* Learning */
-
-const nextLearning =
-    data.learning.find(
-        l =>
-            l.status ===
-            "active"
-    )
-
-    ||
-
-    data.learning.find(
-        l =>
-            l.status ===
-            "queued"
-    );
-
-
-document.getElementById(
-    "nextLearning"
-).innerHTML =
-    nextLearning
-
-    ?
-
-    `
-
-    <div class="book">
-
-        <div class="cover">
-            LEARN
-        </div>
-
-        <div>
-
-            <h3>
-                ${esc(
-                    nextLearning.title
-                )}
-            </h3>
-
-            <div class="author">
-                ${esc(
-                    nextLearning.detail
-                )}
             </div>
 
         </div>
+    `);
 
-        <span class="badge">
-            ${esc(
-                nextLearning.status
-            )}
-        </span>
-
-    </div>
-
-    `
-
-    :
-
-    `<div class="empty">
-        No learning goals yet.
-    </div>`;
-```
-
+    setTimeout(() => {
+        document.getElementById("lTitle")?.focus();
+    },50);
 }
 
 /* =========================================================
-TRACKING
+   DASHBOARD
 ========================================================= */
 
-function getWeekDates() {
+function bookHero(book){
 
-```
-const start =
-    new Date(
-        getWeekKey() +
-        "T00:00:00"
-    );
+    if(!book){
+        return `
+            <div class="empty">
+                No books in this queue.
+            </div>
+        `;
+    }
 
+    return `
+        <div class="book">
 
-const dates = [];
+            <div class="cover">
+                ${esc(book.title.slice(0,18))}
+            </div>
 
+            <div>
+                <h3>${esc(book.title)}</h3>
 
-for (
-    let i = 0;
-    i < 7;
-    i++
-) {
+                <div class="author">
+                    ${esc(book.author)}
+                </div>
+            </div>
 
-    const d =
-        new Date(start);
-
-
-    d.setDate(
-        start.getDate() + i
-    );
-
-
-    dates.push(
-        getDateKey(d)
-    );
-
+        </div>
+    `;
 }
 
+function renderDashboard(){
 
-return dates;
-```
+    const daily =
+        data.goals.filter(
+            g => g.horizon === "daily"
+        );
 
-}
+    const weekly =
+        data.goals.filter(
+            g => g.horizon === "weekly"
+        );
 
-function daysElapsedThisWeek() {
+    const monthly =
+        data.goals.filter(
+            g => g.horizon === "monthly"
+        );
 
-```
-const today =
-    getDateKey();
+    document.getElementById("dashDaily").innerHTML =
+        daily.length
+            ? daily.slice(0,5).map(goalHTML).join("")
+            : `<div class="empty">No daily goals yet.</div>`;
 
+    document.getElementById("dashWeekly").innerHTML =
+        weekly.length
+            ? weekly.slice(0,5).map(goalHTML).join("")
+            : `<div class="empty">No weekly goals yet.</div>`;
 
-const dates =
-    getWeekDates();
+    document.getElementById("dashMonthly").innerHTML =
+        monthly.length
+            ? monthly.slice(0,5).map(goalHTML).join("")
+            : `<div class="empty">No monthly goals yet.</div>`;
 
+    const total = data.goals.length;
 
-const index =
-    dates.indexOf(
-        today
-    );
+    const completed =
+        data.goals.filter(
+            g => isGoalDoneNow(g)
+        ).length;
 
-
-return index >= 0
-    ? index + 1
-    : 7;
-```
-
-}
-
-function dailyGoalStats(
-goal
-) {
-
-```
-const dates =
-    getWeekDates();
-
-
-const completedDates =
-    new Set(
-        data.completions
-            .filter(
-                c =>
-                    c.goal_id ===
-                    goal.id &&
-                    dates.includes(
-                        completionDateKey(c)
-                    )
+    const percentage =
+        total
+            ? Math.round(
+                completed / total * 100
             )
-            .map(
-                completionDateKey
+            : 0;
+
+    document.getElementById("stats").innerHTML = `
+
+        <div class="progress-stat">
+            <b>${completed}</b>
+            <span>completed</span>
+        </div>
+
+        <div class="progress-stat">
+            <b>${total}</b>
+            <span>total goals</span>
+        </div>
+
+        <div class="progress-stat">
+            <b>${percentage}%</b>
+            <span>completion</span>
+        </div>
+
+    `;
+
+    document.getElementById("progressFill").style.width =
+        percentage + "%";
+
+    function nextBook(type){
+
+        return (
+            data.books.find(
+                b =>
+                    b.type === type &&
+                    b.status === "next"
             )
-    );
+            ||
+            data.books.find(
+                b =>
+                    b.type === type &&
+                    b.status === "queued"
+            )
+        );
+    }
 
+    document.getElementById("nextFiction").innerHTML =
+        bookHero(nextBook("fiction"));
 
-const elapsed =
-    daysElapsedThisWeek();
+    document.getElementById("nextNonfiction").innerHTML =
+        bookHero(nextBook("nonfiction"));
 
-
-const completedElapsed =
-    dates
-        .slice(
-            0,
-            elapsed
+    const nextLearning =
+        data.learning.find(
+            l => l.status === "active"
         )
-        .filter(
-            d =>
-                completedDates.has(d)
-        )
-        .length;
+        ||
+        data.learning.find(
+            l => l.status === "queued"
+        );
 
+    document.getElementById("nextLearning").innerHTML =
+        nextLearning
+            ? `
+                <div class="book">
 
-const percentage =
-    elapsed
-        ? Math.round(
-            completedElapsed /
-            elapsed *
-            100
-        )
-        : 0;
-
-
-return {
-
-    dates,
-
-    completedDates,
-
-    completedElapsed,
-
-    elapsed,
-
-    percentage
-
-};
-```
-
-}
-
-function trackingDailyHTML(
-goal
-) {
-
-```
-const stats =
-    dailyGoalStats(
-        goal
-    );
-
-
-const dayLabels =
-    [
-        "M",
-        "T",
-        "W",
-        "T",
-        "F",
-        "S",
-        "S"
-    ];
-
-
-return `
-<div class="tracking-goal">
-
-    <div class="tracking-head">
-
-        <div class="tracking-name">
-            ${esc(goal.name)}
-        </div>
-
-        <div class="tracking-percent">
-            ${stats.percentage}%
-        </div>
-
-    </div>
-
-
-    <div class="tracking-bar">
-
-        <div
-            class="tracking-fill"
-            style="width:${stats.percentage}%">
-        </div>
-
-    </div>
-
-
-    <div class="day-dots">
-
-        ${stats.dates.map(
-            (date,index) => `
-
-                <div class="day-cell">
-
-                    <div class="day-label">
-                        ${dayLabels[index]}
+                    <div class="cover">
+                        LEARN
                     </div>
 
+                    <div>
+                        <h3>${esc(nextLearning.title)}</h3>
+
+                        <div class="author">
+                            ${esc(nextLearning.detail)}
+                        </div>
+                    </div>
+
+                    <span class="badge">
+                        ${esc(nextLearning.status)}
+                    </span>
+
+                </div>
+            `
+            : `
+                <div class="empty">
+                    No learning goals yet.
+                </div>
+            `;
+}
+
+/* =========================================================
+   TRACKING
+========================================================= */
+
+function getWeekDates(){
+
+    const start =
+        new Date(
+            getWeekKey() + "T00:00:00"
+        );
+
+    const dates = [];
+
+    for(let i=0;i<7;i++){
+
+        const d = new Date(start);
+
+        d.setDate(start.getDate()+i);
+
+        dates.push(getDateKey(d));
+    }
+
+    return dates;
+}
+
+function daysElapsedThisWeek(){
+
+    const today = getDateKey();
+
+    const dates = getWeekDates();
+
+    const index = dates.indexOf(today);
+
+    return index >= 0 ? index+1 : 7;
+}
+
+function dailyGoalStats(goal){
+
+    const dates = getWeekDates();
+
+    const completedDates =
+        new Set(
+            data.completions
+                .filter(
+                    c =>
+                        c.goal_id === goal.id &&
+                        dates.includes(
+                            completionDateKey(c)
+                        )
+                )
+                .map(completionDateKey)
+        );
+
+    const elapsed =
+        daysElapsedThisWeek();
+
+    const completedElapsed =
+        dates
+            .slice(0,elapsed)
+            .filter(
+                d => completedDates.has(d)
+            )
+            .length;
+
+    const percentage =
+        elapsed
+            ? Math.round(
+                completedElapsed /
+                elapsed *
+                100
+            )
+            : 0;
+
+    return {
+        dates,
+        completedDates,
+        completedElapsed,
+        elapsed,
+        percentage
+    };
+}
+
+function trackingDailyHTML(goal){
+
+    const stats =
+        dailyGoalStats(goal);
+
+    const labels =
+        ["M","T","W","T","F","S","S"];
+
+    return `
+        <div class="tracking-goal">
+
+            <div class="tracking-head">
+
+                <div class="tracking-name">
+                    ${esc(goal.name)}
+                </div>
+
+                <div class="tracking-percent">
+                    ${stats.percentage}%
+                </div>
+
+            </div>
+
+            <div class="tracking-bar">
+
+                <div
+                    class="tracking-fill"
+                    style="width:${stats.percentage}%">
+                </div>
+
+            </div>
+
+            <div class="day-dots">
+
+                ${stats.dates.map(
+                    (date,index) => `
+
+                        <div class="day-cell">
+
+                            <div class="day-label">
+                                ${labels[index]}
+                            </div>
+
+                            <div
+                                class="day-dot ${
+                                    stats.completedDates.has(date)
+                                        ? "done"
+                                        : ""
+                                }"
+                                title="${date}">
+                            </div>
+
+                        </div>
+
+                    `
+                ).join("")}
+
+            </div>
+
+            <div class="tracking-meta">
+
+                <span>
+                    ${stats.completedElapsed}/${stats.elapsed}
+                    days completed
+                </span>
+
+                <span>
+                    ${labels.join(" · ")}
+                </span>
+
+            </div>
+
+        </div>
+    `;
+}
+
+function trackingWeeklyHTML(goal){
+
+    const count =
+        weekCompletions(goal.id).length;
+
+    const target =
+        weeklyTarget(goal);
+
+    const percentage =
+        Math.min(
+            100,
+            Math.round(
+                count / target * 100
+            )
+        );
+
+    return `
+        <div class="tracking-goal">
+
+            <div class="tracking-head">
+
+                <div class="tracking-name">
+                    ${esc(goal.name)}
+                </div>
+
+                <div class="tracking-percent">
+                    ${count}/${target}
+                </div>
+
+            </div>
+
+            <div class="weekly-progress">
+
+                <div class="tracking-bar">
+
                     <div
-                        class="day-dot ${
-                            stats.completedDates.has(date)
-                                ? "done"
-                                : ""
-                        }"
-                        title="${date}">
+                        class="tracking-fill"
+                        style="width:${percentage}%">
                     </div>
 
                 </div>
 
-            `
-        ).join("")}
+                <div class="weekly-count">
+                    ${percentage}%
+                </div>
 
-    </div>
+            </div>
 
+            <div class="tracking-meta">
 
-    <div class="tracking-meta">
+                <span>
+                    ${
+                        count >= target
+                            ? "Target complete"
+                            : `${target-count} more to go`
+                    }
+                </span>
 
-        <span>
-            ${stats.completedElapsed}/${stats.elapsed}
-            days completed
-        </span>
+                <span>Weekly target</span>
 
-        <span>
-            ${dayLabels.join(" · ")}
-        </span>
-
-    </div>
-
-</div>
-`;
-```
-
-}
-
-function trackingWeeklyHTML(
-goal
-) {
-
-```
-const count =
-    weekCompletions(
-        goal.id
-    ).length;
-
-
-const target =
-    weeklyTarget(
-        goal
-    );
-
-
-const percentage =
-    Math.min(
-        100,
-        Math.round(
-            count /
-            target *
-            100
-        )
-    );
-
-
-return `
-<div class="tracking-goal">
-
-    <div class="tracking-head">
-
-        <div class="tracking-name">
-            ${esc(goal.name)}
-        </div>
-
-        <div class="tracking-percent">
-            ${count}/${target}
-        </div>
-
-    </div>
-
-
-    <div class="weekly-progress">
-
-        <div class="tracking-bar">
-
-            <div
-                class="tracking-fill"
-                style="width:${percentage}%">
             </div>
 
         </div>
+    `;
+}
 
-        <div class="weekly-count">
-            ${percentage}%
+function renderTracking(){
+
+    const daily =
+        data.goals.filter(
+            g => g.horizon === "daily"
+        );
+
+    const weekly =
+        data.goals.filter(
+            g => g.horizon === "weekly"
+        );
+
+    const dailyStats =
+        daily.map(dailyGoalStats);
+
+    const overallDaily =
+        daily.length
+            ? Math.round(
+                dailyStats.reduce(
+                    (sum,item) =>
+                        sum + item.percentage,
+                    0
+                ) / daily.length
+            )
+            : 0;
+
+    const weeklyTargetTotal =
+        weekly.reduce(
+            (sum,g) =>
+                sum + weeklyTarget(g),
+            0
+        );
+
+    const weeklyDoneTotal =
+        weekly.reduce(
+            (sum,g) =>
+                sum +
+                Math.min(
+                    weekCompletions(g.id).length,
+                    weeklyTarget(g)
+                ),
+            0
+        );
+
+    const weeklyPercent =
+        weeklyTargetTotal
+            ? Math.round(
+                weeklyDoneTotal /
+                weeklyTargetTotal *
+                100
+            )
+            : 0;
+
+    const fullyCompleteWeekly =
+        weekly.filter(
+            g =>
+                weekCompletions(g.id).length >=
+                weeklyTarget(g)
+        ).length;
+
+    document.getElementById(
+        "trackingSummary"
+    ).innerHTML = `
+
+        <div class="progress-stat">
+            <b>${overallDaily}%</b>
+            <span>average daily completion</span>
         </div>
 
-    </div>
+        <div class="progress-stat">
+            <b>${weeklyPercent}%</b>
+            <span>weekly target progress</span>
+        </div>
 
+        <div class="progress-stat">
+            <b>${fullyCompleteWeekly}/${weekly.length}</b>
+            <span>weekly goals complete</span>
+        </div>
 
-    <div class="tracking-meta">
+    `;
 
-        <span>
-            ${
-                count >= target
-                    ? "Target complete"
-                    : `${target-count} more to go`
-            }
-        </span>
+    document.getElementById(
+        "trackingDaily"
+    ).innerHTML =
+        daily.length
+            ? daily.map(trackingDailyHTML).join("")
+            : `<div class="empty">No daily goals yet.</div>`;
 
-        <span>
-            Weekly target
-        </span>
+    document.getElementById(
+        "trackingWeekly"
+    ).innerHTML =
+        weekly.length
+            ? weekly.map(trackingWeeklyHTML).join("")
+            : `<div class="empty">No weekly goals yet.</div>`;
 
-    </div>
-
-</div>
-`;
-```
-
-}
-
-function renderTracking() {
-
-```
-const daily =
-    data.goals.filter(
-        g =>
-            g.horizon ===
-            "daily"
-    );
-
-
-const weekly =
-    data.goals.filter(
-        g =>
-            g.horizon ===
-            "weekly"
-    );
-
-
-const dailyPercentages =
-    daily.map(
-        dailyGoalStats
-    );
-
-
-const overallDaily =
-    daily.length
-        ? Math.round(
-            dailyPercentages.reduce(
-                (sum,item) =>
-                    sum +
-                    item.percentage,
-                0
-            ) /
-            daily.length
-        )
-        : 0;
-
-
-const weeklyTargetTotal =
-    weekly.reduce(
-        (sum,g) =>
-            sum +
-            weeklyTarget(g),
-        0
-    );
-
-
-const weeklyDoneTotal =
-    weekly.reduce(
-        (sum,g) =>
-            sum +
-            Math.min(
-                weekCompletions(
-                    g.id
-                ).length,
-                weeklyTarget(g)
-            ),
-        0
-    );
-
-
-const weeklyPercent =
-    weeklyTargetTotal
-        ? Math.round(
-            weeklyDoneTotal /
-            weeklyTargetTotal *
-            100
-        )
-        : 0;
-
-
-const fullyCompleteWeekly =
-    weekly.filter(
-        g =>
-            weekCompletions(
-                g.id
-            ).length >=
-            weeklyTarget(g)
-    ).length;
-
-
-document.getElementById(
-    "trackingSummary"
-).innerHTML = `
-
-    <div class="progress-stat">
-
-        <b>
-            ${overallDaily}%
-        </b>
-
-        <span>
-            average daily completion
-        </span>
-
-    </div>
-
-
-    <div class="progress-stat">
-
-        <b>
-            ${weeklyPercent}%
-        </b>
-
-        <span>
-            weekly target progress
-        </span>
-
-    </div>
-
-
-    <div class="progress-stat">
-
-        <b>
-            ${fullyCompleteWeekly}/${weekly.length}
-        </b>
-
-        <span>
-            weekly goals complete
-        </span>
-
-    </div>
-
-`;
-
-
-document.getElementById(
-    "trackingDaily"
-).innerHTML =
-    daily.length
-
-        ?
-
-        daily.map(
-            trackingDailyHTML
-        ).join("")
-
-        :
-
-        `<div class="empty">
-            No daily goals yet.
-        </div>`;
-
-
-document.getElementById(
-    "trackingWeekly"
-).innerHTML =
-    weekly.length
-
-        ?
-
-        weekly.map(
-            trackingWeeklyHTML
-        ).join("")
-
-        :
-
-        `<div class="empty">
-            No weekly goals yet.
-        </div>`;
-
-
-const weekStart =
-    new Date(
-        getWeekKey() +
-        "T00:00:00"
-    );
-
-
-const weekEnd =
-    new Date(
-        weekStart
-    );
-
-
-weekEnd.setDate(
-    weekEnd.getDate() + 6
-);
-
-
-const format =
-    d =>
-        d.toLocaleDateString(
-            undefined,
-            {
-                month:"short",
-                day:"numeric"
-            }
+    const weekStart =
+        new Date(
+            getWeekKey() + "T00:00:00"
         );
 
+    const weekEnd =
+        new Date(weekStart);
 
-const label =
-    `${format(weekStart)} – ${format(weekEnd)}`;
+    weekEnd.setDate(
+        weekEnd.getDate()+6
+    );
 
-
-const weekLabel =
     document.getElementById(
         "trackingWeekLabel"
-    );
-
-
-if (weekLabel)
-    weekLabel.textContent =
-        label;
-```
-
+    ).textContent =
+        `${formatDate(weekStart)} – ${formatDate(weekEnd)}`;
 }
 
 /* =========================================================
-NAVIGATION
+   HISTORY
 ========================================================= */
 
-function showPage(id) {
+function historyWeekDates(weekKey){
 
-```
-document
-    .querySelectorAll(
-        ".page"
-    )
-    .forEach(
-        page =>
-            page.classList.toggle(
-                "active",
-                page.id === id
-            )
-    );
-
-
-document
-    .querySelectorAll(
-        ".nav button[data-page]"
-    )
-    .forEach(
-        button =>
-            button.classList.toggle(
-                "active",
-                button.dataset.page === id
-            )
-    );
-
-
-render();
-```
-
-}
-
-document
-.querySelectorAll(
-".nav button[data-page]"
-)
-.forEach(
-button => {
-
-```
-        button.onclick =
-            () =>
-                showPage(
-                    button.dataset.page
-                );
-
-    }
-);
-```
-
-document
-.querySelectorAll(
-"#goalTabs button"
-)
-.forEach(
-button => {
-
-```
-        button.onclick = () => {
-
-            document
-                .querySelectorAll(
-                    "#goalTabs button"
-                )
-                .forEach(
-                    b =>
-                        b.classList.remove(
-                            "active"
-                        )
-                );
-
-
-            button.classList.add(
-                "active"
-            );
-
-
-            renderGoals(
-                button.dataset.horizon
-            );
-
-        };
-
-    }
-);
-```
-
-/* =========================================================
-EXPORT
-========================================================= */
-
-function exportBackup() {
-
-```
-const backup = {
-
-    exported_at:
-        new Date().toISOString(),
-
-    goals:
-        data.goals,
-
-    books:
-        data.books,
-
-    learning:
-        data.learning
-
-};
-
-
-const blob =
-    new Blob(
-        [
-            JSON.stringify(
-                backup,
-                null,
-                2
-            )
-        ],
-        {
-            type:
-                "application/json"
-        }
-    );
-
-
-const url =
-    URL.createObjectURL(
-        blob
-    );
-
-
-const a =
-    document.createElement(
-        "a"
-    );
-
-
-a.href =
-    url;
-
-
-a.download =
-    `focus-backup-${getDateKey()}.json`;
-
-
-a.click();
-
-
-URL.revokeObjectURL(
-    url
-);
-```
-
-}
-
-/* =========================================================
-HISTORY
-========================================================= */
-
-function historyWeekDates(
-weekKey
-) {
-
-```
-const start =
-    new Date(
-        weekKey +
-        "T00:00:00"
-    );
-
-
-return Array.from(
-    {
-        length:7
-    },
-    (_,i) => {
-
-        const d =
-            new Date(
-                start
-            );
-
-
-        d.setDate(
-            d.getDate() + i
+    const start =
+        new Date(
+            weekKey + "T00:00:00"
         );
 
+    return Array.from(
+        {length:7},
+        (_,i) => {
 
-        return getDateKey(d);
+            const d =
+                new Date(start);
 
-    }
-);
-```
+            d.setDate(
+                d.getDate()+i
+            );
 
-}
-
-function historyWeeksAvailable() {
-
-```
-const keys = [];
-
-
-for (
-    const completion
-    of data.completions
-) {
-
-    if (
-        !completion.completed_at
-    )
-        continue;
-
-
-    keys.push(
-        getWeekKey(
-            new Date(
-                completion.completed_at
-            )
-        )
+            return getDateKey(d);
+        }
     );
-
 }
 
+function historyWeeksAvailable(){
 
-for (
-    const goal
-    of data.goals
-) {
+    const keys = [];
 
-    if (
-        goal.created_at
-    )
+    for(const completion of data.completions){
+
+        if(!completion.completed_at) continue;
+
         keys.push(
             getWeekKey(
                 new Date(
-                    goal.created_at
+                    completion.completed_at
                 )
             )
         );
+    }
 
+    for(const goal of data.goals){
+
+        if(goal.created_at){
+
+            keys.push(
+                getWeekKey(
+                    new Date(
+                        goal.created_at
+                    )
+                )
+            );
+        }
+    }
+
+    if(!keys.length) return [];
+
+    const currentWeek =
+        getWeekKey();
+
+    const earliest =
+        keys.sort()[0];
+
+    const weeks = [];
+
+    let cursor =
+        new Date(
+            earliest + "T00:00:00"
+        );
+
+    const current =
+        new Date(
+            currentWeek + "T00:00:00"
+        );
+
+    while(cursor < current){
+
+        weeks.push(
+            getDateKey(cursor)
+        );
+
+        cursor.setDate(
+            cursor.getDate()+7
+        );
+    }
+
+    return weeks.reverse();
 }
 
+function goalWasActiveOnDate(goal,date){
 
-if (!keys.length)
-    return [];
+    if(!goal.created_at) return true;
 
-
-const currentWeek =
-    getWeekKey();
-
-
-const earliest =
-    keys.sort()[0];
-
-
-const weeks = [];
-
-
-let cursor =
-    new Date(
-        earliest +
-        "T00:00:00"
-    );
-
-
-const current =
-    new Date(
-        currentWeek +
-        "T00:00:00"
-    );
-
-
-while (
-    cursor < current
-) {
-
-    weeks.push(
+    return (
+        date >=
         getDateKey(
-            cursor
+            new Date(goal.created_at)
         )
     );
-
-
-    cursor.setDate(
-        cursor.getDate() + 7
-    );
-
 }
 
+function goalWasActiveInWeek(goal,weekDates){
 
-return weeks.reverse();
-```
-
-}
-
-function goalWasActiveInWeek(
-goal,
-weekDates
-) {
-
-```
-if (!goal.created_at)
-    return true;
-
-
-const created =
-    new Date(
-        goal.created_at
-    );
-
-
-const createdKey =
-    getDateKey(
-        created
-    );
-
-
-return weekDates.some(
-    date =>
-        date >= createdKey
-);
-```
-
-}
-
-function historicalDailyStats(
-goal,
-weekDates
-) {
-
-```
-const activeDates =
-    weekDates.filter(
+    return weekDates.some(
         date =>
             goalWasActiveOnDate(
                 goal,
                 date
             )
     );
-
-
-const completedDates =
-    new Set(
-        data.completions
-            .filter(
-                c =>
-                    c.goal_id ===
-                    goal.id &&
-                    weekDates.includes(
-                        completionDateKey(c)
-                    )
-            )
-            .map(
-                completionDateKey
-            )
-    );
-
-
-const completed =
-    activeDates.filter(
-        date =>
-            completedDates.has(
-                date
-            )
-    ).length;
-
-
-const percentage =
-    activeDates.length
-        ? Math.round(
-            completed /
-            activeDates.length *
-            100
-        )
-        : 0;
-
-
-return {
-
-    activeDates,
-
-    completedDates,
-
-    completed,
-
-    percentage
-
-};
-```
-
 }
 
-function goalWasActiveOnDate(
-goal,
-date
-) {
+function historicalDailyStats(goal,weekDates){
 
-```
-if (!goal.created_at)
-    return true;
+    const activeDates =
+        weekDates.filter(
+            date =>
+                goalWasActiveOnDate(
+                    goal,
+                    date
+                )
+        );
 
+    const completedDates =
+        new Set(
+            data.completions
+                .filter(
+                    c =>
+                        c.goal_id === goal.id &&
+                        weekDates.includes(
+                            completionDateKey(c)
+                        )
+                )
+                .map(completionDateKey)
+        );
 
-return (
-    date >=
-    getDateKey(
-        new Date(
-            goal.created_at
-        )
-    )
-);
-```
+    const completed =
+        activeDates.filter(
+            date =>
+                completedDates.has(date)
+        ).length;
 
+    const percentage =
+        activeDates.length
+            ? Math.round(
+                completed /
+                activeDates.length *
+                100
+            )
+            : 0;
+
+    return {
+        activeDates,
+        completedDates,
+        completed,
+        percentage
+    };
 }
 
 function historicalWeekCompletions(
-goalId,
-weekKey
-) {
+    goalId,
+    weekKey
+){
 
-```
-return data.completions.filter(
-    c =>
-        c.goal_id === goalId &&
-        getWeekKey(
-            new Date(
-                c.completed_at
-            )
-        ) === weekKey
-);
-```
-
+    return data.completions.filter(
+        c =>
+            c.goal_id === goalId &&
+            getWeekKey(
+                new Date(c.completed_at)
+            ) === weekKey
+    );
 }
 
-function historyDailyHTML(
-goal,
-weekDates
-) {
+function historyDailyHTML(goal,weekDates){
 
-```
-const stats =
-    historicalDailyStats(
-        goal,
-        weekDates
-    );
+    const stats =
+        historicalDailyStats(
+            goal,
+            weekDates
+        );
 
+    const labels =
+        ["M","T","W","T","F","S","S"];
 
-const labels =
-    [
-        "M",
-        "T",
-        "W",
-        "T",
-        "F",
-        "S",
-        "S"
-    ];
+    return `
+        <div class="history-goal">
 
+            <div class="history-goal-head">
 
-return `
-<div class="history-goal">
-
-    <div class="history-goal-head">
-
-        <div class="history-goal-name">
-            ${esc(goal.name)}
-        </div>
-
-        <div class="history-goal-percent">
-            ${stats.percentage}%
-        </div>
-
-    </div>
-
-
-    <div class="tracking-bar">
-
-        <div
-            class="tracking-fill"
-            style="width:${stats.percentage}%">
-        </div>
-
-    </div>
-
-
-    <div class="day-dots">
-
-        ${weekDates.map(
-            (date,index) => `
-
-            <div class="day-cell">
-
-                <div class="day-label">
-                    ${labels[index]}
+                <div class="history-goal-name">
+                    ${esc(goal.name)}
                 </div>
+
+                <div class="history-goal-percent">
+                    ${stats.percentage}%
+                </div>
+
+            </div>
+
+            <div class="tracking-bar">
 
                 <div
-                    class="day-dot ${
-                        stats.completedDates.has(date)
-                            ? "done"
-                            : ""
-                    }"
-                    title="${date}">
+                    class="tracking-fill"
+                    style="width:${stats.percentage}%">
                 </div>
 
             </div>
 
-            `
-        ).join("")}
+            <div class="day-dots">
 
-    </div>
+                ${weekDates.map(
+                    (date,index) => `
 
+                    <div class="day-cell">
 
-    <div class="history-goal-meta">
+                        <div class="day-label">
+                            ${labels[index]}
+                        </div>
 
-        <span>
-            ${stats.completed}/${stats.activeDates.length}
-            days completed
-        </span>
+                        <div
+                            class="day-dot ${
+                                stats.completedDates.has(date)
+                                    ? "done"
+                                    : ""
+                            }"
+                            title="${date}">
+                        </div>
 
-        <span>
-            ${
-                stats.activeDates.length < 7
-                    ? "Goal started during this week"
-                    : "7 days"
-            }
-        </span>
+                    </div>
+                `
+                ).join("")}
 
-    </div>
-
-</div>
-`;
-```
-
-}
-
-function historyWeeklyHTML(
-goal,
-weekKey
-) {
-
-```
-const count =
-    historicalWeekCompletions(
-        goal.id,
-        weekKey
-    ).length;
-
-
-const target =
-    weeklyTarget(
-        goal
-    );
-
-
-const percentage =
-    Math.min(
-        100,
-        Math.round(
-            count /
-            target *
-            100
-        )
-    );
-
-
-return `
-<div class="history-goal">
-
-    <div class="history-goal-head">
-
-        <div class="history-goal-name">
-            ${esc(goal.name)}
-        </div>
-
-        <div class="history-goal-percent">
-            ${count}/${target}
-        </div>
-
-    </div>
-
-
-    <div class="tracking-bar">
-
-        <div
-            class="tracking-fill"
-            style="width:${percentage}%">
-        </div>
-
-    </div>
-
-
-    <div class="history-goal-meta">
-
-        <span>
-            ${percentage}%
-        </span>
-
-        <span>
-            ${
-                count >= target
-                    ? "Target complete"
-                    : `${target-count} more to go`
-            }
-        </span>
-
-    </div>
-
-</div>
-`;
-```
-
-}
-
-function historyWeekHTML(
-weekKey
-) {
-
-```
-const weekDates =
-    historyWeekDates(
-        weekKey
-    );
-
-
-const daily =
-    data.goals.filter(
-        g =>
-            g.horizon ===
-            "daily" &&
-            goalWasActiveInWeek(
-                g,
-                weekDates
-            )
-    );
-
-
-const weekly =
-    data.goals.filter(
-        g =>
-            g.horizon ===
-            "weekly" &&
-            goalWasActiveInWeek(
-                g,
-                weekDates
-            )
-    );
-
-
-const dailyStats =
-    daily.map(
-        g =>
-            historicalDailyStats(
-                g,
-                weekDates
-            )
-    );
-
-
-const dailyPercent =
-    daily.length
-        ? Math.round(
-            dailyStats.reduce(
-                (sum,s) =>
-                    sum +
-                    s.percentage,
-                0
-            ) /
-            daily.length
-        )
-        : 0;
-
-
-const targetTotal =
-    weekly.reduce(
-        (sum,g) =>
-            sum +
-            weeklyTarget(g),
-        0
-    );
-
-
-const doneTotal =
-    weekly.reduce(
-        (sum,g) =>
-            sum +
-            Math.min(
-                historicalWeekCompletions(
-                    g.id,
-                    weekKey
-                ).length,
-                weeklyTarget(g)
-            ),
-        0
-    );
-
-
-const weeklyPercent =
-    targetTotal
-        ? Math.round(
-            doneTotal /
-            targetTotal *
-            100
-        )
-        : 0;
-
-
-const fullyComplete =
-    weekly.filter(
-        g =>
-            historicalWeekCompletions(
-                g.id,
-                weekKey
-            ).length >=
-            weeklyTarget(g)
-    ).length;
-
-
-const start =
-    new Date(
-        weekKey +
-        "T00:00:00"
-    );
-
-
-const end =
-    new Date(
-        start
-    );
-
-
-end.setDate(
-    end.getDate() + 6
-);
-
-
-const format =
-    d =>
-        d.toLocaleDateString(
-            undefined,
-            {
-                month:"short",
-                day:"numeric",
-                year:"numeric"
-            }
-        );
-
-
-return `
-<div class="card history-week">
-
-    <div class="history-week-header">
-
-        <div>
-
-            <div class="history-week-title">
-                ${format(start)} – ${format(end)}
             </div>
 
-            <div class="history-week-sub">
-                Week of ${format(start)}
-            </div>
-
-        </div>
-
-
-        <div class="history-week-metrics">
-
-            <div class="history-metric">
-
-                <b>
-                    ${dailyPercent}%
-                </b>
+            <div class="history-goal-meta">
 
                 <span>
-                    daily
+                    ${stats.completed}/${stats.activeDates.length}
+                    days completed
                 </span>
 
-            </div>
-
-
-            <div class="history-metric">
-
-                <b>
-                    ${weeklyPercent}%
-                </b>
-
                 <span>
-                    weekly
-                </span>
-
-            </div>
-
-
-            <div class="history-metric">
-
-                <b>
-                    ${fullyComplete}/${weekly.length}
-                </b>
-
-                <span>
-                    weekly goals
+                    ${
+                        stats.activeDates.length < 7
+                            ? "Goal started during this week"
+                            : "7 days"
+                    }
                 </span>
 
             </div>
 
         </div>
-
-    </div>
-
-
-    <div class="history-grid">
-
-        <div class="history-section">
-
-            <h3>
-                Daily goals
-            </h3>
-
-            <p>
-                Completion across the full week
-            </p>
-
-            ${
-                daily.length
-
-                ?
-
-                daily
-                    .map(
-                        g =>
-                            historyDailyHTML(
-                                g,
-                                weekDates
-                            )
-                    )
-                    .join("")
-
-                :
-
-                `<div class="history-empty">
-                    No daily goals recorded for this week.
-                </div>`
-            }
-
-        </div>
-
-
-        <div class="history-section">
-
-            <h3>
-                Weekly goals
-            </h3>
-
-            <p>
-                Progress toward each weekly target
-            </p>
-
-            ${
-                weekly.length
-
-                ?
-
-                weekly
-                    .map(
-                        g =>
-                            historyWeeklyHTML(
-                                g,
-                                weekKey
-                            )
-                    )
-                    .join("")
-
-                :
-
-                `<div class="history-empty">
-                    No weekly goals recorded for this week.
-                </div>`
-            }
-
-        </div>
-
-    </div>
-
-</div>
-`;
-```
-
+    `;
 }
 
-function renderHistory() {
+function historyWeeklyHTML(goal,weekKey){
 
-```
-const element =
-    document.getElementById(
-        "historyWeeks"
-    );
+    const count =
+        historicalWeekCompletions(
+            goal.id,
+            weekKey
+        ).length;
 
+    const target =
+        weeklyTarget(goal);
 
-if (!element)
-    return;
-
-
-const weeks =
-    historyWeeksAvailable();
-
-
-element.innerHTML =
-    weeks.length
-
-    ?
-
-    weeks
-        .map(
-            historyWeekHTML
-        )
-        .join("")
-
-    :
-
-    `<div class="card">
-
-        <div class="history-empty">
-            No past weeks to show yet.
-            Complete some goals and your history
-            will appear here next week.
-        </div>
-
-    </div>`;
-```
-
-}
-
-/* =========================================================
-RENDER
-========================================================= */
-
-function render() {
-
-```
-renderDashboard();
-
-renderTracking();
-
-renderHistory();
-
-renderBooks();
-
-renderLearning();
-
-
-const active =
-    document.querySelector(
-        "#goalTabs button.active"
-    );
-
-
-renderGoals(
-    active
-        ? active.dataset.horizon
-        : "daily"
-);
-```
-
-}
-
-/* =========================================================
-AUTH INITIALIZATION
-========================================================= */
-
-async function initializeApp() {
-
-```
-try {
-
-    const {
-        data:{
-            session
-        },
-        error
-    } =
-        await db.auth.getSession();
-
-
-    if (error)
-        throw error;
-
-
-    if (
-        session?.user
-    ) {
-
-        currentUser =
-            session.user;
-
-
-        /* Apply the correct user theme */
-
-        applyUserTheme(
-            currentUser
+    const percentage =
+        Math.min(
+            100,
+            Math.round(
+                count / target * 100
+            )
         );
 
+    return `
+        <div class="history-goal">
 
-        document.getElementById(
-            "authScreen"
-        ).style.display =
-            "none";
+            <div class="history-goal-head">
 
+                <div class="history-goal-name">
+                    ${esc(goal.name)}
+                </div>
 
-        document.getElementById(
-            "app"
-        ).style.display =
-            "flex";
+                <div class="history-goal-percent">
+                    ${count}/${target}
+                </div>
 
+            </div>
 
-        document.getElementById(
-            "userEmail"
-        ).textContent =
-            currentUser.email;
+            <div class="tracking-bar">
 
+                <div
+                    class="tracking-fill"
+                    style="width:${percentage}%">
+                </div>
 
-        await loadData();
+            </div>
 
-    }
+            <div class="history-goal-meta">
 
-    else {
+                <span>${percentage}%</span>
 
-        currentUser =
-            null;
+                <span>
+                    ${
+                        count >= target
+                            ? "Target complete"
+                            : `${target-count} more to go`
+                    }
+                </span>
 
+            </div>
 
-        applyUserTheme(
-            null
+        </div>
+    `;
+}
+
+function historyWeekHTML(weekKey){
+
+    const weekDates =
+        historyWeekDates(weekKey);
+
+    const daily =
+        data.goals.filter(
+            g =>
+                g.horizon === "daily" &&
+                goalWasActiveInWeek(
+                    g,
+                    weekDates
+                )
         );
 
+    const weekly =
+        data.goals.filter(
+            g =>
+                g.horizon === "weekly" &&
+                goalWasActiveInWeek(
+                    g,
+                    weekDates
+                )
+        );
 
-        document.getElementById(
-            "app"
-        ).style.display =
-            "none";
+    const dailyStats =
+        daily.map(
+            g =>
+                historicalDailyStats(
+                    g,
+                    weekDates
+                )
+        );
 
+    const dailyPercent =
+        daily.length
+            ? Math.round(
+                dailyStats.reduce(
+                    (sum,s) =>
+                        sum+s.percentage,
+                    0
+                ) / daily.length
+            )
+            : 0;
 
-        document.getElementById(
-            "authScreen"
-        ).style.display =
-            "flex";
-
-    }
-
-}
-
-catch(error) {
-
-    console.error(
-        "Focus startup error:",
-        error
-    );
-
-
-    document.getElementById(
-        "authScreen"
-    ).style.display =
-        "flex";
-
-
-    document.getElementById(
-        "app"
-    ).style.display =
-        "none";
-
-
-    showAuthMessage(
-        "Could not connect to Focus: " +
-        error.message
-    );
-
-}
-
-finally {
-
-    document.getElementById(
-        "loading"
-    ).style.display =
-        "none";
-
-}
-```
-
-}
-
-/* =========================================================
-AUTH STATE CHANGES
-========================================================= */
-
-db.auth.onAuthStateChange(
-(
-event,
-session
-) => {
-
-```
-    /*
-       Supabase fires SIGNED_IN after a successful login.
-       This listener loads the app immediately instead of
-       requiring a refresh.
-    */
-
-    if (
-        event ===
-        "SIGNED_IN" &&
-        session?.user
-    ) {
-
-        setTimeout(
-            async () => {
-
-                try {
-
-                    currentUser =
-                        session.user;
-
-
-                    /* Apply correct theme */
-
-                    applyUserTheme(
-                        currentUser
-                    );
-
-
-                    document
-                        .getElementById(
-                            "authScreen"
-                        )
-                        .style.display =
-                            "none";
-
-
-                    document
-                        .getElementById(
-                            "app"
-                        )
-                        .style.display =
-                            "flex";
-
-
-                    document
-                        .getElementById(
-                            "userEmail"
-                        )
-                        .textContent =
-                            currentUser.email ||
-                            "";
-
-
-                    await loadData();
-
-                }
-
-                catch(error) {
-
-                    console.error(
-                        "Focus sign-in load error:",
-                        error
-                    );
-
-
-                    document
-                        .getElementById(
-                            "authScreen"
-                        )
-                        .style.display =
-                            "flex";
-
-
-                    document
-                        .getElementById(
-                            "app"
-                        )
-                        .style.display =
-                            "none";
-
-
-                    showAuthMessage(
-                        "Signed in, but Focus could not load your data: " +
-                        error.message
-                    );
-
-                }
-
-            },
+    const targetTotal =
+        weekly.reduce(
+            (sum,g) =>
+                sum+weeklyTarget(g),
             0
         );
 
-    }
-
-
-    if (
-        event ===
-        "SIGNED_OUT"
-    ) {
-
-        currentUser =
-            null;
-
-
-        /* Remove user-specific theme */
-
-        applyUserTheme(
-            null
+    const doneTotal =
+        weekly.reduce(
+            (sum,g) =>
+                sum +
+                Math.min(
+                    historicalWeekCompletions(
+                        g.id,
+                        weekKey
+                    ).length,
+                    weeklyTarget(g)
+                ),
+            0
         );
 
-
-        document
-            .getElementById(
-                "app"
+    const weeklyPercent =
+        targetTotal
+            ? Math.round(
+                doneTotal /
+                targetTotal *
+                100
             )
-            .style.display =
-                "none";
+            : 0;
 
+    const fullyComplete =
+        weekly.filter(
+            g =>
+                historicalWeekCompletions(
+                    g.id,
+                    weekKey
+                ).length >=
+                weeklyTarget(g)
+        ).length;
 
-        document
-            .getElementById(
-                "authScreen"
-            )
-            .style.display =
-                "flex";
+    const start =
+        new Date(
+            weekKey + "T00:00:00"
+        );
 
-    }
+    const end =
+        new Date(start);
 
+    end.setDate(
+        end.getDate()+6
+    );
+
+    return `
+        <div class="card history-week">
+
+            <div class="history-week-header">
+
+                <div>
+
+                    <div class="history-week-title">
+                        ${formatDate(start,true)}
+                        –
+                        ${formatDate(end,true)}
+                    </div>
+
+                    <div class="history-week-sub">
+                        Week of ${formatDate(start,true)}
+                    </div>
+
+                </div>
+
+                <div class="history-week-metrics">
+
+                    <div class="history-metric">
+                        <b>${dailyPercent}%</b>
+                        <span>daily</span>
+                    </div>
+
+                    <div class="history-metric">
+                        <b>${weeklyPercent}%</b>
+                        <span>weekly</span>
+                    </div>
+
+                    <div class="history-metric">
+                        <b>${fullyComplete}/${weekly.length}</b>
+                        <span>weekly goals</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="history-grid">
+
+                <div class="history-section">
+
+                    <h3>Daily goals</h3>
+
+                    <p>
+                        Completion across the full week
+                    </p>
+
+                    ${
+                        daily.length
+                            ? daily.map(
+                                g =>
+                                    historyDailyHTML(
+                                        g,
+                                        weekDates
+                                    )
+                              ).join("")
+                            : `
+                                <div class="history-empty">
+                                    No daily goals recorded for this week.
+                                </div>
+                            `
+                    }
+
+                </div>
+
+                <div class="history-section">
+
+                    <h3>Weekly goals</h3>
+
+                    <p>
+                        Progress toward each weekly target
+                    </p>
+
+                    ${
+                        weekly.length
+                            ? weekly.map(
+                                g =>
+                                    historyWeeklyHTML(
+                                        g,
+                                        weekKey
+                                    )
+                              ).join("")
+                            : `
+                                <div class="history-empty">
+                                    No weekly goals recorded for this week.
+                                </div>
+                            `
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
 }
-```
 
+function renderHistory(){
+
+    const element =
+        document.getElementById("historyWeeks");
+
+    if(!element) return;
+
+    const weeks =
+        historyWeeksAvailable();
+
+    element.innerHTML =
+        weeks.length
+            ? weeks.map(historyWeekHTML).join("")
+            : `
+                <div class="card">
+
+                    <div class="history-empty">
+                        No past weeks to show yet.
+                        Complete some goals and your history
+                        will appear here next week.
+                    </div>
+
+                </div>
+            `;
+}
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showPage(id){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            page =>
+                page.classList.toggle(
+                    "active",
+                    page.id === id
+                )
+        );
+
+    document
+        .querySelectorAll(
+            ".nav button[data-page]"
+        )
+        .forEach(
+            button =>
+                button.classList.toggle(
+                    "active",
+                    button.dataset.page === id
+                )
+        );
+
+    render();
+}
+
+document
+    .querySelectorAll(
+        ".nav button[data-page]"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => showPage(button.dataset.page)
+        );
+    });
+
+document
+    .querySelectorAll(
+        "#goalTabs button"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .querySelectorAll(
+                        "#goalTabs button"
+                    )
+                    .forEach(
+                        b =>
+                            b.classList.remove("active")
+                    );
+
+                button.classList.add("active");
+
+                renderGoals(
+                    button.dataset.horizon
+                );
+            }
+        );
+    });
+
+/* =========================================================
+   EXPORT
+========================================================= */
+
+function exportBackup(){
+
+    const backup = {
+        exported_at:
+            new Date().toISOString(),
+
+        goals:data.goals,
+        completions:data.completions,
+        books:data.books,
+        learning:data.learning
+    };
+
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    backup,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:"application/json"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+        `focus-backup-${getDateKey()}.json`;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    setTimeout(
+        () => URL.revokeObjectURL(url),
+        1000
+    );
+}
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render(){
+
+    if(!currentUser) return;
+
+    renderDashboard();
+    renderTracking();
+    renderHistory();
+    renderBooks();
+    renderLearning();
+
+    const active =
+        document.querySelector(
+            "#goalTabs button.active"
+        );
+
+    renderGoals(
+        active
+            ? active.dataset.horizon
+            : "daily"
+    );
+}
+
+/* =========================================================
+   SHOW / HIDE APP
+========================================================= */
+
+function showApp(){
+
+    document.getElementById("authScreen")
+        .style.display = "none";
+
+    document.getElementById("app")
+        .style.display = "flex";
+
+    document.getElementById("userEmail")
+        .textContent =
+            currentUser?.email || "";
+}
+
+function showLogin(){
+
+    document.getElementById("app")
+        .style.display = "none";
+
+    document.getElementById("authScreen")
+        .style.display = "flex";
+}
+
+/* =========================================================
+   AUTH INITIALIZATION
+========================================================= */
+
+async function loadUserSession(user){
+
+    if(!user) return;
+
+    if(loadingUser) return;
+
+    loadingUser = true;
+
+    try{
+
+        currentUser = user;
+
+        applyUserTheme(currentUser);
+
+        showApp();
+
+        showAuthMessage("");
+
+        await loadData();
+
+    }catch(error){
+
+        console.error(
+            "Focus data loading error:",
+            error
+        );
+
+        showLogin();
+
+        showAuthMessage(
+            "Signed in, but Focus could not load your data: " +
+            error.message
+        );
+
+    }finally{
+
+        loadingUser = false;
+    }
+}
+
+async function initializeApp(){
+
+    try{
+
+        const {
+            data:{session},
+            error
+        } =
+            await db.auth.getSession();
+
+        if(error) throw error;
+
+        if(session?.user){
+
+            await loadUserSession(
+                session.user
+            );
+
+        }else{
+
+            currentUser = null;
+
+            applyUserTheme(null);
+
+            showLogin();
+        }
+
+    }catch(error){
+
+        console.error(
+            "Focus startup error:",
+            error
+        );
+
+        currentUser = null;
+
+        showLogin();
+
+        showAuthMessage(
+            "Could not connect to Focus: " +
+            error.message
+        );
+
+    }finally{
+
+        document.getElementById("loading")
+            .style.display = "none";
+    }
+}
+
+/* =========================================================
+   SUPABASE AUTH LISTENER
+========================================================= */
+
+db.auth.onAuthStateChange(
+    async (event,session) => {
+
+        console.log(
+            "Supabase auth event:",
+            event
+        );
+
+        if(
+            event === "SIGNED_IN" &&
+            session?.user
+        ){
+
+            await loadUserSession(
+                session.user
+            );
+
+            return;
+        }
+
+        if(event === "SIGNED_OUT"){
+
+            currentUser = null;
+
+            data = {
+                goals:[],
+                completions:[],
+                books:[],
+                learning:[]
+            };
+
+            loadingUser = false;
+
+            applyUserTheme(null);
+
+            showLogin();
+
+            showAuthMessage("");
+        }
+    }
 );
 
 /* =========================================================
-START APPLICATION
+   DATE
+========================================================= */
+
+document.getElementById("date").textContent =
+    new Date().toLocaleDateString(
+        undefined,
+        {
+            weekday:"long",
+            month:"long",
+            day:"numeric",
+            year:"numeric"
+        }
+    );
+
+/* =========================================================
+   MIDNIGHT CHECK
+========================================================= */
+
+let lastDate = getDateKey();
+
+setInterval(
+    async () => {
+
+        const currentDate =
+            getDateKey();
+
+        if(
+            currentDate !== lastDate &&
+            currentUser
+        ){
+
+            lastDate = currentDate;
+
+            await resetRecurringGoals();
+
+            render();
+
+            document.getElementById("date")
+                .textContent =
+                    new Date().toLocaleDateString(
+                        undefined,
+                        {
+                            weekday:"long",
+                            month:"long",
+                            day:"numeric",
+                            year:"numeric"
+                        }
+                    );
+        }
+
+    },
+    60000
+);
+
+/* =========================================================
+   START
 ========================================================= */
 
 initializeApp();
-
-/* =========================================================
-DATE
-========================================================= */
-
-document.getElementById(
-"date"
-).textContent =
-new Date().toLocaleDateString(
-undefined,
-{
-weekday:"long",
-month:"long",
-day:"numeric",
-year:"numeric"
-}
-);
-
-/* =========================================================
-MIDNIGHT RESET CHECK
-========================================================= */
-
-let lastDate =
-getDateKey();
-
-setInterval(
-async () => {
-
-```
-    const currentDate =
-        getDateKey();
-
-
-    if (
-        currentDate !==
-        lastDate &&
-        currentUser
-    ) {
-
-        lastDate =
-            currentDate;
-
-
-        await resetRecurringGoals();
-
-
-        render();
-
-    }
-
-},
-60000
-```
-
-);
-
 </script>
 
 </body>
