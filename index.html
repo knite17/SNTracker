@@ -886,6 +886,148 @@ select:focus {
 }
 
 
+
+/* =========================================================
+   TRACKING
+========================================================= */
+
+.tracking-summary {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.tracking-summary .progress-stat {
+    text-align:left;
+}
+
+.tracking-goal {
+    padding:16px 0;
+    border-top:1px solid var(--line);
+}
+
+.tracking-goal:first-child {
+    border-top:0;
+    padding-top:0;
+}
+
+.tracking-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:14px;
+    margin-bottom:9px;
+}
+
+.tracking-name {
+    font-weight:700;
+    font-size:14px;
+}
+
+.tracking-percent {
+    font-size:13px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.tracking-meta {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:7px;
+}
+
+.tracking-bar {
+    width:100%;
+    height:9px;
+    background:#ecece7;
+    border-radius:99px;
+    overflow:hidden;
+}
+
+.tracking-fill {
+    height:100%;
+    width:0;
+    background:var(--accent);
+    border-radius:99px;
+    transition:width .3s ease;
+}
+
+.day-dots {
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+    margin-top:11px;
+}
+
+.day-dot {
+    height:7px;
+    border-radius:99px;
+    background:#e5e5df;
+}
+
+.day-dot.done {
+    background:var(--accent);
+}
+
+.weekly-progress {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:10px;
+}
+
+.weekly-progress .tracking-bar {
+    flex:1;
+}
+
+.weekly-count {
+    font-size:11px;
+    color:var(--muted);
+    white-space:nowrap;
+}
+
+.goal-repeat-control {
+    display:none;
+}
+
+.goal-repeat-control.show {
+    display:block;
+}
+
+.goal-helper {
+    color:var(--muted);
+    font-size:11px;
+    margin-top:5px;
+    line-height:1.4;
+}
+
+.goal-action-count {
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin-left:auto;
+    flex:none;
+}
+
+.goal-action-count .btn {
+    padding:6px 9px;
+    font-size:11px;
+}
+
+@media(max-width:500px) {
+    .tracking-summary {
+        grid-template-columns:1fr;
+    }
+
+    .tracking-head {
+        align-items:flex-start;
+    }
+}
+
 /* =========================================================
    EMPTY
 ========================================================= */
@@ -1700,6 +1842,58 @@ select:focus {
 
 
 <!-- =========================================================
+     TRACKING
+========================================================= -->
+
+<section
+    id="tracking"
+    class="page">
+
+<header>
+    <div>
+        <div class="eyebrow">Tracking</div>
+        <div class="title">Your week.</div>
+        <p class="sub">See how consistently you are completing your daily and weekly goals.</p>
+    </div>
+    <div class="today" id="trackingWeekLabel"></div>
+</header>
+
+<div class="card span12">
+    <div class="section-head">
+        <div>
+            <h2>Weekly overview</h2>
+            <p>Daily goals are measured across the current week. Weekly goals fill up as you complete their targets.</p>
+        </div>
+    </div>
+    <div id="trackingSummary" class="tracking-summary"></div>
+</div>
+
+<div class="grid">
+    <div class="card span6">
+        <div class="section-head">
+            <div>
+                <h2>Daily goals</h2>
+                <p>Completion this week</p>
+            </div>
+        </div>
+        <div id="trackingDaily"></div>
+    </div>
+
+    <div class="card span6">
+        <div class="section-head">
+            <div>
+                <h2>Weekly goals</h2>
+                <p>Progress toward each weekly target</p>
+            </div>
+        </div>
+        <div id="trackingWeekly"></div>
+    </div>
+</div>
+
+</section>
+
+
+<!-- =========================================================
      BOOKS
 ========================================================= -->
 
@@ -1905,6 +2099,7 @@ let currentUser = null;
 
 let data = {
     goals:[],
+    completions:[],
     books:[],
     learning:[]
 };
@@ -2193,6 +2388,7 @@ async function loadData() {
 
     const [
         goalsResult,
+        completionsResult,
         booksResult,
         learningResult
     ] = await Promise.all([
@@ -2201,6 +2397,11 @@ async function loadData() {
             .from("goals")
             .select("*")
             .order("created_at"),
+
+        db
+            .from("goal_completions")
+            .select("*")
+            .order("completed_at"),
 
         db
             .from("books")
@@ -2218,6 +2419,9 @@ async function loadData() {
     if (goalsResult.error)
         throw goalsResult.error;
 
+    if (completionsResult.error)
+        throw completionsResult.error;
+
     if (booksResult.error)
         throw booksResult.error;
 
@@ -2227,6 +2431,11 @@ async function loadData() {
 
     data.goals =
         goalsResult.data || [];
+
+    data.completions =
+        completionsResult.data || [];
+
+    await seedLegacyCompletions();
 
     data.books =
         booksResult.data || [];
@@ -2246,238 +2455,341 @@ async function loadData() {
    AUTOMATIC RESETS
 ========================================================= */
 
-async function resetRecurringGoals() {
+async function seedLegacyCompletions() {
+    /*
+       Existing versions of Focus stored only the current "done" state.
+       If a legacy goal is currently done and has no completion event,
+       create one so the new tracking page does not lose that completion.
+    */
+    for (const goal of data.goals) {
+        const alreadySeeded = data.completions.some(c => c.goal_id === goal.id);
 
-    const today =
-        getDateKey();
+        if (!goal.done || alreadySeeded)
+            continue;
 
-    const week =
-        getWeekKey();
+        let completedDate = null;
 
-    const month =
-        getMonthKey();
+        if (goal.horizon === "daily")
+            completedDate = goal.completed_date || getDateKey();
+
+        if (goal.horizon === "weekly")
+            completedDate = getDateKey();
+
+        if (!completedDate)
+            continue;
+
+        const { data: created, error } = await db
+            .from("goal_completions")
+            .insert({
+                user_id:currentUser.id,
+                goal_id:goal.id,
+                completed_at:new Date(
+                    completedDate + "T12:00:00"
+                ).toISOString()
+            })
+            .select()
+            .single();
+
+        if (!error && created)
+            data.completions.push(created);
+    }
+}
 
 
-    for (
-        const goal
-        of data.goals
-    ) {
+function completionDateKey(completion) {
+    if (!completion || !completion.completed_at)
+        return "";
 
-        let reset = false;
+    return getDateKey(new Date(completion.completed_at));
+}
 
+
+function weekCompletions(goalId) {
+    const week = getWeekKey();
+    return data.completions.filter(
+        c =>
+            c.goal_id === goalId &&
+            getWeekKey(new Date(c.completed_at)) === week
+    );
+}
+
+
+function todayCompletions(goalId) {
+    const today = getDateKey();
+    return data.completions.filter(
+        c =>
+            c.goal_id === goalId &&
+            completionDateKey(c) === today
+    );
+}
+
+
+function weeklyTarget(goal) {
+    return Math.max(
+        1,
+        Number(goal.target_count || 1)
+    );
+}
+
+
+function isGoalDoneNow(goal) {
+    if (goal.horizon === "daily")
+        return todayCompletions(goal.id).length > 0;
+
+    if (goal.horizon === "weekly")
+        return weekCompletions(goal.id).length >= weeklyTarget(goal);
+
+    return !!goal.done;
+}
+
+
+async function syncGoalDone(goal) {
+    const doneNow = isGoalDoneNow(goal);
+
+    if (goal.horizon === "daily") {
+        const date = doneNow ? getDateKey() : null;
 
         if (
-            goal.horizon === "daily" &&
-            goal.completed_date &&
-            goal.completed_date !== today
+            goal.done !== doneNow ||
+            goal.completed_date !== date
         ) {
-
-            reset = true;
-
-        }
-
-
-        if (
-            goal.horizon === "weekly" &&
-            goal.completed_week &&
-            goal.completed_week !== week
-        ) {
-
-            reset = true;
-
-        }
-
-
-        if (
-            goal.horizon === "monthly" &&
-            goal.completed_month &&
-            goal.completed_month !== month
-        ) {
-
-            reset = true;
-
-        }
-
-
-        if (reset) {
-
             await db
                 .from("goals")
                 .update({
-                    done:false,
-                    completed_date:null,
-                    completed_week:null,
-                    completed_month:null
+                    done:doneNow,
+                    completed_date:date
                 })
                 .eq("id",goal.id)
-                .eq(
-                    "user_id",
-                    currentUser.id
-                );
+                .eq("user_id",currentUser.id);
 
-
-            goal.done = false;
-
-            goal.completed_date = null;
-
-            goal.completed_week = null;
-
-            goal.completed_month = null;
-
+            goal.done = doneNow;
+            goal.completed_date = date;
         }
 
+        return;
     }
 
+    if (goal.horizon === "weekly") {
+        const week = doneNow ? getWeekKey() : null;
+
+        if (
+            goal.done !== doneNow ||
+            goal.completed_week !== week
+        ) {
+            await db
+                .from("goals")
+                .update({
+                    done:doneNow,
+                    completed_week:week
+                })
+                .eq("id",goal.id)
+                .eq("user_id",currentUser.id);
+
+            goal.done = doneNow;
+            goal.completed_week = week;
+        }
+    }
 }
 
+
+async function resetRecurringGoals() {
+    /*
+       Completion history is never erased at the start of a new day/week.
+       Only the legacy display flags are refreshed from the completion log.
+    */
+    for (const goal of data.goals)
+        await syncGoalDone(goal);
+}
 
 /* =========================================================
    GOALS
 ========================================================= */
 
 async function toggleGoal(id) {
-
     const goal =
-        data.goals.find(
-            g => g.id === id
-        );
-
+        data.goals.find(g => g.id === id);
 
     if (!goal)
         return;
 
+    /*
+       Daily goals can be completed once per day.
+       Weekly repeat goals add/remove one completion event at a time.
+       Monthly goals keep the original one-checkbox behaviour.
+    */
+    if (goal.horizon === "monthly") {
+        const now = new Date();
+        const newDone = !goal.done;
 
-    const now =
-        new Date();
+        const update = {
+            done:newDone,
+            completed_date:null,
+            completed_week:null,
+            completed_month:newDone
+                ? getMonthKey(now)
+                : null
+        };
 
-    const newDone =
-        !goal.done;
-
-
-    const update = {
-
-        done:newDone,
-
-        completed_date:null,
-
-        completed_week:null,
-
-        completed_month:null
-
-    };
-
-
-    if (newDone) {
-
-        if (
-            goal.horizon === "daily"
-        )
-
-            update.completed_date =
-                getDateKey(now);
-
-
-        if (
-            goal.horizon === "weekly"
-        )
-
-            update.completed_week =
-                getWeekKey(now);
-
-
-        if (
-            goal.horizon === "monthly"
-        )
-
-            update.completed_month =
-                getMonthKey(now);
-
-    }
-
-
-    const { error } =
-        await db
+        const { error } = await db
             .from("goals")
             .update(update)
             .eq("id",id)
-            .eq(
-                "user_id",
-                currentUser.id
-            );
+            .eq("user_id",currentUser.id);
 
+        if (error) {
+            alert(error.message);
+            return;
+        }
 
-    if (error) {
-
-        alert(error.message);
-
+        Object.assign(goal, update);
+        render();
         return;
-
     }
 
+    if (goal.horizon === "daily") {
+        const existing = todayCompletions(id)[0];
 
-    Object.assign(
-        goal,
-        update
-    );
+        if (existing) {
+            const { error } = await db
+                .from("goal_completions")
+                .delete()
+                .eq("id",existing.id)
+                .eq("user_id",currentUser.id);
 
+            if (error) {
+                alert(error.message);
+                return;
+            }
 
-    render();
+            data.completions =
+                data.completions.filter(
+                    c => c.id !== existing.id
+                );
+        } else {
+            const { data:created, error } = await db
+                .from("goal_completions")
+                .insert({
+                    user_id:currentUser.id,
+                    goal_id:id,
+                    completed_at:new Date().toISOString()
+                })
+                .select()
+                .single();
 
+            if (error) {
+                alert(error.message);
+                return;
+            }
+
+            data.completions.push(created);
+        }
+
+        await syncGoalDone(goal);
+        render();
+        return;
+    }
+
+    if (goal.horizon === "weekly") {
+        const completions = weekCompletions(id);
+        const target = weeklyTarget(goal);
+
+        /*
+           Once the target is reached, the main checkbox removes the
+           latest completion so the goal can be corrected.
+        */
+        if (completions.length >= target) {
+            const latest =
+                completions
+                    .slice()
+                    .sort(
+                        (a,b) =>
+                            new Date(b.completed_at) -
+                            new Date(a.completed_at)
+                    )[0];
+
+            const { error } = await db
+                .from("goal_completions")
+                .delete()
+                .eq("id",latest.id)
+                .eq("user_id",currentUser.id);
+
+            if (error) {
+                alert(error.message);
+                return;
+            }
+
+            data.completions =
+                data.completions.filter(
+                    c => c.id !== latest.id
+                );
+        } else {
+            const { data:created, error } = await db
+                .from("goal_completions")
+                .insert({
+                    user_id:currentUser.id,
+                    goal_id:id,
+                    completed_at:new Date().toISOString()
+                })
+                .select()
+                .single();
+
+            if (error) {
+                alert(error.message);
+                return;
+            }
+
+            data.completions.push(created);
+        }
+
+        await syncGoalDone(goal);
+        render();
+    }
 }
 
-
 async function addGoal() {
-
     const name =
-        document
-            .getElementById("gName")
-            .value
-            .trim();
-
+        document.getElementById("gName").value.trim();
 
     const horizon =
-        document
-            .getElementById("gH")
-            .value;
+        document.getElementById("gH").value;
 
+    const targetInput =
+        document.getElementById("gTarget");
+
+    const targetCount =
+        horizon === "weekly"
+            ? Math.max(
+                1,
+                Number(targetInput?.value || 1)
+            )
+            : 1;
 
     if (!name)
         return;
 
-
-    const {
-        data:created,
-        error
-    } =
+    const { data:created, error } =
         await db
             .from("goals")
             .insert({
                 user_id:currentUser.id,
                 name,
                 horizon,
+                target_count:targetCount,
                 done:false
             })
             .select()
             .single();
 
-
     if (error) {
-
         alert(error.message);
-
         return;
-
     }
-
 
     data.goals.push(created);
 
     closeModal();
-
     render();
-
 }
-
 
 async function deleteGoal(id) {
 
@@ -2521,15 +2833,26 @@ async function deleteGoal(id) {
 
 
 function goalHTML(goal) {
+    const done = isGoalDoneNow(goal);
+
+    let suffix = "";
+
+    if (goal.horizon === "weekly") {
+        const count = weekCompletions(goal.id).length;
+        const target = weeklyTarget(goal);
+
+        suffix = `
+            <span class="badge">
+                ${count}/${target} this week
+            </span>`;
+    }
 
     return `
-
-    <div class="goal ${goal.done ? "done":""}">
-
+    <div class="goal ${done ? "done":""}">
         <div class="goal-row">
 
             <button
-                class="check ${goal.done ? "done":""}"
+                class="check ${done ? "done":""}"
                 onclick="toggleGoal(${goal.id})">
             </button>
 
@@ -2537,22 +2860,18 @@ function goalHTML(goal) {
                 ${esc(goal.name)}
             </div>
 
+            ${suffix}
+
             <button
                 class="icon"
                 onclick="deleteGoal(${goal.id})">
-
                 ×
-
             </button>
 
         </div>
-
     </div>
-
     `;
-
 }
-
 
 function renderGoals(horizon) {
 
@@ -3077,7 +3396,6 @@ document.getElementById(
 ========================================================= */
 
 function openGoal() {
-
     openModal(`
 
     <div class="modal-head">
@@ -3089,13 +3407,10 @@ function openGoal() {
         <button
             class="close"
             onclick="closeModal()">
-
             ×
-
         </button>
 
     </div>
-
 
     <div class="form">
 
@@ -3111,14 +3426,13 @@ function openGoal() {
 
         </div>
 
-
         <div>
 
             <label>
                 TIMEFRAME
             </label>
 
-            <select id="gH">
+            <select id="gH" onchange="toggleGoalRepeatField()">
 
                 <option value="daily">
                     Daily
@@ -3136,6 +3450,26 @@ function openGoal() {
 
         </div>
 
+        <div
+            id="goalRepeatField"
+            class="goal-repeat-control">
+
+            <label>
+                TIMES PER WEEK
+            </label>
+
+            <input
+                id="gTarget"
+                type="number"
+                min="1"
+                max="100"
+                value="1">
+
+            <div class="goal-helper">
+                For example, set 3 for "go to the gym" three times this week.
+            </div>
+
+        </div>
 
         <div style="display:flex;align-items:end">
 
@@ -3154,8 +3488,25 @@ function openGoal() {
 
     `);
 
+    toggleGoalRepeatField();
 }
 
+
+function toggleGoalRepeatField() {
+    const horizon =
+        document.getElementById("gH")?.value;
+
+    const field =
+        document.getElementById("goalRepeatField");
+
+    if (!field)
+        return;
+
+    field.classList.toggle(
+        "show",
+        horizon === "weekly"
+    );
+}
 
 /* =========================================================
    BOOK MODAL
@@ -3649,6 +4000,313 @@ function renderDashboard() {
 
 
 /* =========================================================
+   TRACKING
+========================================================= */
+
+function getWeekDates() {
+    const start = new Date(getWeekKey() + "T00:00:00");
+    const dates = [];
+
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(start);
+        d.setDate(start.getDate() + i);
+        dates.push(getDateKey(d));
+    }
+
+    return dates;
+}
+
+
+function daysElapsedThisWeek() {
+    const today = getDateKey();
+    const dates = getWeekDates();
+    const index = dates.indexOf(today);
+
+    return index >= 0 ? index + 1 : 7;
+}
+
+
+function dailyGoalStats(goal) {
+    const dates = getWeekDates();
+    const completedDates = new Set(
+        data.completions
+            .filter(
+                c =>
+                    c.goal_id === goal.id &&
+                    dates.includes(completionDateKey(c))
+            )
+            .map(completionDateKey)
+    );
+
+    const elapsed = daysElapsedThisWeek();
+    const completedElapsed =
+        dates
+            .slice(0,elapsed)
+            .filter(d => completedDates.has(d))
+            .length;
+
+    const percentage =
+        elapsed
+            ? Math.round(
+                completedElapsed / elapsed * 100
+            )
+            : 0;
+
+    return {
+        dates,
+        completedDates,
+        completedElapsed,
+        elapsed,
+        percentage
+    };
+}
+
+
+function trackingDailyHTML(goal) {
+    const stats = dailyGoalStats(goal);
+
+    const dayLabels = ["M","T","W","T","F","S","S"];
+
+    return `
+    <div class="tracking-goal">
+
+        <div class="tracking-head">
+            <div class="tracking-name">
+                ${esc(goal.name)}
+            </div>
+
+            <div class="tracking-percent">
+                ${stats.percentage}%
+            </div>
+        </div>
+
+        <div class="tracking-bar">
+            <div
+                class="tracking-fill"
+                style="width:${stats.percentage}%">
+            </div>
+        </div>
+
+        <div class="day-dots">
+            ${stats.dates.map(
+                (date,index) => `
+                    <div
+                        class="day-dot ${
+                            stats.completedDates.has(date)
+                                ? "done"
+                                : ""
+                        }"
+                        title="${dayLabels[index]}">
+                    </div>
+                `
+            ).join("")}
+        </div>
+
+        <div class="tracking-meta">
+            <span>
+                ${stats.completedElapsed}/${stats.elapsed} days completed
+            </span>
+            <span>
+                ${dayLabels.join(" · ")}
+            </span>
+        </div>
+
+    </div>
+    `;
+}
+
+
+function trackingWeeklyHTML(goal) {
+    const count =
+        weekCompletions(goal.id).length;
+
+    const target =
+        weeklyTarget(goal);
+
+    const percentage =
+        Math.min(
+            100,
+            Math.round(
+                count / target * 100
+            )
+        );
+
+    return `
+    <div class="tracking-goal">
+
+        <div class="tracking-head">
+            <div class="tracking-name">
+                ${esc(goal.name)}
+            </div>
+
+            <div class="tracking-percent">
+                ${count}/${target}
+            </div>
+        </div>
+
+        <div class="weekly-progress">
+
+            <div class="tracking-bar">
+                <div
+                    class="tracking-fill"
+                    style="width:${percentage}%">
+                </div>
+            </div>
+
+            <div class="weekly-count">
+                ${percentage}%
+            </div>
+
+        </div>
+
+        <div class="tracking-meta">
+            <span>
+                ${count >= target ? "Target complete" : `${target-count} more to go`}
+            </span>
+            <span>
+                Weekly target
+            </span>
+        </div>
+
+    </div>
+    `;
+}
+
+
+function renderTracking() {
+    const daily =
+        data.goals.filter(
+            g => g.horizon === "daily"
+        );
+
+    const weekly =
+        data.goals.filter(
+            g => g.horizon === "weekly"
+        );
+
+    const dailyPercentages =
+        daily.map(
+            dailyGoalStats
+        );
+
+    const overallDaily =
+        daily.length
+            ? Math.round(
+                dailyPercentages.reduce(
+                    (sum,item) =>
+                        sum + item.percentage,
+                    0
+                ) / daily.length
+            )
+            : 0;
+
+    const weeklyTargetTotal =
+        weekly.reduce(
+            (sum,g) =>
+                sum + weeklyTarget(g),
+            0
+        );
+
+    const weeklyDoneTotal =
+        weekly.reduce(
+            (sum,g) =>
+                sum + Math.min(
+                    weekCompletions(g.id).length,
+                    weeklyTarget(g)
+                ),
+            0
+        );
+
+    const weeklyPercent =
+        weeklyTargetTotal
+            ? Math.round(
+                weeklyDoneTotal /
+                weeklyTargetTotal * 100
+            )
+            : 0;
+
+    const fullyCompleteWeekly =
+        weekly.filter(
+            g =>
+                weekCompletions(g.id).length >=
+                weeklyTarget(g)
+        ).length;
+
+    document.getElementById(
+        "trackingSummary"
+    ).innerHTML = `
+
+        <div class="progress-stat">
+            <b>${overallDaily}%</b>
+            <span>average daily completion</span>
+        </div>
+
+        <div class="progress-stat">
+            <b>${weeklyPercent}%</b>
+            <span>weekly target progress</span>
+        </div>
+
+        <div class="progress-stat">
+            <b>${fullyCompleteWeekly}/${weekly.length}</b>
+            <span>weekly goals complete</span>
+        </div>
+
+    `;
+
+    document.getElementById(
+        "trackingDaily"
+    ).innerHTML =
+        daily.length
+            ? daily.map(
+                trackingDailyHTML
+            ).join("")
+            : `<div class="empty">
+                No daily goals yet.
+               </div>`;
+
+    document.getElementById(
+        "trackingWeekly"
+    ).innerHTML =
+        weekly.length
+            ? weekly.map(
+                trackingWeeklyHTML
+            ).join("")
+            : `<div class="empty">
+                No weekly goals yet.
+               </div>`;
+
+    const weekStart = new Date(
+        getWeekKey() + "T00:00:00"
+    );
+
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(
+        weekEnd.getDate() + 6
+    );
+
+    const format = d =>
+        d.toLocaleDateString(
+            undefined,
+            {
+                month:"short",
+                day:"numeric"
+            }
+        );
+
+    const label =
+        `${format(weekStart)} – ${format(weekEnd)}`;
+
+    const weekLabel =
+        document.getElementById(
+            "trackingWeekLabel"
+        );
+
+    if (weekLabel)
+        weekLabel.textContent = label;
+}
+
+
+/* =========================================================
    NAVIGATION
 ========================================================= */
 
@@ -3803,6 +4461,7 @@ function exportBackup() {
 function render() {
 
     renderDashboard();
+    renderTracking();
 
     renderBooks();
 
@@ -4022,4 +4681,3 @@ setInterval(
 
 </body>
 </html>
-
