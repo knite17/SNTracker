@@ -1,0 +1,4026 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Focus — Goals, Books & Learning</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+:root {
+    --bg:#f5f5f3;
+    --card:#fff;
+    --text:#20211f;
+    --muted:#777873;
+    --line:#e6e6e1;
+    --accent:#5d6b52;
+    --accent-light:#dfe6d8;
+    --danger:#a94a45;
+
+    --sidebar:#20221f;
+    --sidebar-hover:#343831;
+
+    --sidebar-width:245px;
+    --sidebar-collapsed:72px;
+
+    --shadow:0 8px 30px rgba(30,30,20,.06);
+}
+
+* {
+    box-sizing:border-box;
+}
+
+body {
+    margin:0;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,
+    BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+button,
+input,
+textarea,
+select {
+    font:inherit;
+}
+
+button {
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app {
+    display:flex;
+    min-height:100vh;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    width:var(--sidebar-width);
+    background:var(--sidebar);
+    color:white;
+    padding:28px 18px;
+
+    position:fixed;
+    inset:0 auto 0 0;
+
+    transition:
+        width .25s ease,
+        padding .25s ease;
+
+    overflow:hidden;
+    z-index:20;
+}
+
+.sidebar.collapsed {
+    width:var(--sidebar-collapsed);
+    padding:28px 10px;
+}
+
+
+/* Logo */
+
+.logo {
+    font-weight:800;
+    font-size:22px;
+    padding:0 12px 28px;
+    white-space:nowrap;
+}
+
+.logo span {
+    color:#b9c8aa;
+}
+
+
+/* Collapse button */
+
+.sidebar-toggle {
+    position:absolute;
+    top:20px;
+    right:14px;
+
+    width:30px;
+    height:30px;
+
+    border:0;
+    border-radius:8px;
+
+    background:#ffffff10;
+    color:#c7c8c4;
+
+    font-size:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    transition:background .2s ease;
+}
+
+.sidebar-toggle:hover {
+    background:#ffffff20;
+    color:white;
+}
+
+
+/* User */
+
+.user-box {
+    padding:12px;
+    margin-bottom:15px;
+    border-bottom:1px solid #ffffff14;
+    white-space:nowrap;
+}
+
+.user-email {
+    color:#c7c8c4;
+    font-size:11px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+
+/* Navigation */
+
+.nav button {
+    display:flex;
+    align-items:center;
+
+    width:100%;
+
+    text-align:left;
+
+    border:0;
+    background:transparent;
+
+    color:#c7c8c4;
+
+    padding:12px 14px;
+
+    border-radius:10px;
+    margin:3px 0;
+
+    white-space:nowrap;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+}
+
+.nav button:hover,
+.nav button.active {
+    background:var(--sidebar-hover);
+    color:white;
+}
+
+.nav-icon {
+    width:22px;
+    min-width:22px;
+
+    display:inline-flex;
+    justify-content:center;
+
+    margin-right:10px;
+
+    font-size:15px;
+}
+
+.nav-label {
+    transition:opacity .15s ease;
+}
+
+.nav small {
+    display:block;
+
+    color:#888d84;
+
+    padding:22px 14px 8px;
+
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    font-size:10px;
+
+    white-space:nowrap;
+}
+
+
+/* Collapsed sidebar */
+
+.sidebar.collapsed .logo {
+    font-size:0;
+    padding-left:12px;
+    padding-right:12px;
+}
+
+.sidebar.collapsed .logo span {
+    display:none;
+}
+
+.sidebar.collapsed .user-box,
+.sidebar.collapsed .nav small {
+    display:none;
+}
+
+.sidebar.collapsed .nav button {
+    justify-content:center;
+    padding:12px 0;
+}
+
+.sidebar.collapsed .nav-icon {
+    margin-right:0;
+}
+
+.sidebar.collapsed .nav-label {
+    display:none;
+}
+
+.sidebar.collapsed .sidebar-toggle {
+    right:21px;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+    margin-left:var(--sidebar-width);
+
+    width:calc(100% - var(--sidebar-width));
+
+    padding:38px clamp(22px,5vw,70px);
+
+    max-width:1450px;
+
+    transition:
+        margin-left .25s ease,
+        width .25s ease;
+}
+
+body.sidebar-collapsed .main {
+    margin-left:var(--sidebar-collapsed);
+    width:calc(100% - var(--sidebar-collapsed));
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+
+    margin-bottom:28px;
+
+    gap:20px;
+}
+
+.eyebrow {
+    font-size:12px;
+
+    text-transform:uppercase;
+    letter-spacing:1.6px;
+
+    color:var(--muted);
+    font-weight:700;
+}
+
+.title {
+    font-size:38px;
+    line-height:1.05;
+
+    letter-spacing:-1.5px;
+
+    margin:7px 0;
+}
+
+.sub {
+    color:var(--muted);
+    margin:0;
+}
+
+.today {
+    font-size:13px;
+    color:var(--muted);
+    padding-top:8px;
+
+    text-align:right;
+    white-space:nowrap;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.grid {
+    display:grid;
+
+    grid-template-columns:
+        repeat(12,minmax(0,1fr));
+
+    gap:18px;
+}
+
+.card {
+    background:var(--card);
+
+    border:1px solid var(--line);
+
+    border-radius:16px;
+
+    padding:20px;
+
+    box-shadow:var(--shadow);
+
+    min-width:0;
+}
+
+.span12 {
+    grid-column:span 12;
+}
+
+.span8 {
+    grid-column:span 8;
+}
+
+.span6 {
+    grid-column:span 6;
+}
+
+.span4 {
+    grid-column:span 4;
+}
+
+
+/* =========================================================
+   CARD HEADERS
+========================================================= */
+
+.card h2 {
+    font-size:17px;
+    margin:0 0 5px;
+}
+
+.card p {
+    color:var(--muted);
+    font-size:13px;
+}
+
+.section-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:16px;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+    border:0;
+
+    background:var(--text);
+    color:white;
+
+    padding:10px 14px;
+
+    border-radius:9px;
+
+    font-weight:650;
+    font-size:13px;
+
+    white-space:nowrap;
+}
+
+.btn:hover {
+    opacity:.88;
+}
+
+.btn.secondary {
+    background:var(--accent-light);
+    color:#394333;
+}
+
+.btn.danger {
+    background:#f4dfdd;
+    color:var(--danger);
+}
+
+
+/* =========================================================
+   GOALS
+========================================================= */
+
+.goal {
+    padding:14px 0;
+
+    border-top:1px solid var(--line);
+}
+
+.goal:first-child {
+    border-top:0;
+    padding-top:0;
+}
+
+.goal-row {
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    min-width:0;
+}
+
+.check {
+    width:21px;
+    height:21px;
+
+    border:1.5px solid #aaa;
+
+    border-radius:6px;
+
+    background:white;
+
+    flex:none;
+
+    position:relative;
+}
+
+.check.done {
+    background:var(--accent);
+    border-color:var(--accent);
+}
+
+.check.done:after {
+    content:"✓";
+
+    color:white;
+
+    position:absolute;
+
+    font-size:14px;
+
+    left:4px;
+    top:0;
+}
+
+.goal-name {
+    flex:1;
+
+    min-width:0;
+
+    font-weight:650;
+    font-size:14px;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.goal.done .goal-name {
+    text-decoration:line-through;
+    color:#999;
+}
+
+.icon {
+    border:0;
+    background:transparent;
+
+    color:#999;
+
+    padding:4px 6px;
+
+    flex:none;
+}
+
+.icon:hover {
+    color:var(--danger);
+}
+
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge {
+    font-size:11px;
+
+    background:#f0f1ed;
+    color:#66705e;
+
+    border-radius:99px;
+
+    padding:4px 8px;
+
+    white-space:nowrap;
+}
+
+
+/* =========================================================
+   BOOKS
+========================================================= */
+
+.book {
+    display:flex;
+
+    gap:14px;
+
+    align-items:center;
+
+    min-width:0;
+}
+
+.cover {
+    width:48px;
+    height:66px;
+
+    border-radius:5px;
+
+    background:#dedfd9;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#777;
+
+    font-size:10px;
+    text-align:center;
+
+    padding:4px;
+
+    flex-shrink:0;
+}
+
+.book h3 {
+    font-size:15px;
+
+    margin:0 0 4px;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.author {
+    font-size:12px;
+
+    color:var(--muted);
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.list {
+    display:grid;
+    gap:10px;
+}
+
+.list-item {
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    gap:12px;
+
+    padding:12px;
+
+    border:1px solid var(--line);
+
+    border-radius:10px;
+
+    background:white;
+
+    min-width:0;
+}
+
+.list-item > div:first-child {
+    min-width:0;
+}
+
+.list-item strong {
+    font-size:13px;
+}
+
+.list-item span {
+    font-size:11px;
+    color:var(--muted);
+}
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.tabs {
+    display:flex;
+
+    gap:5px;
+
+    background:#ecece7;
+
+    padding:4px;
+
+    border-radius:10px;
+
+    max-width:100%;
+}
+
+.tabs button {
+    border:0;
+
+    background:transparent;
+
+    padding:8px 12px;
+
+    border-radius:7px;
+
+    font-size:12px;
+
+    color:#666;
+
+    white-space:nowrap;
+}
+
+.tabs button.active {
+    background:white;
+
+    color:#222;
+
+    box-shadow:0 1px 5px #00000010;
+}
+
+
+/* =========================================================
+   PAGES
+========================================================= */
+
+.page {
+    display:none;
+}
+
+.page.active {
+    display:block;
+}
+
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form {
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:12px;
+}
+
+.form .full {
+    grid-column:1/-1;
+}
+
+label {
+    font-size:11px;
+
+    color:var(--muted);
+
+    font-weight:700;
+
+    display:block;
+
+    margin-bottom:5px;
+}
+
+input,
+textarea,
+select {
+    width:100%;
+
+    padding:11px 12px;
+
+    border:1px solid var(--line);
+
+    border-radius:9px;
+
+    background:white;
+
+    outline:none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color:#a8b49e;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+    position:fixed;
+
+    inset:0;
+
+    background:#0008;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    z-index:100;
+}
+
+.modal.show {
+    display:flex;
+}
+
+.modal-box {
+    background:white;
+
+    border-radius:16px;
+
+    padding:24px;
+
+    width:min(520px,100%);
+
+    box-shadow:0 20px 70px #0003;
+}
+
+.modal-head {
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:18px;
+}
+
+.modal-head h2 {
+    margin:0;
+
+    font-size:20px;
+}
+
+.close {
+    border:0;
+
+    background:#eee;
+
+    border-radius:50%;
+
+    width:30px;
+    height:30px;
+}
+
+
+/* =========================================================
+   IMPROVED PROGRESS
+========================================================= */
+
+.progress-card {
+    display:flex;
+    flex-direction:column;
+}
+
+.progress-stats {
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
+    gap:8px;
+
+    width:100%;
+}
+
+.progress-stat {
+    background:#f7f7f4;
+
+    border-radius:12px;
+
+    padding:13px 10px;
+
+    min-width:0;
+
+    text-align:center;
+}
+
+.progress-stat b {
+    display:block;
+
+    font-size:clamp(20px,2.4vw,28px);
+
+    line-height:1.1;
+
+    margin-bottom:5px;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.progress-stat span {
+    display:block;
+
+    font-size:10px;
+
+    color:var(--muted);
+
+    white-space:nowrap;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+
+/* Progress bar */
+
+.progress-bar {
+    width:100%;
+
+    height:7px;
+
+    background:#ecece7;
+
+    border-radius:99px;
+
+    overflow:hidden;
+
+    margin-top:16px;
+}
+
+.progress-fill {
+    height:100%;
+
+    background:var(--accent);
+
+    border-radius:99px;
+
+    width:0%;
+
+    transition:width .3s ease;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty {
+    padding:30px;
+
+    text-align:center;
+
+    color:var(--muted);
+
+    border:1px dashed #d5d5ce;
+
+    border-radius:12px;
+}
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+.auth-screen {
+    min-height:100vh;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+}
+
+.auth-card {
+    width:min(430px,100%);
+
+    background:white;
+
+    border:1px solid var(--line);
+
+    border-radius:18px;
+
+    padding:30px;
+
+    box-shadow:var(--shadow);
+}
+
+.auth-logo {
+    font-size:28px;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+}
+
+.auth-card p {
+    color:var(--muted);
+
+    font-size:13px;
+}
+
+.auth-card .field {
+    margin:15px 0;
+}
+
+.auth-message {
+    margin-top:15px;
+
+    font-size:12px;
+
+    color:var(--muted);
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading {
+    position:fixed;
+
+    inset:0;
+
+    background:#f5f5f3;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:1000;
+
+    font-weight:700;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px) {
+
+    .span8,
+    .span6,
+    .span4 {
+        grid-column:span 12;
+    }
+
+    .progress-stats {
+        gap:10px;
+    }
+
+}
+
+
+@media(max-width:850px) {
+
+    .sidebar {
+        width:68px;
+
+        padding:20px 9px;
+    }
+
+    .sidebar.collapsed {
+        width:68px;
+    }
+
+    .sidebar-toggle {
+        display:none;
+    }
+
+    .logo {
+        font-size:0;
+
+        padding:0 10px 25px;
+    }
+
+    .logo:first-letter {
+        font-size:22px;
+    }
+
+    .user-box,
+    .nav small {
+        display:none;
+    }
+
+    .nav button {
+        justify-content:center;
+
+        font-size:0;
+
+        text-align:center;
+    }
+
+    .nav-icon {
+        margin-right:0;
+    }
+
+    .nav-label {
+        display:none;
+    }
+
+    .main,
+    body.sidebar-collapsed .main {
+        margin-left:68px;
+
+        width:calc(100% - 68px);
+
+        padding:25px 18px;
+    }
+
+    .title {
+        font-size:30px;
+    }
+
+    .form {
+        grid-template-columns:1fr;
+    }
+
+    .form .full {
+        grid-column:auto;
+    }
+
+    header {
+        flex-direction:column;
+    }
+
+    .today {
+        text-align:left;
+        padding-top:0;
+    }
+
+}
+
+
+@media(max-width:500px) {
+
+    .main,
+    body.sidebar-collapsed .main {
+        padding:20px 12px;
+    }
+
+    .card {
+        padding:16px;
+        border-radius:14px;
+    }
+
+    .progress-stats {
+        grid-template-columns:1fr;
+    }
+
+    .progress-stat {
+        display:flex;
+
+        align-items:center;
+        justify-content:space-between;
+
+        text-align:left;
+
+        padding:11px 14px;
+    }
+
+    .progress-stat b {
+        margin:0;
+        font-size:22px;
+    }
+
+    .progress-stat span {
+        font-size:11px;
+    }
+
+    .section-head {
+        align-items:flex-start;
+    }
+
+    .tabs {
+        overflow-x:auto;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     LOADING
+========================================================= -->
+
+<div id="loading" class="loading">
+    Loading Focus...
+</div>
+
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<section id="authScreen" class="auth-screen">
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            Focus<span style="color:#b9c8aa">.</span>
+        </div>
+
+        <p>
+            Your personal goals, books and learning system.
+        </p>
+
+        <div class="field">
+
+            <label>EMAIL</label>
+
+            <input
+                id="authEmail"
+                type="email"
+                placeholder="you@example.com">
+
+        </div>
+
+        <div class="field">
+
+            <label>PASSWORD</label>
+
+            <input
+                id="authPassword"
+                type="password"
+                placeholder="At least 6 characters">
+
+        </div>
+
+        <button
+            class="btn"
+            style="width:100%"
+            onclick="signIn()">
+
+            Sign in
+
+        </button>
+
+        <button
+            class="btn secondary"
+            style="width:100%;margin-top:8px"
+            onclick="signUp()">
+
+            Create account
+
+        </button>
+
+        <div
+            id="authMessage"
+            class="auth-message">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     APP
+========================================================= -->
+
+<div
+    id="app"
+    class="app"
+    style="display:none">
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside
+    class="sidebar"
+    id="sidebar">
+
+    <div class="logo">
+        Focus<span>.</span>
+    </div>
+
+
+    <button
+        class="sidebar-toggle"
+        id="sidebarToggle"
+        onclick="toggleSidebar()"
+        aria-label="Collapse sidebar">
+
+        ‹
+
+    </button>
+
+
+    <div class="user-box">
+
+        <div
+            class="user-email"
+            id="userEmail">
+        </div>
+
+    </div>
+
+
+    <nav class="nav">
+
+
+        <button
+            class="active"
+            data-page="dashboard">
+
+            <span class="nav-icon">⌂</span>
+
+            <span class="nav-label">
+                Dashboard
+            </span>
+
+        </button>
+
+
+        <button data-page="goals">
+
+            <span class="nav-icon">✓</span>
+
+            <span class="nav-label">
+                Goals
+            </span>
+
+        </button>
+
+
+        <button data-page="books">
+
+            <span class="nav-icon">▣</span>
+
+            <span class="nav-label">
+                Books
+            </span>
+
+        </button>
+
+
+        <button data-page="learning">
+
+            <span class="nav-icon">◇</span>
+
+            <span class="nav-label">
+                Learning
+            </span>
+
+        </button>
+
+
+        <small>
+            Account
+        </small>
+
+
+        <button onclick="exportBackup()">
+
+            <span class="nav-icon">↓</span>
+
+            <span class="nav-label">
+                Export backup
+            </span>
+
+        </button>
+
+
+        <button onclick="signOut()">
+
+            <span class="nav-icon">↪</span>
+
+            <span class="nav-label">
+                Sign out
+            </span>
+
+        </button>
+
+
+    </nav>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+
+<!-- =========================================================
+     DASHBOARD
+========================================================= -->
+
+<section
+    id="dashboard"
+    class="page active">
+
+
+<header>
+
+    <div>
+
+        <div class="eyebrow">
+            Your personal system
+        </div>
+
+        <div class="title">
+            Good to see you.
+        </div>
+
+        <p class="sub">
+            Keep the important things moving, one day at a time.
+        </p>
+
+    </div>
+
+    <div
+        class="today"
+        id="date">
+    </div>
+
+</header>
+
+
+<div class="grid">
+
+
+<!-- TODAY -->
+
+<div class="card span8">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                Today
+            </h2>
+
+            <p>
+                Daily goals
+            </p>
+
+        </div>
+
+        <button
+            class="btn"
+            onclick="openGoal()">
+
+            + Goal
+
+        </button>
+
+    </div>
+
+    <div id="dashDaily"></div>
+
+</div>
+
+
+<!-- PROGRESS -->
+
+<div class="card span4 progress-card">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                Progress
+            </h2>
+
+            <p>
+                Current goals
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="progress-stats"
+        id="stats">
+    </div>
+
+
+    <div class="progress-bar">
+
+        <div
+            class="progress-fill"
+            id="progressFill">
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- WEEK -->
+
+<div class="card span6">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                This week
+            </h2>
+
+            <p>
+                Weekly goals
+            </p>
+
+        </div>
+
+        <button
+            class="btn secondary"
+            onclick="showPage('goals')">
+
+            View all
+
+        </button>
+
+    </div>
+
+    <div id="dashWeekly"></div>
+
+</div>
+
+
+<!-- MONTH -->
+
+<div class="card span6">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                This month
+            </h2>
+
+            <p>
+                Monthly goals
+            </p>
+
+        </div>
+
+        <button
+            class="btn secondary"
+            onclick="showPage('goals')">
+
+            View all
+
+        </button>
+
+    </div>
+
+    <div id="dashMonthly"></div>
+
+</div>
+
+
+<!-- FICTION -->
+
+<div class="card span6">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                Next fiction
+            </h2>
+
+            <p>
+                From your reading queue
+            </p>
+
+        </div>
+
+        <button
+            class="btn secondary"
+            onclick="showPage('books')">
+
+            Books
+
+        </button>
+
+    </div>
+
+    <div id="nextFiction"></div>
+
+</div>
+
+
+<!-- NONFICTION -->
+
+<div class="card span6">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                Next non-fiction
+            </h2>
+
+            <p>
+                From your reading queue
+            </p>
+
+        </div>
+
+        <button
+            class="btn secondary"
+            onclick="showPage('books')">
+
+            Books
+
+        </button>
+
+    </div>
+
+    <div id="nextNonfiction"></div>
+
+</div>
+
+
+<!-- LEARNING -->
+
+<div class="card span12">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                Next learning focus
+            </h2>
+
+            <p>
+                Your active learning queue
+            </p>
+
+        </div>
+
+        <button
+            class="btn secondary"
+            onclick="showPage('learning')">
+
+            Learning
+
+        </button>
+
+    </div>
+
+    <div id="nextLearning"></div>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     GOALS
+========================================================= -->
+
+<section
+    id="goals"
+    class="page">
+
+
+<header>
+
+    <div>
+
+        <div class="eyebrow">
+            Goals
+        </div>
+
+        <div class="title">
+            Your goals.
+        </div>
+
+        <p class="sub">
+            Daily, weekly and monthly.
+        </p>
+
+    </div>
+
+    <button
+        class="btn"
+        onclick="openGoal()">
+
+        + Add goal
+
+    </button>
+
+</header>
+
+
+<div class="card">
+
+    <div class="section-head">
+
+        <div
+            class="tabs"
+            id="goalTabs">
+
+            <button
+                class="active"
+                data-horizon="daily">
+
+                Daily
+
+            </button>
+
+            <button
+                data-horizon="weekly">
+
+                Weekly
+
+            </button>
+
+            <button
+                data-horizon="monthly">
+
+                Monthly
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="goalList"></div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     BOOKS
+========================================================= -->
+
+<section
+    id="books"
+    class="page">
+
+
+<header>
+
+    <div>
+
+        <div class="eyebrow">
+            Reading
+        </div>
+
+        <div class="title">
+            Books.
+        </div>
+
+        <p class="sub">
+            Build your reading queue.
+        </p>
+
+    </div>
+
+    <button
+        class="btn"
+        onclick="openBook()">
+
+        + Add book
+
+    </button>
+
+</header>
+
+
+<div class="grid">
+
+
+<div class="card span6">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                Fiction
+            </h2>
+
+            <p>
+                Reading queue
+            </p>
+
+        </div>
+
+    </div>
+
+    <div
+        id="fictionList"
+        class="list">
+    </div>
+
+</div>
+
+
+<div class="card span6">
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                Non-fiction
+            </h2>
+
+            <p>
+                Reading queue
+            </p>
+
+        </div>
+
+    </div>
+
+    <div
+        id="nonfictionList"
+        class="list">
+    </div>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     LEARNING
+========================================================= -->
+
+<section
+    id="learning"
+    class="page">
+
+
+<header>
+
+    <div>
+
+        <div class="eyebrow">
+            Learning
+        </div>
+
+        <div class="title">
+            Learning.
+        </div>
+
+        <p class="sub">
+            Your learning queue.
+        </p>
+
+    </div>
+
+    <button
+        class="btn"
+        onclick="openLearning()">
+
+        + Add learning goal
+
+    </button>
+
+</header>
+
+
+<div class="card">
+
+    <div
+        id="learningList"
+        class="list">
+    </div>
+
+</div>
+
+</section>
+
+
+</main>
+
+</div>
+
+
+<!-- =========================================================
+     MODAL
+========================================================= -->
+
+<div
+    class="modal"
+    id="modal">
+
+    <div
+        class="modal-box"
+        id="modalContent">
+    </div>
+
+</div>
+
+
+<script>
+
+
+/* =========================================================
+   SUPABASE CONFIGURATION
+========================================================= */
+
+const SUPABASE_URL =
+    "https://eolmzfbnvelnozynpmez.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_wHBm6EI9kFXgOhPwEI7VoQ_AaKWIQRh";
+
+
+const { createClient } =
+    supabase;
+
+
+const db =
+    createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY,
+        {
+            auth:{
+                persistSession:true,
+                autoRefreshToken:true,
+                detectSessionInUrl:true
+            }
+        }
+    );
+
+
+let currentUser = null;
+
+
+let data = {
+    goals:[],
+    books:[],
+    learning:[]
+};
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function toggleSidebar() {
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const collapsed =
+        sidebar.classList.toggle("collapsed");
+
+    document.body.classList.toggle(
+        "sidebar-collapsed",
+        collapsed
+    );
+
+
+    const toggle =
+        document.getElementById("sidebarToggle");
+
+
+    toggle.textContent =
+        collapsed
+            ? "›"
+            : "‹";
+
+
+    toggle.setAttribute(
+        "aria-label",
+        collapsed
+            ? "Expand sidebar"
+            : "Collapse sidebar"
+    );
+
+
+    localStorage.setItem(
+        "focus-sidebar-collapsed",
+        collapsed
+            ? "true"
+            : "false"
+    );
+
+}
+
+
+/* Restore sidebar state */
+
+(function restoreSidebar(){
+
+    const collapsed =
+        localStorage.getItem(
+            "focus-sidebar-collapsed"
+        ) === "true";
+
+
+    if (collapsed) {
+
+        document
+            .getElementById("sidebar")
+            .classList.add("collapsed");
+
+        document.body.classList.add(
+            "sidebar-collapsed"
+        );
+
+        document
+            .getElementById("sidebarToggle")
+            .textContent = "›";
+
+    }
+
+})();
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function esc(value) {
+
+    return String(value ?? "").replace(
+        /[&<>"']/g,
+        function(match) {
+
+            return {
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;",
+                "'":"&#039;"
+            }[match];
+
+        }
+    );
+
+}
+
+
+function getDateKey(
+    date = new Date()
+) {
+
+    /*
+       Uses local NZ time rather than UTC.
+       This prevents the daily reset from
+       happening at the wrong time.
+    */
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(
+            date.getMonth()+1
+        ).padStart(2,"0");
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2,"0");
+
+    return `${year}-${month}-${day}`;
+
+}
+
+
+function getWeekKey(
+    date = new Date()
+) {
+
+    const d =
+        new Date(date);
+
+    d.setHours(
+        0,0,0,0
+    );
+
+    const day =
+        d.getDay();
+
+    const diff =
+        day === 0
+            ? -6
+            : 1 - day;
+
+    d.setDate(
+        d.getDate() + diff
+    );
+
+    return getDateKey(d);
+
+}
+
+
+function getMonthKey(
+    date = new Date()
+) {
+
+    return `${date.getFullYear()}-${String(
+        date.getMonth()+1
+    ).padStart(2,"0")}`;
+
+}
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+async function signUp() {
+
+    const email =
+        document
+            .getElementById("authEmail")
+            .value
+            .trim();
+
+
+    const password =
+        document
+            .getElementById("authPassword")
+            .value;
+
+
+    if (
+        !email ||
+        password.length < 6
+    ) {
+
+        showAuthMessage(
+            "Enter a valid email and a password of at least 6 characters."
+        );
+
+        return;
+
+    }
+
+
+    const { error } =
+        await db.auth.signUp({
+            email,
+            password
+        });
+
+
+    if (error) {
+
+        showAuthMessage(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    showAuthMessage(
+        "Account created. Check your email if email confirmation is enabled."
+    );
+
+}
+
+
+async function signIn() {
+
+    const email =
+        document
+            .getElementById("authEmail")
+            .value
+            .trim();
+
+
+    const password =
+        document
+            .getElementById("authPassword")
+            .value;
+
+
+    const { error } =
+        await db.auth.signInWithPassword({
+            email,
+            password
+        });
+
+
+    if (error) {
+
+        showAuthMessage(
+            error.message
+        );
+
+        return;
+
+    }
+
+}
+
+
+async function signOut() {
+
+    await db.auth.signOut();
+
+}
+
+
+function showAuthMessage(message) {
+
+    document
+        .getElementById("authMessage")
+        .textContent = message;
+
+}
+
+
+/* =========================================================
+   LOAD DATABASE
+========================================================= */
+
+async function loadData() {
+
+    const [
+        goalsResult,
+        booksResult,
+        learningResult
+    ] = await Promise.all([
+
+        db
+            .from("goals")
+            .select("*")
+            .order("created_at"),
+
+        db
+            .from("books")
+            .select("*")
+            .order("created_at"),
+
+        db
+            .from("learning")
+            .select("*")
+            .order("created_at")
+
+    ]);
+
+
+    if (goalsResult.error)
+        throw goalsResult.error;
+
+    if (booksResult.error)
+        throw booksResult.error;
+
+    if (learningResult.error)
+        throw learningResult.error;
+
+
+    data.goals =
+        goalsResult.data || [];
+
+    data.books =
+        booksResult.data || [];
+
+    data.learning =
+        learningResult.data || [];
+
+
+    await resetRecurringGoals();
+
+    render();
+
+}
+
+
+/* =========================================================
+   AUTOMATIC RESETS
+========================================================= */
+
+async function resetRecurringGoals() {
+
+    const today =
+        getDateKey();
+
+    const week =
+        getWeekKey();
+
+    const month =
+        getMonthKey();
+
+
+    for (
+        const goal
+        of data.goals
+    ) {
+
+        let reset = false;
+
+
+        if (
+            goal.horizon === "daily" &&
+            goal.completed_date &&
+            goal.completed_date !== today
+        ) {
+
+            reset = true;
+
+        }
+
+
+        if (
+            goal.horizon === "weekly" &&
+            goal.completed_week &&
+            goal.completed_week !== week
+        ) {
+
+            reset = true;
+
+        }
+
+
+        if (
+            goal.horizon === "monthly" &&
+            goal.completed_month &&
+            goal.completed_month !== month
+        ) {
+
+            reset = true;
+
+        }
+
+
+        if (reset) {
+
+            await db
+                .from("goals")
+                .update({
+                    done:false,
+                    completed_date:null,
+                    completed_week:null,
+                    completed_month:null
+                })
+                .eq("id",goal.id)
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
+
+
+            goal.done = false;
+
+            goal.completed_date = null;
+
+            goal.completed_week = null;
+
+            goal.completed_month = null;
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   GOALS
+========================================================= */
+
+async function toggleGoal(id) {
+
+    const goal =
+        data.goals.find(
+            g => g.id === id
+        );
+
+
+    if (!goal)
+        return;
+
+
+    const now =
+        new Date();
+
+    const newDone =
+        !goal.done;
+
+
+    const update = {
+
+        done:newDone,
+
+        completed_date:null,
+
+        completed_week:null,
+
+        completed_month:null
+
+    };
+
+
+    if (newDone) {
+
+        if (
+            goal.horizon === "daily"
+        )
+
+            update.completed_date =
+                getDateKey(now);
+
+
+        if (
+            goal.horizon === "weekly"
+        )
+
+            update.completed_week =
+                getWeekKey(now);
+
+
+        if (
+            goal.horizon === "monthly"
+        )
+
+            update.completed_month =
+                getMonthKey(now);
+
+    }
+
+
+    const { error } =
+        await db
+            .from("goals")
+            .update(update)
+            .eq("id",id)
+            .eq(
+                "user_id",
+                currentUser.id
+            );
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    Object.assign(
+        goal,
+        update
+    );
+
+
+    render();
+
+}
+
+
+async function addGoal() {
+
+    const name =
+        document
+            .getElementById("gName")
+            .value
+            .trim();
+
+
+    const horizon =
+        document
+            .getElementById("gH")
+            .value;
+
+
+    if (!name)
+        return;
+
+
+    const {
+        data:created,
+        error
+    } =
+        await db
+            .from("goals")
+            .insert({
+                user_id:currentUser.id,
+                name,
+                horizon,
+                done:false
+            })
+            .select()
+            .single();
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    data.goals.push(created);
+
+    closeModal();
+
+    render();
+
+}
+
+
+async function deleteGoal(id) {
+
+    if (
+        !confirm(
+            "Delete this goal?"
+        )
+    )
+        return;
+
+
+    const { error } =
+        await db
+            .from("goals")
+            .delete()
+            .eq("id",id)
+            .eq(
+                "user_id",
+                currentUser.id
+            );
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    data.goals =
+        data.goals.filter(
+            g => g.id !== id
+        );
+
+
+    render();
+
+}
+
+
+function goalHTML(goal) {
+
+    return `
+
+    <div class="goal ${goal.done ? "done":""}">
+
+        <div class="goal-row">
+
+            <button
+                class="check ${goal.done ? "done":""}"
+                onclick="toggleGoal(${goal.id})">
+            </button>
+
+            <div class="goal-name">
+                ${esc(goal.name)}
+            </div>
+
+            <button
+                class="icon"
+                onclick="deleteGoal(${goal.id})">
+
+                ×
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+function renderGoals(horizon) {
+
+    const goals =
+        data.goals.filter(
+            g => g.horizon === horizon
+        );
+
+
+    document.getElementById(
+        "goalList"
+    ).innerHTML =
+
+        goals.length
+
+        ?
+
+        goals
+            .map(goalHTML)
+            .join("")
+
+        :
+
+        `<div class="empty">
+            No ${horizon} goals yet.
+        </div>`;
+
+}
+
+
+/* =========================================================
+   BOOKS
+========================================================= */
+
+async function addBook() {
+
+    const title =
+        document
+            .getElementById("bTitle")
+            .value
+            .trim();
+
+
+    const author =
+        document
+            .getElementById("bAuthor")
+            .value
+            .trim();
+
+
+    const type =
+        document
+            .getElementById("bType")
+            .value;
+
+
+    const status =
+        document
+            .getElementById("bStatus")
+            .value;
+
+
+    if (!title)
+        return;
+
+
+    if (status === "next") {
+
+        await db
+            .from("books")
+            .update({
+                status:"queued"
+            })
+            .eq(
+                "user_id",
+                currentUser.id
+            )
+            .eq("type",type)
+            .eq("status","next");
+
+
+        data.books
+            .filter(
+                b =>
+                    b.type === type &&
+                    b.status === "next"
+            )
+            .forEach(
+                b => b.status = "queued"
+            );
+
+    }
+
+
+    const {
+        data:created,
+        error
+    } =
+        await db
+            .from("books")
+            .insert({
+                user_id:currentUser.id,
+                title,
+                author,
+                type,
+                status
+            })
+            .select()
+            .single();
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    data.books.push(created);
+
+    closeModal();
+
+    render();
+
+}
+
+
+async function deleteBook(id) {
+
+    if (
+        !confirm(
+            "Delete this book?"
+        )
+    )
+        return;
+
+
+    const { error } =
+        await db
+            .from("books")
+            .delete()
+            .eq("id",id)
+            .eq(
+                "user_id",
+                currentUser.id
+            );
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    data.books =
+        data.books.filter(
+            b => b.id !== id
+        );
+
+
+    render();
+
+}
+
+
+function renderBooks() {
+
+    [
+        "fiction",
+        "nonfiction"
+    ]
+    .forEach(type => {
+
+        const element =
+            document.getElementById(
+                type === "fiction"
+                    ? "fictionList"
+                    : "nonfictionList"
+            );
+
+
+        const books =
+            data.books.filter(
+                b => b.type === type
+            );
+
+
+        element.innerHTML =
+
+            books.length
+
+            ?
+
+            books.map(
+                (book,index) => `
+
+                <div class="list-item">
+
+                    <div>
+
+                        <strong>
+                            ${index+1}.
+                            ${esc(book.title)}
+                        </strong>
+
+                        <br>
+
+                        <span>
+                            ${esc(book.author)}
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <span class="badge">
+                            ${esc(book.status)}
+                        </span>
+
+                        <button
+                            class="icon"
+                            onclick="deleteBook(${book.id})">
+
+                            ×
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                `
+            ).join("")
+
+            :
+
+            `<div class="empty">
+                No books yet.
+            </div>`;
+
+    });
+
+}
+
+
+/* =========================================================
+   LEARNING
+========================================================= */
+
+async function addLearning() {
+
+    const title =
+        document
+            .getElementById("lTitle")
+            .value
+            .trim();
+
+
+    const detail =
+        document
+            .getElementById("lDetail")
+            .value
+            .trim();
+
+
+    if (!title)
+        return;
+
+
+    const {
+        data:created,
+        error
+    } =
+        await db
+            .from("learning")
+            .insert({
+                user_id:currentUser.id,
+                title,
+                detail,
+                status:"queued"
+            })
+            .select()
+            .single();
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    data.learning.push(created);
+
+    closeModal();
+
+    render();
+
+}
+
+
+async function cycleLearning(id) {
+
+    const learning =
+        data.learning.find(
+            l => l.id === id
+        );
+
+
+    if (!learning)
+        return;
+
+
+    const states =
+        [
+            "queued",
+            "active",
+            "done"
+        ];
+
+
+    const index =
+        states.indexOf(
+            learning.status
+        );
+
+
+    const newStatus =
+        states[
+            (index+1) % states.length
+        ];
+
+
+    const { error } =
+        await db
+            .from("learning")
+            .update({
+                status:newStatus
+            })
+            .eq("id",id)
+            .eq(
+                "user_id",
+                currentUser.id
+            );
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    learning.status =
+        newStatus;
+
+
+    render();
+
+}
+
+
+async function deleteLearning(id) {
+
+    if (
+        !confirm(
+            "Delete this learning goal?"
+        )
+    )
+        return;
+
+
+    const { error } =
+        await db
+            .from("learning")
+            .delete()
+            .eq("id",id)
+            .eq(
+                "user_id",
+                currentUser.id
+            );
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+
+    }
+
+
+    data.learning =
+        data.learning.filter(
+            l => l.id !== id
+        );
+
+
+    render();
+
+}
+
+
+function renderLearning() {
+
+    const element =
+        document.getElementById(
+            "learningList"
+        );
+
+
+    element.innerHTML =
+
+        data.learning.length
+
+        ?
+
+        data.learning.map(
+            (item,index) => `
+
+            <div class="list-item">
+
+                <div>
+
+                    <strong>
+                        ${index+1}.
+                        ${esc(item.title)}
+                    </strong>
+
+                    <br>
+
+                    <span>
+                        ${esc(item.detail)}
+                    </span>
+
+                </div>
+
+                <div>
+
+                    <button
+                        class="btn secondary"
+                        onclick="cycleLearning(${item.id})">
+
+                        ${esc(item.status)}
+
+                    </button>
+
+                    <button
+                        class="icon"
+                        onclick="deleteLearning(${item.id})">
+
+                        ×
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            `
+        ).join("")
+
+        :
+
+        `<div class="empty">
+            No learning goals yet.
+        </div>`;
+
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+function openModal(content) {
+
+    document.getElementById(
+        "modalContent"
+    ).innerHTML = content;
+
+
+    document.getElementById(
+        "modal"
+    ).classList.add("show");
+
+}
+
+
+function closeModal() {
+
+    document.getElementById(
+        "modal"
+    ).classList.remove("show");
+
+}
+
+
+document.getElementById(
+    "modal"
+).onclick = e => {
+
+    if (
+        e.target.id === "modal"
+    )
+        closeModal();
+
+};
+
+
+/* =========================================================
+   GOAL MODAL
+========================================================= */
+
+function openGoal() {
+
+    openModal(`
+
+    <div class="modal-head">
+
+        <h2>
+            Add goal
+        </h2>
+
+        <button
+            class="close"
+            onclick="closeModal()">
+
+            ×
+
+        </button>
+
+    </div>
+
+
+    <div class="form">
+
+        <div class="full">
+
+            <label>
+                GOAL
+            </label>
+
+            <input
+                id="gName"
+                placeholder="What do you want to accomplish?">
+
+        </div>
+
+
+        <div>
+
+            <label>
+                TIMEFRAME
+            </label>
+
+            <select id="gH">
+
+                <option value="daily">
+                    Daily
+                </option>
+
+                <option value="weekly">
+                    Weekly
+                </option>
+
+                <option value="monthly">
+                    Monthly
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div style="display:flex;align-items:end">
+
+            <button
+                class="btn"
+                style="width:100%"
+                onclick="addGoal()">
+
+                Save goal
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `);
+
+}
+
+
+/* =========================================================
+   BOOK MODAL
+========================================================= */
+
+function openBook() {
+
+    openModal(`
+
+    <div class="modal-head">
+
+        <h2>
+            Add book
+        </h2>
+
+        <button
+            class="close"
+            onclick="closeModal()">
+
+            ×
+
+        </button>
+
+    </div>
+
+
+    <div class="form">
+
+        <div class="full">
+
+            <label>
+                TITLE
+            </label>
+
+            <input
+                id="bTitle"
+                placeholder="Book title">
+
+        </div>
+
+
+        <div>
+
+            <label>
+                AUTHOR
+            </label>
+
+            <input
+                id="bAuthor"
+                placeholder="Author">
+
+        </div>
+
+
+        <div>
+
+            <label>
+                CATEGORY
+            </label>
+
+            <select id="bType">
+
+                <option value="fiction">
+                    Fiction
+                </option>
+
+                <option value="nonfiction">
+                    Non-fiction
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="full">
+
+            <label>
+                QUEUE STATUS
+            </label>
+
+            <select id="bStatus">
+
+                <option value="next">
+                    Next to read
+                </option>
+
+                <option value="queued">
+                    Queued
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="full">
+
+            <button
+                class="btn"
+                style="width:100%"
+                onclick="addBook()">
+
+                Save book
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `);
+
+}
+
+
+/* =========================================================
+   LEARNING MODAL
+========================================================= */
+
+function openLearning() {
+
+    openModal(`
+
+    <div class="modal-head">
+
+        <h2>
+            Add learning goal
+        </h2>
+
+        <button
+            class="close"
+            onclick="closeModal()">
+
+            ×
+
+        </button>
+
+    </div>
+
+
+    <div class="form">
+
+        <div class="full">
+
+            <label>
+                LEARNING GOAL
+            </label>
+
+            <input
+                id="lTitle"
+                placeholder="e.g. Learn conversational Spanish">
+
+        </div>
+
+
+        <div class="full">
+
+            <label>
+                PLAN / DETAIL
+            </label>
+
+            <textarea
+                id="lDetail"
+                rows="3"
+                placeholder="How will you work on it?"></textarea>
+
+        </div>
+
+
+        <div class="full">
+
+            <button
+                class="btn"
+                style="width:100%"
+                onclick="addLearning()">
+
+                Save learning goal
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `);
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function bookHero(book) {
+
+    if (!book)
+
+        return `
+        <div class="empty">
+            No books in this queue.
+        </div>`;
+
+
+    return `
+
+    <div class="book">
+
+        <div class="cover">
+            ${esc(
+                book.title.slice(0,18)
+            )}
+        </div>
+
+        <div>
+
+            <h3>
+                ${esc(book.title)}
+            </h3>
+
+            <div class="author">
+                ${esc(book.author)}
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+function renderDashboard() {
+
+    const daily =
+        data.goals.filter(
+            g => g.horizon === "daily"
+        );
+
+
+    const weekly =
+        data.goals.filter(
+            g => g.horizon === "weekly"
+        );
+
+
+    const monthly =
+        data.goals.filter(
+            g => g.horizon === "monthly"
+        );
+
+
+    document.getElementById(
+        "dashDaily"
+    ).innerHTML = daily.length
+
+        ?
+
+        daily
+            .slice(0,5)
+            .map(goalHTML)
+            .join("")
+
+        :
+
+        `<div class="empty">
+            No daily goals yet.
+        </div>`;
+
+
+    document.getElementById(
+        "dashWeekly"
+    ).innerHTML = weekly.length
+
+        ?
+
+        weekly
+            .slice(0,5)
+            .map(goalHTML)
+            .join("")
+
+        :
+
+        `<div class="empty">
+            No weekly goals yet.
+        </div>`;
+
+
+    document.getElementById(
+        "dashMonthly"
+    ).innerHTML = monthly.length
+
+        ?
+
+        monthly
+            .slice(0,5)
+            .map(goalHTML)
+            .join("")
+
+        :
+
+        `<div class="empty">
+            No monthly goals yet.
+        </div>`;
+
+
+    /* Progress */
+
+    const total =
+        data.goals.length;
+
+
+    const completed =
+        data.goals.filter(
+            g => g.done
+        ).length;
+
+
+    const percentage =
+        total
+            ? Math.round(
+                completed / total * 100
+            )
+            : 0;
+
+
+    document.getElementById(
+        "stats"
+    ).innerHTML = `
+
+    <div class="progress-stat">
+
+        <b>
+            ${completed}
+        </b>
+
+        <span>
+            completed
+        </span>
+
+    </div>
+
+
+    <div class="progress-stat">
+
+        <b>
+            ${total}
+        </b>
+
+        <span>
+            total goals
+        </span>
+
+    </div>
+
+
+    <div class="progress-stat">
+
+        <b>
+            ${percentage}%
+        </b>
+
+        <span>
+            completion
+        </span>
+
+    </div>
+
+    `;
+
+
+    const progressFill =
+        document.getElementById(
+            "progressFill"
+        );
+
+
+    if (progressFill) {
+
+        progressFill.style.width =
+            percentage + "%";
+
+    }
+
+
+    /* Books */
+
+    function nextBook(type) {
+
+        return (
+
+            data.books.find(
+                b =>
+                    b.type === type &&
+                    b.status === "next"
+            )
+
+            ||
+
+            data.books.find(
+                b =>
+                    b.type === type &&
+                    b.status === "queued"
+            )
+
+        );
+
+    }
+
+
+    document.getElementById(
+        "nextFiction"
+    ).innerHTML =
+        bookHero(
+            nextBook("fiction")
+        );
+
+
+    document.getElementById(
+        "nextNonfiction"
+    ).innerHTML =
+        bookHero(
+            nextBook("nonfiction")
+        );
+
+
+    /* Learning */
+
+    const nextLearning =
+        data.learning.find(
+            l =>
+                l.status === "active"
+        )
+
+        ||
+
+        data.learning.find(
+            l =>
+                l.status === "queued"
+        );
+
+
+    document.getElementById(
+        "nextLearning"
+    ).innerHTML = nextLearning
+
+        ?
+
+        `
+
+        <div class="book">
+
+            <div class="cover">
+                LEARN
+            </div>
+
+            <div>
+
+                <h3>
+                    ${esc(
+                        nextLearning.title
+                    )}
+                </h3>
+
+                <div class="author">
+                    ${esc(
+                        nextLearning.detail
+                    )}
+                </div>
+
+            </div>
+
+            <span class="badge">
+                ${esc(
+                    nextLearning.status
+                )}
+            </span>
+
+        </div>
+
+        `
+
+        :
+
+        `<div class="empty">
+            No learning goals yet.
+        </div>`;
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showPage(id) {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            page =>
+                page.classList.toggle(
+                    "active",
+                    page.id === id
+                )
+        );
+
+
+    document
+        .querySelectorAll(
+            ".nav button[data-page]"
+        )
+        .forEach(
+            button =>
+                button.classList.toggle(
+                    "active",
+                    button.dataset.page === id
+                )
+        );
+
+
+    render();
+
+}
+
+
+document
+    .querySelectorAll(
+        ".nav button[data-page]"
+    )
+    .forEach(button => {
+
+        button.onclick =
+            () =>
+                showPage(
+                    button.dataset.page
+                );
+
+    });
+
+
+document
+    .querySelectorAll(
+        "#goalTabs button"
+    )
+    .forEach(button => {
+
+        button.onclick = () => {
+
+            document
+                .querySelectorAll(
+                    "#goalTabs button"
+                )
+                .forEach(
+                    b =>
+                        b.classList.remove(
+                            "active"
+                        )
+                );
+
+
+            button.classList.add(
+                "active"
+            );
+
+
+            renderGoals(
+                button.dataset.horizon
+            );
+
+        };
+
+    });
+
+
+/* =========================================================
+   EXPORT
+========================================================= */
+
+function exportBackup() {
+
+    const backup = {
+
+        exported_at:
+            new Date().toISOString(),
+
+        goals:data.goals,
+
+        books:data.books,
+
+        learning:data.learning
+
+    };
+
+
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    backup,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:"application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const a =
+        document.createElement(
+            "a"
+        );
+
+
+    a.href = url;
+
+
+    a.download =
+        `focus-backup-${getDateKey()}.json`;
+
+
+    a.click();
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render() {
+
+    renderDashboard();
+
+    renderBooks();
+
+    renderLearning();
+
+
+    const active =
+        document.querySelector(
+            "#goalTabs button.active"
+        );
+
+
+    renderGoals(
+        active
+            ? active.dataset.horizon
+            : "daily"
+    );
+
+}
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+/* =========================================================
+   AUTH INITIALIZATION
+========================================================= */
+
+async function initializeApp() {
+
+    try {
+
+        const {
+            data: {
+                session
+            },
+            error
+        } = await db.auth.getSession();
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (session?.user) {
+
+            currentUser =
+                session.user;
+
+
+            document.getElementById(
+                "authScreen"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "app"
+            ).style.display = "flex";
+
+
+            document.getElementById(
+                "userEmail"
+            ).textContent =
+                currentUser.email;
+
+
+            await loadData();
+
+        }
+
+        else {
+
+            currentUser = null;
+
+
+            document.getElementById(
+                "app"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "authScreen"
+            ).style.display = "flex";
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Focus startup error:",
+            error
+        );
+
+
+        document.getElementById(
+            "authScreen"
+        ).style.display = "flex";
+
+
+        document.getElementById(
+            "app"
+        ).style.display = "none";
+
+
+        showAuthMessage(
+            "Could not connect to Focus: " +
+            error.message
+        );
+
+    }
+
+    finally {
+
+        document.getElementById(
+            "loading"
+        ).style.display = "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTH STATE CHANGES
+========================================================= */
+
+db.auth.onAuthStateChange(
+    (event, session) => {
+
+        /*
+           Do not reload the database here.
+
+           initializeApp() handles the initial session.
+           This listener only reacts to later
+           sign-in/sign-out changes.
+        */
+
+        if (event === "SIGNED_OUT") {
+
+            currentUser = null;
+
+            document.getElementById(
+                "app"
+            ).style.display = "none";
+
+            document.getElementById(
+                "authScreen"
+            ).style.display = "flex";
+
+        }
+
+    }
+);
+
+
+/* Start application */
+
+initializeApp();
+
+/* =========================================================
+   DATE
+========================================================= */
+
+document.getElementById(
+    "date"
+).textContent =
+    new Date().toLocaleDateString(
+        undefined,
+        {
+            weekday:"long",
+            month:"long",
+            day:"numeric",
+            year:"numeric"
+        }
+    );
+
+
+/* =========================================================
+   MIDNIGHT RESET CHECK
+========================================================= */
+
+let lastDate =
+    getDateKey();
+
+
+setInterval(
+    async () => {
+
+        const currentDate =
+            getDateKey();
+
+
+        if (
+            currentDate !== lastDate &&
+            currentUser
+        ) {
+
+            lastDate =
+                currentDate;
+
+
+            await resetRecurringGoals();
+
+            render();
+
+        }
+
+    },
+    60000
+);
+
+</script>
+
+</body>
+</html>
+```
