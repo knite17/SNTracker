@@ -542,16 +542,20 @@ select:focus{
     height:30px;
 }
 
-.progress-card{
+.progress-period-card{
     display:flex;
     flex-direction:column;
 }
 
-.progress-stats{
+.progress-period-stats{
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(2,minmax(0,1fr));
     gap:8px;
     width:100%;
+}
+
+.progress-period-stats .progress-stat:first-child{
+    grid-column:1 / -1;
 }
 
 .progress-stat{
@@ -1356,18 +1360,42 @@ select:focus{
     <div id="dashDaily"></div>
 </div>
 
-<div class="card span6 progress-card">
+<div class="card span4 progress-period-card">
     <div class="section-head">
         <div>
-            <h2>Progress</h2>
-            <p>Current goals</p>
+            <h2>Daily progress</h2>
+            <p>Today</p>
         </div>
     </div>
-
-    <div class="progress-stats" id="stats"></div>
-
+    <div class="progress-period-stats" id="dailyProgressStats"></div>
     <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
+        <div class="progress-fill" id="dailyProgressFill"></div>
+    </div>
+</div>
+
+<div class="card span4 progress-period-card">
+    <div class="section-head">
+        <div>
+            <h2>Weekly progress</h2>
+            <p>This week</p>
+        </div>
+    </div>
+    <div class="progress-period-stats" id="weeklyProgressStats"></div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="weeklyProgressFill"></div>
+    </div>
+</div>
+
+<div class="card span4 progress-period-card">
+    <div class="section-head">
+        <div>
+            <h2>Monthly progress</h2>
+            <p>This month</p>
+        </div>
+    </div>
+    <div class="progress-period-stats" id="monthlyProgressStats"></div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="monthlyProgressFill"></div>
     </div>
 </div>
 
@@ -3528,41 +3556,79 @@ function renderDashboard(){
             ? monthly.slice(0,5).map(goalHTML).join("")
             : `<div class="empty">No monthly goals yet.</div>`;
 
-    const total = data.goals.length;
+    /* Separate progress for each goal horizon */
+    const dailyTotal = daily.length;
+    const dailyCompleted = daily.filter(g => isGoalDoneNow(g)).length;
+    const dailyPercent = dailyTotal
+        ? Math.round(dailyCompleted / dailyTotal * 100)
+        : 0;
 
-    const completed =
-        data.goals.filter(
-            g => isGoalDoneNow(g)
-        ).length;
+    const weeklyTargetTotal = weekly.reduce(
+        (sum,g) => sum + weeklyTarget(g),
+        0
+    );
+    const weeklyCompletedTotal = weekly.reduce(
+        (sum,g) => sum + Math.min(weekCompletions(g.id).length, weeklyTarget(g)),
+        0
+    );
+    const weeklyPercent = weeklyTargetTotal
+        ? Math.round(weeklyCompletedTotal / weeklyTargetTotal * 100)
+        : 0;
 
-    const percentage =
-        total
-            ? Math.round(
-                completed / total * 100
-            )
-            : 0;
+    const monthlyTotal = monthly.length;
+    const monthlyCompleted = monthly.filter(g => isGoalDoneNow(g)).length;
+    const monthlyPercent = monthlyTotal
+        ? Math.round(monthlyCompleted / monthlyTotal * 100)
+        : 0;
 
-    document.getElementById("stats").innerHTML = `
-
+    document.getElementById("dailyProgressStats").innerHTML = `
         <div class="progress-stat">
-            <b>${completed}</b>
+            <b>${dailyPercent}%</b>
+            <span>today's completion</span>
+        </div>
+        <div class="progress-stat">
+            <b>${dailyCompleted}</b>
             <span>completed</span>
         </div>
-
         <div class="progress-stat">
-            <b>${total}</b>
+            <b>${dailyTotal}</b>
             <span>total goals</span>
         </div>
-
-        <div class="progress-stat">
-            <b>${percentage}%</b>
-            <span>completion</span>
-        </div>
-
     `;
 
-    document.getElementById("progressFill").style.width =
-        percentage + "%";
+    document.getElementById("weeklyProgressStats").innerHTML = `
+        <div class="progress-stat">
+            <b>${weeklyPercent}%</b>
+            <span>weekly target progress</span>
+        </div>
+        <div class="progress-stat">
+            <b>${weeklyCompletedTotal}</b>
+            <span>completed</span>
+        </div>
+        <div class="progress-stat">
+            <b>${weeklyTargetTotal}</b>
+            <span>target</span>
+        </div>
+    `;
+
+    document.getElementById("monthlyProgressStats").innerHTML = `
+        <div class="progress-stat">
+            <b>${monthlyPercent}%</b>
+            <span>monthly completion</span>
+        </div>
+        <div class="progress-stat">
+            <b>${monthlyCompleted}</b>
+            <span>completed</span>
+        </div>
+        <div class="progress-stat">
+            <b>${monthlyTotal}</b>
+            <span>total goals</span>
+        </div>
+    `;
+
+    document.getElementById("dailyProgressFill").style.width = dailyPercent + "%";
+    document.getElementById("weeklyProgressFill").style.width = weeklyPercent + "%";
+    document.getElementById("monthlyProgressFill").style.width = monthlyPercent + "%";
 
     function nextBook(type){
 
