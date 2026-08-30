@@ -988,6 +988,224 @@ select:focus{
 
     .tracking-head{align-items:flex-start}
 }
+/* =========================================================
+   BOOKS & REVIEWS
+========================================================= */
+
+.book-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    min-width:0;
+    width:100%;
+}
+
+.book-check{
+    width:22px;
+    height:22px;
+    border:1.5px solid #aaa;
+    border-radius:6px;
+    background:white;
+    flex:none;
+    position:relative;
+    transition:all .2s ease;
+}
+
+.book-check:hover{
+    border-color:var(--accent);
+    background:var(--accent-light);
+}
+
+.book-check.done{
+    background:var(--accent);
+    border-color:var(--accent);
+}
+
+.book-check.done:after{
+    content:"✓";
+    color:white;
+    position:absolute;
+    font-size:14px;
+    left:4px;
+    top:0;
+}
+
+.book-info{
+    flex:1;
+    min-width:0;
+}
+
+.book-info strong{
+    font-size:13px;
+    display:block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.book-info span{
+    font-size:11px;
+    color:var(--muted);
+}
+
+.book-actions{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    flex:none;
+}
+
+.book-cover-small{
+    width:42px;
+    height:58px;
+    border-radius:5px;
+    background:var(--theme-medium);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--theme-text);
+    font-size:8px;
+    text-align:center;
+    padding:4px;
+    flex:none;
+}
+
+.completed-book{
+    opacity:.92;
+}
+
+.completed-book .book-info strong{
+    color:#555;
+}
+
+.rating{
+    color:#d59b27;
+    letter-spacing:1px;
+    font-size:14px;
+    white-space:nowrap;
+}
+
+.review-card{
+    margin-bottom:18px;
+}
+
+.review-card:last-child{
+    margin-bottom:0;
+}
+
+.review-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:18px;
+}
+
+.review-title{
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:4px;
+}
+
+.review-author{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.review-date{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:4px;
+}
+
+.review-text{
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+    color:#454641;
+    font-size:13px;
+    line-height:1.7;
+    white-space:pre-wrap;
+}
+
+.review-rating{
+    text-align:right;
+    flex:none;
+}
+
+.review-rating .rating{
+    display:block;
+    margin-bottom:5px;
+}
+
+.review-rating span{
+    font-size:10px;
+    color:var(--muted);
+}
+
+.review-empty{
+    padding:45px 20px;
+    text-align:center;
+    color:var(--muted);
+    border:1px dashed var(--line);
+    border-radius:12px;
+}
+
+.review-empty strong{
+    display:block;
+    color:var(--text);
+    margin-bottom:5px;
+}
+
+.finish-book-title{
+    font-size:17px;
+    font-weight:750;
+    margin-bottom:4px;
+}
+
+.finish-book-author{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:20px;
+}
+
+.star-picker{
+    display:flex;
+    gap:5px;
+    margin-top:6px;
+}
+
+.star-picker button{
+    border:0;
+    background:transparent;
+    color:#c8c8c2;
+    font-size:28px;
+    padding:0 2px;
+    line-height:1;
+}
+
+.star-picker button.selected{
+    color:#d59b27;
+}
+
+@media(max-width:600px){
+
+    .book-item{
+        align-items:flex-start;
+    }
+
+    .book-actions{
+        flex-direction:column;
+        align-items:flex-end;
+    }
+
+    .review-header{
+        flex-direction:column;
+    }
+
+    .review-rating{
+        text-align:left;
+    }
+}
 </style>
 </head>
 
@@ -1085,7 +1303,12 @@ select:focus{
             <span class="nav-icon">▣</span>
             <span class="nav-label">Books</span>
         </button>
-
+        
+        <button data-page="reviews">
+            <span class="nav-icon">★</span>
+            <span class="nav-label">Reviews</span>
+        </button>
+        
         <button data-page="learning">
             <span class="nav-icon">◇</span>
             <span class="nav-label">Learning</span>
@@ -1312,7 +1535,7 @@ select:focus{
     <div>
         <div class="eyebrow">Reading</div>
         <div class="title">Books.</div>
-        <p class="sub">Build your reading queue.</p>
+        <p class="sub">Build your reading queue and keep track of what you've finished.</p>
     </div>
 
     <button class="btn" onclick="openBook()">+ Add book</button>
@@ -1327,6 +1550,7 @@ select:focus{
             <p>Reading queue</p>
         </div>
     </div>
+
     <div id="fictionList" class="list"></div>
 </div>
 
@@ -1337,13 +1561,47 @@ select:focus{
             <p>Reading queue</p>
         </div>
     </div>
+
     <div id="nonfictionList" class="list"></div>
+</div>
+
+<div class="card span12">
+
+    <div class="section-head">
+        <div>
+            <h2>Completed books</h2>
+            <p>Your finished reading</p>
+        </div>
+
+        <button
+            class="btn secondary"
+            onclick="showPage('reviews')">
+            View reviews
+        </button>
+    </div>
+
+    <div id="completedBooksList" class="list"></div>
+
 </div>
 
 </div>
 
 </section>
 
+<section id="reviews" class="page">
+
+<header>
+    <div>
+        <div class="eyebrow">Reading</div>
+        <div class="title">Reviews.</div>
+        <p class="sub">Your personal record of the books you've finished.</p>
+    </div>
+</header>
+
+<div id="reviewsList"></div>
+
+</section>
+    
 <section id="learning" class="page">
 
 <header>
@@ -2232,48 +2490,581 @@ function renderBooks(){
 
         const books =
             data.books.filter(
-                b => b.type === type
+                b =>
+                    b.type === type &&
+                    b.status !== "done"
             );
 
         element.innerHTML =
             books.length
-                ? books.map(
-                    (book,index) => `
-                        <div class="list-item">
+                ? books.map(book => `
 
-                            <div>
-                                <strong>
-                                    ${index+1}. ${esc(book.title)}
-                                </strong>
-                                <br>
-                                <span>
-                                    ${esc(book.author)}
-                                </span>
+                    <div class="list-item">
+
+                        <div class="book-item">
+
+                            <button
+                                class="book-check"
+                                onclick="finishBook(${JSON.stringify(book.id)})"
+                                aria-label="Mark book as finished"
+                                title="Mark as finished">
+                            </button>
+
+                            <div class="book-cover-small">
+                                ${esc(book.title.slice(0,18))}
                             </div>
 
-                            <div>
-                                <span class="badge">
-                                    ${esc(book.status)}
+                            <div class="book-info">
+
+                                <strong>
+                                    ${esc(book.title)}
+                                </strong>
+
+                                <span>
+                                    ${esc(book.author || "Unknown author")}
                                 </span>
 
-                                <button
-                                    class="icon"
-                                    onclick="deleteBook(${JSON.stringify(book.id)})">
-                                    ×
-                                </button>
                             </div>
 
                         </div>
-                    `
-                ).join("")
+
+                        <div class="book-actions">
+
+                            <span class="badge">
+                                ${
+                                    book.status === "next"
+                                        ? "Next"
+                                        : "Queued"
+                                }
+                            </span>
+
+                            <button
+                                class="icon"
+                                onclick="deleteBook(${JSON.stringify(book.id)})"
+                                aria-label="Delete book">
+                                ×
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `).join("")
                 : `
                     <div class="empty">
-                        No books yet.
+                        No books in this queue.
                     </div>
                 `;
     });
+
+    renderCompletedBooks();
+}
+function renderCompletedBooks(){
+
+    const element =
+        document.getElementById("completedBooksList");
+
+    if(!element) return;
+
+    const books =
+        data.books
+            .filter(b => b.status === "done")
+            .sort(
+                (a,b) =>
+                    new Date(b.completed_at || 0) -
+                    new Date(a.completed_at || 0)
+            );
+
+    element.innerHTML =
+        books.length
+            ? books.map(book => `
+
+                <div class="list-item completed-book">
+
+                    <div class="book-item">
+
+                        <div class="book-cover-small">
+                            ${esc(book.title.slice(0,18))}
+                        </div>
+
+                        <div class="book-info">
+
+                            <strong>
+                                ${esc(book.title)}
+                            </strong>
+
+                            <span>
+                                ${esc(book.author || "Unknown author")}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="book-actions">
+
+                        ${
+                            book.rating
+                                ? `
+                                    <span class="rating">
+                                        ${starsHTML(book.rating)}
+                                    </span>
+                                `
+                                : ""
+                        }
+
+                        <button
+                            class="btn secondary"
+                            onclick="editBookReview(${JSON.stringify(book.id)})">
+                            Review
+                        </button>
+
+                        <button
+                            class="icon"
+                            onclick="deleteBook(${JSON.stringify(book.id)})">
+                            ×
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `).join("")
+            : `
+                <div class="empty">
+                    You haven't finished any books yet.
+                </div>
+            `;
+}
+    function starsHTML(rating){
+
+    const value =
+        Math.max(
+            0,
+            Math.min(
+                5,
+                Number(rating || 0)
+            )
+        );
+
+    return "★".repeat(value) +
+           "☆".repeat(5-value);
 }
 
+
+function finishBook(id){
+
+    const book =
+        data.books.find(
+            b => b.id === id
+        );
+
+    if(!book) return;
+
+    openReviewModal(book, false);
+}
+
+
+function editBookReview(id){
+
+    const book =
+        data.books.find(
+            b => b.id === id
+        );
+
+    if(!book) return;
+
+    openReviewModal(book, true);
+}
+
+
+function openReviewModal(book, editing){
+
+    const currentRating =
+        Number(book.rating || 0);
+
+    openModal(`
+
+        <div class="modal-head">
+
+            <h2>
+                ${editing ? "Edit review" : "Finish book"}
+            </h2>
+
+            <button
+                class="close"
+                onclick="closeModal()">
+                ×
+            </button>
+
+        </div>
+
+        <div class="finish-book-title">
+            ${esc(book.title)}
+        </div>
+
+        <div class="finish-book-author">
+            ${esc(book.author || "Unknown author")}
+        </div>
+
+        <div class="form">
+
+            <div class="full">
+
+                <label>RATING</label>
+
+                <div
+                    class="star-picker"
+                    id="starPicker">
+
+                    ${[1,2,3,4,5].map(star => `
+
+                        <button
+                            type="button"
+                            class="${
+                                star <= currentRating
+                                    ? "selected"
+                                    : ""
+                            }"
+                            onclick="selectBookRating(${star})"
+                            data-rating="${star}">
+                            ★
+                        </button>
+
+                    `).join("")}
+
+                </div>
+
+                <input
+                    type="hidden"
+                    id="bookRating"
+                    value="${currentRating}">
+
+            </div>
+
+            <div class="full">
+
+                <label>REVIEW</label>
+
+                <textarea
+                    id="bookReview"
+                    rows="7"
+                    placeholder="What did you think of the book? What stood out to you? Would you recommend it?">${esc(book.review || "")}</textarea>
+
+            </div>
+
+            <div>
+
+                <label>DATE FINISHED</label>
+
+                <input
+                    id="bookCompletedDate"
+                    type="date"
+                    value="${
+                        book.completed_at
+                            ? getDateKey(
+                                new Date(book.completed_at)
+                              )
+                            : getDateKey()
+                    }">
+
+            </div>
+
+            <div style="display:flex;align-items:end">
+
+                <button
+                    class="btn"
+                    style="width:100%"
+                    onclick="saveBookReview(${JSON.stringify(book.id)})">
+
+                    ${editing ? "Save review" : "Finish book"}
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+function selectBookRating(rating){
+
+    const input =
+        document.getElementById("bookRating");
+
+    if(!input) return;
+
+    input.value = rating;
+
+    document
+        .querySelectorAll("#starPicker button")
+        .forEach(button => {
+
+            const value =
+                Number(button.dataset.rating);
+
+            button.classList.toggle(
+                "selected",
+                value <= rating
+            );
+        });
+}
+
+
+async function saveBookReview(id){
+
+    const book =
+        data.books.find(
+            b => b.id === id
+        );
+
+    if(!book) return;
+
+    const rating =
+        Number(
+            document.getElementById("bookRating")?.value || 0
+        );
+
+    const review =
+        document.getElementById("bookReview")
+            ?.value.trim() || "";
+
+    const completedDate =
+        document.getElementById("bookCompletedDate")
+            ?.value;
+
+    if(rating < 1 || rating > 5){
+
+        alert("Please choose a rating from 1 to 5 stars.");
+
+        return;
+    }
+
+    if(!review){
+
+        if(!confirm(
+            "You haven't written a review. Finish the book without a review?"
+        )){
+            return;
+        }
+    }
+
+    let completedAt =
+        new Date().toISOString();
+
+    if(completedDate){
+
+        completedAt =
+            new Date(
+                completedDate + "T12:00:00"
+            ).toISOString();
+    }
+
+    const update = {
+
+        status:"done",
+
+        rating,
+
+        review,
+
+        completed_at:completedAt
+
+    };
+
+    const {error} =
+        await db
+            .from("books")
+            .update(update)
+            .eq("id",id)
+            .eq("user_id",currentUser.id);
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            "Could not save the book review: " +
+            error.message
+        );
+
+        return;
+    }
+
+    Object.assign(book,update);
+
+    /*
+       If this book was the "next" book,
+       automatically promote the next queued
+       book of the same type.
+    */
+
+    const replacement =
+        data.books
+            .filter(
+                b =>
+                    b.id !== id &&
+                    b.type === book.type &&
+                    b.status === "queued"
+            )
+            .sort(
+                (a,b) =>
+                    new Date(a.created_at) -
+                    new Date(b.created_at)
+            )[0];
+
+    if(replacement){
+
+        const {error:promotionError} =
+            await db
+                .from("books")
+                .update({
+                    status:"next"
+                })
+                .eq("id",replacement.id)
+                .eq("user_id",currentUser.id);
+
+        if(!promotionError){
+
+            replacement.status = "next";
+
+        }else{
+
+            console.error(
+                "Could not promote next book:",
+                promotionError
+            );
+        }
+    }
+
+    closeModal();
+
+    render();
+
+    /*
+       Take the user directly to their new review
+       after finishing the book.
+    */
+
+    showPage("reviews");
+}
+    function renderReviews(){
+
+    const element =
+        document.getElementById("reviewsList");
+
+    if(!element) return;
+
+    const books =
+        data.books
+            .filter(b => b.status === "done")
+            .sort(
+                (a,b) =>
+                    new Date(b.completed_at || 0) -
+                    new Date(a.completed_at || 0)
+            );
+
+    if(!books.length){
+
+        element.innerHTML = `
+
+            <div class="card">
+
+                <div class="review-empty">
+
+                    <strong>
+                        No reviews yet.
+                    </strong>
+
+                    Finish a book from your Books page
+                    and your review will appear here.
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+    element.innerHTML =
+        books.map(book => `
+
+            <div class="card review-card">
+
+                <div class="review-header">
+
+                    <div>
+
+                        <div class="review-title">
+                            ${esc(book.title)}
+                        </div>
+
+                        <div class="review-author">
+                            ${esc(book.author || "Unknown author")}
+                        </div>
+
+                        ${
+                            book.completed_at
+                                ? `
+                                    <div class="review-date">
+                                        Finished
+                                        ${formatDate(
+                                            new Date(book.completed_at),
+                                            true
+                                        )}
+                                    </div>
+                                `
+                                : ""
+                        }
+
+                    </div>
+
+                    <div class="review-rating">
+
+                        <span class="rating">
+                            ${starsHTML(book.rating)}
+                        </span>
+
+                        <span>
+                            ${book.rating || 0}/5
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="review-text">
+                    ${
+                        book.review
+                            ? esc(book.review)
+                            : "No written review."
+                    }
+                </div>
+
+                <div style="
+                    display:flex;
+                    justify-content:flex-end;
+                    margin-top:16px;
+                    gap:8px;
+                ">
+
+                    <button
+                        class="btn secondary"
+                        onclick="editBookReview(${JSON.stringify(book.id)})">
+                        Edit review
+                    </button>
+
+                </div>
+
+            </div>
+
+        `).join("");
+}
+    
 /* =========================================================
    LEARNING
 ========================================================= */
@@ -3850,6 +4641,7 @@ function render(){
     renderTracking();
     renderHistory();
     renderBooks();
+    renderReviews();
     renderLearning();
 
     const active =
