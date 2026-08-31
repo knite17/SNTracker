@@ -3472,7 +3472,6 @@ function openLearning(){
 ========================================================= */
 
 function bookHero(book){
-
     if(!book){
         return `
             <div class="empty">
@@ -3484,15 +3483,22 @@ function bookHero(book){
     return `
         <div class="book">
 
+            <button
+                class="book-check"
+                onclick="finishBook(${JSON.stringify(book.id)})"
+                aria-label="Mark book as finished"
+                title="Mark as finished">
+            </button>
+
             <div class="cover">
                 ${esc(book.title.slice(0,18))}
             </div>
 
-            <div>
+            <div style="flex:1;min-width:0">
                 <h3>${esc(book.title)}</h3>
 
                 <div class="author">
-                    ${esc(book.author)}
+                    ${esc(book.author || "Unknown author")}
                 </div>
             </div>
 
