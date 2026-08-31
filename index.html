@@ -3523,94 +3523,233 @@ function renderDashboard(){
             g => g.horizon === "monthly"
         );
 
-    document.getElementById("dashDaily").innerHTML =
-        daily.length
-            ? daily.slice(0,5).map(goalHTML).join("")
-            : `<div class="empty">No daily goals yet.</div>`;
 
-    document.getElementById("dashWeekly").innerHTML =
-        weekly.length
-            ? weekly.slice(0,5).map(goalHTML).join("")
-            : `<div class="empty">No weekly goals yet.</div>`;
+    /* =========================
+       DAILY / WEEKLY / MONTHLY GOALS
+       ========================= */
 
-    document.getElementById("dashMonthly").innerHTML =
-        monthly.length
-            ? monthly.slice(0,5).map(goalHTML).join("")
-            : `<div class="empty">No monthly goals yet.</div>`;
+    const dashDaily =
+        document.getElementById("dashDaily");
 
-    /* Separate progress for each goal horizon */
+    if(dashDaily){
+        dashDaily.innerHTML =
+            daily.length
+                ? daily.slice(0,5).map(goalHTML).join("")
+                : `<div class="empty">No daily goals yet.</div>`;
+    }
+
+
+    const dashWeekly =
+        document.getElementById("dashWeekly");
+
+    if(dashWeekly){
+        dashWeekly.innerHTML =
+            weekly.length
+                ? weekly.slice(0,5).map(goalHTML).join("")
+                : `<div class="empty">No weekly goals yet.</div>`;
+    }
+
+
+    const dashMonthly =
+        document.getElementById("dashMonthly");
+
+    if(dashMonthly){
+        dashMonthly.innerHTML =
+            monthly.length
+                ? monthly.slice(0,5).map(goalHTML).join("")
+                : `<div class="empty">No monthly goals yet.</div>`;
+    }
+
+
+    /* =========================
+       DAILY PROGRESS
+       ========================= */
+
     const dailyTotal = daily.length;
-    const dailyCompleted = daily.filter(g => isGoalDoneNow(g)).length;
-    const dailyPercent = dailyTotal
-        ? Math.round(dailyCompleted / dailyTotal * 100)
-        : 0;
 
-    const weeklyTargetTotal = weekly.reduce(
-        (sum,g) => sum + weeklyTarget(g),
-        0
-    );
-    const weeklyCompletedTotal = weekly.reduce(
-        (sum,g) => sum + Math.min(weekCompletions(g.id).length, weeklyTarget(g)),
-        0
-    );
-    const weeklyPercent = weeklyTargetTotal
-        ? Math.round(weeklyCompletedTotal / weeklyTargetTotal * 100)
-        : 0;
+    const dailyCompleted =
+        daily.filter(
+            g => isGoalDoneNow(g)
+        ).length;
 
-    const monthlyTotal = monthly.length;
-    const monthlyCompleted = monthly.filter(g => isGoalDoneNow(g)).length;
-    const monthlyPercent = monthlyTotal
-        ? Math.round(monthlyCompleted / monthlyTotal * 100)
-        : 0;
+    const dailyPercent =
+        dailyTotal
+            ? Math.round(
+                dailyCompleted /
+                dailyTotal *
+                100
+            )
+            : 0;
 
-    document.getElementById("dailyProgressStats").innerHTML = `
-        <div class="progress-stat">
-            <b>${dailyPercent}%</b>
-            <span>today's completion</span>
-        </div>
-        <div class="progress-stat">
-            <b>${dailyCompleted}</b>
-            <span>completed</span>
-        </div>
-        <div class="progress-stat">
-            <b>${dailyTotal}</b>
-            <span>total goals</span>
-        </div>
-    `;
 
-    document.getElementById("weeklyProgressStats").innerHTML = `
-        <div class="progress-stat">
-            <b>${weeklyPercent}%</b>
-            <span>weekly target progress</span>
-        </div>
-        <div class="progress-stat">
-            <b>${weeklyCompletedTotal}</b>
-            <span>completed</span>
-        </div>
-        <div class="progress-stat">
-            <b>${weeklyTargetTotal}</b>
-            <span>target</span>
-        </div>
-    `;
+    const dailyProgressStats =
+        document.getElementById(
+            "dailyProgressStats"
+        );
 
-    document.getElementById("monthlyProgressStats").innerHTML = `
-        <div class="progress-stat">
-            <b>${monthlyPercent}%</b>
-            <span>monthly completion</span>
-        </div>
-        <div class="progress-stat">
-            <b>${monthlyCompleted}</b>
-            <span>completed</span>
-        </div>
-        <div class="progress-stat">
-            <b>${monthlyTotal}</b>
-            <span>total goals</span>
-        </div>
-    `;
+    if(dailyProgressStats){
 
-    document.getElementById("dailyProgressFill").style.width = dailyPercent + "%";
-    document.getElementById("weeklyProgressFill").style.width = weeklyPercent + "%";
-    document.getElementById("monthlyProgressFill").style.width = monthlyPercent + "%";
+        dailyProgressStats.innerHTML = `
+            <div class="progress-stat">
+                <b>${dailyPercent}%</b>
+                <span>today's completion</span>
+            </div>
+
+            <div class="progress-stat">
+                <b>${dailyCompleted}</b>
+                <span>completed</span>
+            </div>
+
+            <div class="progress-stat">
+                <b>${dailyTotal}</b>
+                <span>total goals</span>
+            </div>
+        `;
+    }
+
+
+    const dailyProgressFill =
+        document.getElementById(
+            "dailyProgressFill"
+        );
+
+    if(dailyProgressFill){
+        dailyProgressFill.style.width =
+            dailyPercent + "%";
+    }
+
+
+    /* =========================
+       WEEKLY PROGRESS
+       ========================= */
+
+    const weeklyTargetTotal =
+        weekly.reduce(
+            (sum,g) =>
+                sum + weeklyTarget(g),
+            0
+        );
+
+    const weeklyCompletedTotal =
+        weekly.reduce(
+            (sum,g) =>
+                sum +
+                Math.min(
+                    weekCompletions(g.id).length,
+                    weeklyTarget(g)
+                ),
+            0
+        );
+
+    const weeklyPercent =
+        weeklyTargetTotal
+            ? Math.round(
+                weeklyCompletedTotal /
+                weeklyTargetTotal *
+                100
+            )
+            : 0;
+
+
+    const weeklyProgressStats =
+        document.getElementById(
+            "weeklyProgressStats"
+        );
+
+    if(weeklyProgressStats){
+
+        weeklyProgressStats.innerHTML = `
+            <div class="progress-stat">
+                <b>${weeklyPercent}%</b>
+                <span>weekly target progress</span>
+            </div>
+
+            <div class="progress-stat">
+                <b>${weeklyCompletedTotal}</b>
+                <span>completed</span>
+            </div>
+
+            <div class="progress-stat">
+                <b>${weeklyTargetTotal}</b>
+                <span>target</span>
+            </div>
+        `;
+    }
+
+
+    const weeklyProgressFill =
+        document.getElementById(
+            "weeklyProgressFill"
+        );
+
+    if(weeklyProgressFill){
+        weeklyProgressFill.style.width =
+            weeklyPercent + "%";
+    }
+
+
+    /* =========================
+       MONTHLY PROGRESS
+       ========================= */
+
+    const monthlyTotal =
+        monthly.length;
+
+    const monthlyCompleted =
+        monthly.filter(
+            g => isGoalDoneNow(g)
+        ).length;
+
+    const monthlyPercent =
+        monthlyTotal
+            ? Math.round(
+                monthlyCompleted /
+                monthlyTotal *
+                100
+            )
+            : 0;
+
+
+    const monthlyProgressStats =
+        document.getElementById(
+            "monthlyProgressStats"
+        );
+
+    if(monthlyProgressStats){
+
+        monthlyProgressStats.innerHTML = `
+            <div class="progress-stat">
+                <b>${monthlyPercent}%</b>
+                <span>monthly completion</span>
+            </div>
+
+            <div class="progress-stat">
+                <b>${monthlyCompleted}</b>
+                <span>completed</span>
+            </div>
+
+            <div class="progress-stat">
+                <b>${monthlyTotal}</b>
+                <span>total goals</span>
+            </div>
+        `;
+    }
+
+
+    const monthlyProgressFill =
+        document.getElementById(
+            "monthlyProgressFill"
+        );
+
+    if(monthlyProgressFill){
+        monthlyProgressFill.style.width =
+            monthlyPercent + "%";
+    }
+
+
+    /* =========================
+       NEXT BOOKS
+       ========================= */
 
     function nextBook(type){
 
@@ -3620,7 +3759,9 @@ function renderDashboard(){
                     b.type === type &&
                     b.status === "next"
             )
+
             ||
+
             data.books.find(
                 b =>
                     b.type === type &&
@@ -3629,51 +3770,92 @@ function renderDashboard(){
         );
     }
 
-    document.getElementById("nextFiction").innerHTML =
-        bookHero(nextBook("fiction"));
 
-    document.getElementById("nextNonfiction").innerHTML =
-        bookHero(nextBook("nonfiction"));
+    const nextFiction =
+        document.getElementById(
+            "nextFiction"
+        );
+
+    if(nextFiction){
+        nextFiction.innerHTML =
+            bookHero(
+                nextBook("fiction")
+            );
+    }
+
+
+    const nextNonfiction =
+        document.getElementById(
+            "nextNonfiction"
+        );
+
+    if(nextNonfiction){
+        nextNonfiction.innerHTML =
+            bookHero(
+                nextBook("nonfiction")
+            );
+    }
+
+
+    /* =========================
+       NEXT LEARNING
+       ========================= */
 
     const nextLearning =
         data.learning.find(
             l => l.status === "active"
         )
+
         ||
+
         data.learning.find(
             l => l.status === "queued"
         );
 
-    document.getElementById("nextLearning").innerHTML =
-        nextLearning
-            ? `
-                <div class="book">
 
-                    <div class="cover">
-                        LEARN
-                    </div>
+    const nextLearningEl =
+        document.getElementById(
+            "nextLearning"
+        );
 
-                    <div>
-                        <h3>${esc(nextLearning.title)}</h3>
+    if(nextLearningEl){
 
-                        <div class="author">
-                            ${esc(nextLearning.detail)}
+        nextLearningEl.innerHTML =
+            nextLearning
+                ? `
+                    <div class="book">
+
+                        <div class="cover">
+                            LEARN
                         </div>
+
+                        <div>
+                            <h3>
+                                ${esc(nextLearning.title)}
+                            </h3>
+
+                            <div class="author">
+                                ${esc(
+                                    nextLearning.detail
+                                )}
+                            </div>
+                        </div>
+
+                        <span class="badge">
+                            ${esc(
+                                nextLearning.status
+                            )}
+                        </span>
+
                     </div>
-
-                    <span class="badge">
-                        ${esc(nextLearning.status)}
-                    </span>
-
-                </div>
-            `
-            : `
-                <div class="empty">
-                    No learning goals yet.
-                </div>
-            `;
+                `
+                : `
+                    <div class="empty">
+                        No learning goals yet.
+                    </div>
+                `;
+    }
 }
-
 /* =========================================================
    TRACKING
 ========================================================= */
