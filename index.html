@@ -1376,12 +1376,12 @@ select:focus{
             <span class="nav-icon">▣</span>
             <span class="nav-label">Books</span>
         </button>
-        
+
         <button data-page="reviews">
             <span class="nav-icon">★</span>
             <span class="nav-label">Reviews</span>
         </button>
-        
+
         <button data-page="learning">
             <span class="nav-icon">◇</span>
             <span class="nav-label">Learning</span>
@@ -1465,7 +1465,7 @@ select:focus{
         <div class="progress-fill" id="weeklyProgressFill"></div>
     </div>
 </div>
-    
+
 <div class="card span6">
     <div class="section-head">
         <div>
@@ -1674,7 +1674,7 @@ select:focus{
 <div id="reviewsList"></div>
 
 </section>
-    
+
 <section id="learning" class="page">
 
 <header>
@@ -2480,7 +2480,7 @@ function goalHTML(goal){
 
                 <button
                     class="check ${done ? "done" : ""}"
-                    onclick="toggleGoal(${JSON.stringify(goal.id)})"
+                    onclick='toggleGoal(${JSON.stringify(goal.id)})'
                     aria-label="Toggle goal">
                 </button>
 
@@ -2492,7 +2492,7 @@ function goalHTML(goal){
 
                 <button
                     class="icon"
-                    onclick="deleteGoal(${JSON.stringify(goal.id)})"
+                    onclick='deleteGoal(${JSON.stringify(goal.id)})'
                     aria-label="Delete goal">
                     ×
                 </button>
@@ -2544,7 +2544,7 @@ function dailyGoalWeekHTML(goal){
 
                 <button
                     class="icon"
-                    onclick="deleteGoal(${JSON.stringify(goal.id)})"
+                    onclick='deleteGoal(${JSON.stringify(goal.id)})'
                     aria-label="Delete goal">
                     ×
                 </button>
@@ -2566,7 +2566,7 @@ function dailyGoalWeekHTML(goal){
                                     ? "is-today"
                                     : ""
                             }"
-                            onclick="toggleGoalDate(${JSON.stringify(goal.id)},${JSON.stringify(date)})"
+                            onclick='toggleGoalDate(${JSON.stringify(goal.id)},${JSON.stringify(date)})'
                             aria-label="Toggle ${esc(goal.name)} for ${labels[index]}"
                             title="${date}">
 
@@ -2734,7 +2734,7 @@ function renderBooks(){
 
                             <button
                                 class="book-check"
-                                onclick="finishBook(${JSON.stringify(book.id)})"
+                                onclick='finishBook(${JSON.stringify(book.id)})'
                                 aria-label="Mark book as finished"
                                 title="Mark as finished">
                             </button>
@@ -2769,7 +2769,7 @@ function renderBooks(){
 
                             <button
                                 class="icon"
-                                onclick="deleteBook(${JSON.stringify(book.id)})"
+                                onclick='deleteBook(${JSON.stringify(book.id)})'
                                 aria-label="Delete book">
                                 ×
                             </button>
@@ -2844,13 +2844,13 @@ function renderCompletedBooks(){
 
                         <button
                             class="btn secondary"
-                            onclick="editBookReview(${JSON.stringify(book.id)})">
+                            onclick='editBookReview(${JSON.stringify(book.id)})'>
                             Review
                         </button>
 
                         <button
                             class="icon"
-                            onclick="deleteBook(${JSON.stringify(book.id)})">
+                            onclick='deleteBook(${JSON.stringify(book.id)})'>
                             ×
                         </button>
 
@@ -3004,7 +3004,7 @@ function openReviewModal(book, editing){
                 <button
                     class="btn"
                     style="width:100%"
-                    onclick="saveBookReview(${JSON.stringify(book.id)})">
+                    onclick='saveBookReview(${JSON.stringify(book.id)})'>
 
                     ${editing ? "Save review" : "Finish book"}
 
@@ -3283,7 +3283,7 @@ async function saveBookReview(id){
 
                     <button
                         class="btn secondary"
-                        onclick="editBookReview(${JSON.stringify(book.id)})">
+                        onclick='editBookReview(${JSON.stringify(book.id)})'>
                         Edit review
                     </button>
 
@@ -3293,7 +3293,7 @@ async function saveBookReview(id){
 
         `).join("");
 }
-    
+
 /* =========================================================
    LEARNING
 ========================================================= */
@@ -3422,13 +3422,13 @@ function renderLearning(){
                         <div>
                             <button
                                 class="btn secondary"
-                                onclick="cycleLearning(${JSON.stringify(item.id)})">
+                                onclick='cycleLearning(${JSON.stringify(item.id)})'>
                                 ${esc(item.status)}
                             </button>
 
                             <button
                                 class="icon"
-                                onclick="deleteLearning(${JSON.stringify(item.id)})">
+                                onclick='deleteLearning(${JSON.stringify(item.id)})'>
                                 ×
                             </button>
                         </div>
@@ -3710,7 +3710,7 @@ function bookHero(book){
 
             <button
                 class="book-check"
-                onclick="finishBook(${JSON.stringify(book.id)})"
+                onclick='finishBook(${JSON.stringify(book.id)})'
                 aria-label="Mark book as finished"
                 title="Mark as finished">
             </button>
